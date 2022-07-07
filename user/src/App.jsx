@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import authSvg from "./assests/image.png";
 import gltf from "./assests/www.gltf";
 import gltf_w from "./assests/w_w.gltf";
-import ww_w from "./assests/Bee.glb";
+import ww_w from "./assests/w_w.glb";
 import authSvgwww from "./assests/foto.png";
 import Navigation from "./screens/Navigation";
 import Footer from "./screens/Footer";
@@ -303,17 +303,6 @@ controls.touches = {
                   <div className="align-items-center p-1 m-auto w-25 color rounded-lg">
                     <Www_w />
                   </div>
-                    {/*<img
-                      className="card-img-top-circle p-1 m-auto wrapperest this color"
-                      src={
-                        `${process.env.REACT_APP_URL}/profile/` +
-                        this.state.user.foto
-                      }
-                      onError={(e) => {
-                        e.target.src = authSvgwww; //replacement image imported above
-                        e.target.style = "padding: 3px; margin: 1px"; // inline styles in html format
-                      }}
-                    />*/}
                   </a>
                 </div>
                 <div className="componentWrapperbottom this2 color rounded text-center text-light">
@@ -322,12 +311,7 @@ controls.touches = {
                   </div>
                 </div>
               </div>
-              <div className="d-none text-center">
-                Estimado estudiante rectifique sus apellidos y nombres en ese
-                orden (es decir primero los apellidos y luego los nombres)
-                haciendo click sobre la foto. Por ejemplo CHAVEZ GAMBOA, NANCY
-                YENY.
-              </div>
+
             </div>
           ) : null}
 
@@ -395,8 +379,7 @@ controls.touches = {
               </div>
             </>
           </div>
-          {/*
-           {isAuth() ? <Socket /> : null} */}
+
            <div class="container p-0">
            <div className="w-100 text-center" ref={(ref) => (this.mount = ref)} />
            <Www />
