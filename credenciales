@@ -1,0 +1,194 @@
+www_g hp_lapYGbkB1sFdLzbY8UZGeBh6SvUJAt1bjBki
+
+git config --global user.name "fissart"
+git config --global user.email ricardomallqui6@gmail.com
+git config --global user.password "@Qqwerty123456"
+git config --global credential.helper "cache --timeout=360000000"
+git config --list
+
+12.14 
+12
+git config --global http.postBuffer 500M
+git config --global http.maxRequestBuffer 100M
+git config --global core.compression 0
+
+https://tecadmin.net/how-to-install-mongodb-on-ubuntu-22-04/
+
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+sudo apt update
+sudo apt install -y mongodb-org
+sudo systemctl start mongod   
+
+while true; do inotifywait -e CLOSE_WRITE stdbook.tex; git add -A && git commit -m "w" && git push --set-upstream origin master; done; 
+
+
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash			
+
+Plug 'vim-autoformat/vim-autoformat' ”:Autoformat
+Plug 'lervag/vimtex'
+Plug 'https://github.com/vim-latex/vim-latex'
+Plug 'honza/vim-snippets' “???
+Plug 'SirVer/ultisnips'
+Plug 'ervandew/supertab'
+sudo apt install -y vim-youcompleteme
+
+vertical vim
+
+Stand on the beginning of the column
+Press Ctrl+v, then mark across the column you want to edit.
+Press Shift+i to insert text at the beginning of the column, Shift+a to append text, r to replace highlighted text, d to delete, c to change... etc.
+Hit ESC when done.
+
+
+	" Add numbers to each line on the left-hand side.
+	set number
+	let g:auto_save = 1  " enable AutoSave on Vim startup
+
+	call plug#begin()
+	Plug 'junegunn/vim-easy-align' 
+	Plug 'tyru/open-browser.vim' " opens url in browser
+	Plug 'http://github.com/tpope/vim-surround' " Surrounding ysw)
+	Plug 'https://github.com/preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+	Plug 'https://github.com/ap/vim-css-color' " CSS Color Preview
+	Plug 'https://github.com/tpope/vim-commentary' " For Commenting gcc & gc
+	Plug 'https://github.com/907th/vim-auto-save' ":AutoSaveToggle
+	Plug 'vim-latex/vim-latex'
+	call plug#end()
+
+
+
+sudo add-apt-repository ppa:sunderme/texstudio
+
+
+
+
+sudo apt install texstudio
+
+sudo apt-get install texlive-lang-spanish texlive-bibtex-extra texlive-latex-extra
+
+
+https://www.linuxfordevices.com/tutorials/linux/vim-plug-install-plugins
+http://libgen.rs/
+
+gh repo create --source=. --public //crea repositorio con el nombre la carpeta en el cual esta
+Subir archivos:
+# 
+retsam nigiro maertspu-tes-- hsup tig && "w" m- timmoc tig && A- dda tig
+git add -A && git commit -m "w" && git push -f --set-upstream origin master
+# 
+git add --all && git commit -m "Initial comment" && git push -u origin main
+gh auth login //logueo desde cmd
+git init -b main //Si usa Git 2.28.0 o una versión posterior, puede establecer el nombre de la rama predeterminada usando -b
+gh repo delete https://github.com/fissart/www //Remove repo
+
+Create-React-App: ESlint error while deployment on local machine
+rm -rf node_modules/eslint
+
+
+
+{ciclo:"VII", mension:"EA", codigo :"AFPRE409", title:"Retrato I", teoria:"0", practica:"2", credito:"1", requisito:"Taller Regional II"},
+{ciclo:"VII", mension:"EA", codigo :"AFPTE417", title:"Teatro I", teoria:"0", practica:"4", credito:"2", requisito:"No tiene"},
+
+
+labslovmiranda@esfapa.edu.pe
+44307771
+
+moisesanchahua@esfapa.edu.pe
+80078876
+
+williamrojas@esfapa.edu.pe
+william061183123
+
+
+git guarda contraseña token:
+https://stackoverflow.com/questions/68775869/message-support-for-password-authentication-was-removed-please-use-a-personal
+certbot:
+https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-20-04
+—------------------------rufus same in linux: 
+sudo dd if=origen-de-iso of=ruta-del-dispositivo
+la rut	a se obtiene : sudo fdisk -l
+—----------------------------------------------------------------------------
+Connect to wifi:---------------------------------------------
+ifconfig
+sudo ifconfig wlp3s0 up
+iwlist wlp3s0 scan
+sudo iwconfig wlan0 essid “NameWifi” key CONTRASEÑA
+
+View password saved:—---------------------------------------------
+cd /etc/NetworkManager/system-connections/
+ls -a
+sudo cat [name of profile]
+—----------------------------------------------------------------------
+método que averigua solo el wifi activo-Use nmcli command to get password of currently connected network:
+nmcli device wifi show-password
+
+[15:29, 10/11/2022]  : New Root Password: 4uxCrEMntFuu
+[15:30, 10/11/2022]  : Primary IP	169.197.183.212
+
+In the files:
+sudo mousepad /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-session.xml 
+
+sudo mousepad  /etc/xdg/xdg-xubuntu/xfce4/xfconf/xfce-perchannel-xml/xfce4-session.xml
+Reemplazar xfwm4 con compiz
+—-------------------
+Acceso control panel
+169.197.183.189
+https://portal.datapacket.net/login
+https://proxweb.datapacket.net
+email:ayacucho.bellasartes@gmail.com
+pass:esfapa.edu.pe22
+User: bellasartes@esfapa.edu.pe
+Pass: @2Sl00sJ
+pass root: 
+ssh root@169.197.183.189
+0yMoKwHvG5Eu
+--------------------------
+
+sudo certbot --apache
+sudo service mongod stop
+sudo service apache2 stop
+pm2 stop all 
+sudo service mongod start
+sudo service apache2 start
+pm2 start /var/www/new/index.js
+
+https://www.youtube.com/watch?v=XD0JAx4G_7k
+Subir libros en GITHUB
+usethis::edit_r_environ()0
+ng build --prod --base-href https://fissart.github.io/web_art/
+Instalar bookdown-new project- new directory-book project using bookdown
+EN consola
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=IB1vP2MzCcM
+" target="_blank"><img src="http://img.youtube.com/vi/IB1vP2MzCcM/sddefault.jpg" width="700px"/></a>
+usethis::use_github
+git remote -v (lista de repositorios)
+git remote rm origin (eliminar repositorio)
+git remote add origin https://github.com/fissart/geometryart.git (nuevo repositorio)
+git add -A && git commit -m "w" && git push --set-upstream origin master
+git add -A
+git commit -m "w"
+git push --set-upstream origin master
+(guardar en repositorio)
+usethis::use_git (instalar usethis)
+
+
+user and pass: prousodu        erticnice
+https://www.youtube.com/watch?v=wUUOw4KZ4Ec&ab_channel=TRIBUTAyCONSULTA
+
+sudo apt install apache2
+sudo systemctl status apache2
+
+.htaccess:
+sudo nano /etc/apache2/apache2.conf
+AllowOverride All
+sudo a2enmod rewrite
+sudo systemctl apache2 restart
+
+169.197.183.33
+@Qq1w2e3r4t5y6u7
+
+http://169.197.183.229/  
+MIIxwIG8KDxD

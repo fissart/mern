@@ -1,0 +1,676 @@
+cristelaraujo@unsch.edu.pe
+20220122
+
+
+cesarfernandez@esfapa.edu.pe 74385932
+
+josephdurand@esfapa.edu.pe
+45459234
+
+
+
+	adrianapalomino@esfapa.edu.pe
+61271869
+
+
+
+import React, { Component } from 'react';
+//import authSvg from "../assests/update.svg";
+import Navigation from '../screens/Navigation.jsx';
+//import DatePicker from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css';
+import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import { Modal, Row } from 'react-bootstrap';
+import { IconButton } from '@material-ui/core';
+import { MdEdit, MdDelete, MdOpenInNew } from 'react-icons/md';
+import { IoMdCreate, IoIosCloseCircleOutline, IoMdTrendingUp } from 'react-icons/io';
+import axios from 'axios';
+import { removeCookie, removeLocalStorage, isAuth } from '../helpers/auth';
+import authSvgwww from "../assests/www.jpg";
+
+//@ts-checkimport addNotification from "react-push-notification";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+export default class CreateNote extends Component {
+	state = {
+		nombre: '',
+		fechaexamen: '',
+		fechatarea: '',
+		timexa: '',
+		contenido: '',
+		selectsubmit: false,
+		editing: false,
+		zz: [],
+		zzstd: [],
+		www: [],
+		wwr: [],
+		_id: '',
+		_idcurse: '',
+		showModal: false,
+		submit: '',
+		test: '',
+	};
+
+	open = () => this.setState({ showModal: true });
+	close = () => this.setState({ showModal: false });
+
+	open1 = () => this.setState({ showModal1: true });
+	close1 = () => this.setState({ showModal1: false });
+
+	getNotes = async () => {
+		const res = await axios.get(`${process.env.REACT_APP_API_URL}/curses/cursosespecificos/${isAuth()._id}/true`);
+		console.log(res.data[0].cursesstd, "w wwwwww");
+		this.setState({
+			zz: res.data[0].curses,
+			zzstd: res.data[0].cursesstd,
+		});
+		//console.log(this.state.zz);
+	};
+
+
+	async componentDidMount() {
+		this.getNotes();
+		console.log(JSON.parse(localStorage.getItem("user")).name, "wwwwww_w")
+		removeCookie('idc');
+		removeLocalStorage('idc');
+		removeCookie('idcat');
+		removeLocalStorage('idcat');
+		removeCookie('namecurse');
+		removeLocalStorage('namecurse');
+	}
+
+	createCategory = async () => {
+		this.setState({
+			submit: 'Crear categoria',
+			selectsubmit: true,
+			editing: false,
+		});
+	};
+
+	UserUpdateSet = async curseId => {
+		const res = await axios.get(`${process.env.REACT_APP_API_URL}/categories/` + curseId);
+		console.log(res.data);
+		this.setState({
+			nombre: res.data.nombre,
+			contenido: res.data.contenido,
+			editing: true,
+			selectsubmit: true,
+			_id: res.data._id,
+			submit: 'Actualizar usuario',
+		});
+	};
+
+	createCurse = async iduser => {
+		const Data = {
+			category: iduser,
+			nombre: 'Nombre curso',
+			contenido: 'Contenido',
+			tarea: 'Tarea',
+			test: 'Examen',
+			fechaexamen: 'December 31, 2021 7:30 PM',
+			fechatarea: 'December 31, 2021 7:30 PM',
+			timexa: '2',
+		};
+		await axios.post(`${process.env.REACT_APP_API_URL}/curses`, Data);
+		this.getNotes();
+		toast.dark('Creado correctamente');
+	};
+
+	UserUpdate = async () => {
+		const Data = {
+			nombre: this.state.nombre,
+			contenido: this.state.contenido,
+		};
+		await axios.put(`${process.env.REACT_APP_API_URL}/categories/` + this.state._id, Data);
+		toast.dark('Actualizado correctamente');
+		this.getNotes();
+		//this.close();
+		this.setState({
+			nombre: '',
+			contenido: '',
+		});
+		this.close();
+	};
+
+	CreateUser = async () => {
+		const Data = {
+			nombre: 'this.state.nombre',
+			contenido: 'this.state.contenido',
+		};
+		await axios.post(`${process.env.REACT_APP_API_URL}/categories`, Data);
+		toast.dark('Creado correctamente');
+		this.getNotes();
+	};
+
+	upDateCurseSet = async curseId => {
+		const res = await axios.get(`${process.env.REACT_APP_API_URL}/curses/` + curseId);
+		this.setState({
+			nombre: res.data.nombre,
+			contenido: res.data.contenido,
+			tarea: res.data.tarea,
+			test: res.data.test,
+			timexa: res.data.timexa,
+			fechaexamen: new Date(res.data.fechaexamen),
+			fechatarea: new Date(res.data.fechatarea),
+			_idcurse: res.data._id,
+		});
+	};
+
+	CurseUpdate = async () => {
+		const Www = {
+			nombre: this.state.nombre,
+			contenido: this.state.contenido,
+			tarea: this.state.tarea,
+			test: this.state.test,
+			timexa: this.state.timexa,
+			fechaexamen: this.state.fechaexamen,
+			fechatarea: this.state.fechatarea,
+		};
+		await axios.put(`${process.env.REACT_APP_API_URL}/curses/` + this.state._idcurse, Www);
+		this.setState({
+			category: '',
+			nombre: '',
+			contenido: '',
+			tarea: '',
+			test: '',
+			fechaexamen: '',
+			fechatarea: '',
+			timexa: '',
+		});
+		toast.dark('Actualizado correctamente');
+		this.close1();
+		this.getNotes();
+	};
+
+	onInputChange = e => {
+		this.setState({
+			[e.target.name]: e.target.value,
+		});
+	};
+
+	onChangeDatetest = fechaexamen => {
+		this.setState({ fechaexamen });
+	};
+
+	onChangeDatetask = fechatarea => {
+		this.setState({ fechatarea });
+	};
+
+	deleteNote = async noteId => {
+		const response = window.confirm('Deseas eliminar este curso?');
+		if (response) {
+			await axios.delete(`${process.env.REACT_APP_API_URL}/categories/` + noteId);
+			this.getNotes();
+			toast.dark('Removido correctamente');
+		}
+	};
+
+	getCateg = async idtask => {
+		const resww = await axios.get(`${process.env.REACT_APP_API_URL}/categories/` + idtask + `/` + isAuth()._id);
+		console.log(this.state.wwr);
+		this.setState({
+			wwr: resww.data[0].capitulos,
+		});
+	};
+
+	addCurso = async idcurse => {
+		const ww = await axios.get(`${process.env.REACT_APP_API_URL}/mycurses/www/` + idcurse + `/` + isAuth()._id);
+		console.log(ww.data.length);
+		const curseAdd = {
+			user: isAuth()._id,
+			curse: idcurse,
+		};
+
+		if (ww.data.length > 0) {
+			toast.error('Ya te agregaste al curso');
+		} else {
+			const wwncurse = await axios.get(`${process.env.REACT_APP_API_URL}/mycurses/` + isAuth()._id);
+			//      console.log(wwncurse.data.length);
+			if (wwncurse.data.length < 1) {
+				const response = window.confirm('Deseas agregarte al curso?');
+				if (response) {
+					await axios.post(`${process.env.REACT_APP_API_URL}/mycurses`, curseAdd);
+				}
+			} else {
+				toast.dark('Ud solo puede unirse a uno');
+			}
+		}
+		this.getNotes();
+	};
+
+	deleteCurso = async curso => {
+		const response = window.confirm('Deseas borrarlo el curso?');
+		if (response) {
+			await axios.delete(`${process.env.REACT_APP_API_URL}/curses/` + curso);
+		}
+		this.getNotes();
+		toast.dark('Removido correctamente');
+	};
+
+	deletetomyCurso = async midcurso => {
+		console.log(midcurso);
+		const response = window.confirm('Deseas borrarlo de tus cursos?');
+		if (response) {
+			await axios.delete(`${process.env.REACT_APP_API_URL}/mycurses/` + midcurso);
+		}
+		this.getNotes();
+	};
+
+	cleanFields = () => {
+		this.setState({
+			nombre: '',
+			contenido: '',
+			tarea: '',
+			test: '',
+			fechaexamen: '',
+			fechatarea: '',
+			timexa: '',
+			_id: '',
+			_idcurse: '',
+		});
+	};
+
+	render() {
+		return (
+			<div>
+				<ToastContainer
+					position="bottom-right"
+					autoClose={2000}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
+				/>
+
+				<Modal
+					show={this.state.showModal}
+					onHide={() => {
+						this.close1();
+					}}
+					animation={false}
+				>
+					<div className="modal-header font-weight-bold ">
+						Actualizar Usuario
+					</div>
+					<Modal.Body>
+						<div className="card form-group">
+							<div className="componentWrappertextleft ">
+								Nombre
+							</div>
+							<input
+								type="text"
+								className="form-control  border-0 rounded-0"
+								placeholder="Nombre"
+								onChange={this.onInputChange}
+								name="nombre"
+								value={this.state.nombre}
+								required
+							/>
+						</div>
+
+						<div className="card form-group">
+							<div className="componentWrappertextleft ">
+								Contenido
+							</div>
+							<textarea
+								type="text"
+								className="form-control  border-0 rounded-0"
+								placeholder="Contenido"
+								name="contenido"
+								rows="2"
+								onChange={this.onInputChange}
+								value={this.state.contenido}
+								required
+							/>
+						</div>
+
+					</Modal.Body>
+					<Modal.Footer>
+						<button className="btn btn-success" onClick={this.UserUpdate}>
+							Actualizar usuario
+						</button>
+						<button
+							type="button"
+							className="btn btn-primary"
+							data-dismiss="modal"
+							onClick={(this.cleanFields, this.close)}
+						>
+							Cerrar
+						</button>
+					</Modal.Footer>
+				</Modal>
+
+				<Modal
+					show={this.state.showModal1}
+					onHide={() => {
+						this.close();
+					}}
+					animation={false}
+				>
+					<div className="modal-header font-weight-bold bg-info">
+						Actualizar curso
+					</div>
+					<Modal.Body className="bg-info">
+
+						<div className="card form-group">
+							<div className="componentWrappertextleft ">
+								Nombre
+							</div>
+							<input
+								type="text"
+								className="form-control  border-0 rounded-0"
+								placeholder="Nombre"
+								onChange={this.onInputChange}
+								name="nombre"
+								value={this.state.nombre}
+								required
+							/>
+						</div>
+
+						<div className="card form-group">
+							<div className="componentWrappertextleft ">
+								Contenido
+							</div>
+							<textarea
+								type="text"
+								className="form-control  border-0 rounded-0"
+								placeholder="Contenido"
+								name="contenido"
+								rows="2"
+								onChange={this.onInputChange}
+								value={this.state.contenido}
+								required
+							/>
+						</div>
+						<div>
+							<div className="card form-group">
+								<div className="componentWrappertextleft ">
+									Test
+								</div>
+								<textarea
+									type="text"
+									className="form-control  border-0 rounded-0"
+									placeholder="Test"
+									name="test"
+									onChange={this.onInputChange}
+									value={this.state.test}
+									required
+								/>
+							</div>
+							<div className="card form-group">
+								<div className="componentWrappertextleft ">
+									Tarea
+								</div>
+								<textarea
+									type="text"
+									className="form-control  border-0 rounded-0"
+									placeholder="Tarea"
+									name="tarea"
+									onChange={this.onInputChange}
+									value={this.state.tarea}
+									required
+								/>
+							</div>
+
+							<div className="card form-group">
+								<div
+									className="componentWrappertextleft "
+									style={{
+										zIndex: 1050,
+									}}
+								>
+									Fecha examen
+								</div>
+								<DatePicker
+									className="form-control  border-0 rounded-0"
+									selected={this.state.fechaexamen}
+									onChange={this.onChangeDatetest}
+									showTimeSelect
+									dateFormat="MMMM d, yyyy h:mm aa"
+								/>
+							</div>
+							<div className="card form-group">
+								<div
+									className="componentWrappertextleft "
+									style={{
+										zIndex: 1050,
+									}}
+								>
+									Fecha tarea
+								</div>
+								<DatePicker
+									className="form-control  border-0 rounded-0"
+									selected={this.state.fechatarea}
+									onChange={this.onChangeDatetask}
+									showTimeSelect
+									dateFormat="MMMM d, yyyy h:mm aa"
+								/>
+							</div>
+
+							<div className="card form-group mb-0">
+								<div className="componentWrappertextleft ">
+									Tiempo examen
+								</div>
+								<input
+									type="text"
+									className="form-control  border-0 rounded-0"
+									placeholder="Tiempo"
+									onChange={this.onInputChange}
+									name="timexa"
+									value={this.state.timexa}
+									required
+								/>
+							</div>
+						</div>
+
+					</Modal.Body>
+					<Modal.Footer className="bg-info">
+						<button className="btn btn-light" onClick={this.CurseUpdate}>
+							Actualizar
+						</button>
+						<button
+							type="button"
+							className="btn btn-primary"
+							data-dismiss="modal"
+							onClick={(this.cleanFields, this.close1)}
+						>
+							Cerrar
+						</button>
+					</Modal.Footer>
+				</Modal>
+
+				<Navigation />	
+				{isAuth().role === 'admin'
+					? <div
+						style={{
+							position: 'fixed',
+							bottom: 0.5 + 'em',
+							left: 0.1 + 'em',
+							zIndex: 1050,
+						}}
+					>
+						<button
+							className="btn btn-info"
+							onClick={() => {
+								this.CreateUser();
+								//this.createCategory();
+								//this.open();
+							}}
+							style={{ color: '#000' }}
+						>
+							Crear usuario
+						</button>
+					</div>
+					: null}
+
+				{JSON.parse(localStorage.getItem("user")).rol == '2' ?
+					<div className="container p-1 text-center my-3">
+						<div className='row justify-content-center align-items-center'>
+							{this.state.zz.map((message, index) => (
+								<div className="p-1 col-md-4" style={{
+									backgroundImage: `url(${process.env.REACT_APP_URL}/${message.img})`,
+									// backgroundImage: `url(${externalImage})`,
+									backgroundSize: 'cover',
+									backgroundRepeat: 'no-repeat',
+									backgroundPosition: 'center',
+									//height: '200px',
+								}} key={index}>
+									<div className="border p-2 rounded">
+										<div className="text-uppercase">
+											{message.title} - {message.mencion}
+										</div>
+
+										<img
+											className="p-1 m-auto wrapperestperfil"
+											src={
+												`${process.env.REACT_APP_URL}/${message.img}`
+											}
+											onError={(e) => {
+												e.target.src = authSvgwww; //replacement image imported above
+												e.target.style = "padding: 3px; margin: 1px"; // inline styles in html format
+											}}
+										/>
+										<div>
+											<Link
+												className="btn btn-info w-100 text-uppercase"
+												style={{ color: 'white' }}
+												to={'/curso/' + message._id}
+											>
+												Ir al curso
+											</Link>
+											{/* <button onClick={() => this.deleteCurso(message._id)} className="btn btn-light mt-1">
+												Eliminar curso
+											</button>
+											<button
+												data-toggle="modal"
+												data-target=".bd-example-modal-lg"
+												onClick={() => {
+													this.upDateCurseSet(message._id);
+													this.open1();
+												}}
+												className="btn btn-light mt-1"
+											>
+												Editar curso
+											</button> */}
+										</div>
+
+									</div>
+
+									<div className="componentWrapperbottom text-center">
+										{isAuth().role === 'admin'
+											? <div className="btn-group">
+												<button
+													className="btn btn-success"
+													onClick={() => {
+														this.UserUpdateSet(message._id);
+														this.open();
+													}}
+													style={{ color: '#ffff' }}
+												>
+													Editar usuario
+												</button>
+											</div>
+											: null}
+									</div>
+								</div>
+							))}
+
+						</div>
+
+
+					</div> :
+
+
+					<div className="container p-1 text-center my-3">
+						<div className="p-1 my-1 text-center bg-info rounded">
+							{JSON.parse(localStorage.getItem("user")).name} 
+						</div>
+						<div className='row justify-content-center align-items-center'>
+							{this.state.zzstd.map((message, index) => (
+								<div className="p-1 col-md-4" style={{
+									backgroundImage: `url(${process.env.REACT_APP_URL}/${message.img})`,
+									// backgroundImage: `url(${externalImage})`,
+									backgroundSize: 'cover',
+									backgroundRepeat: 'no-repeat',
+									backgroundPosition: 'center',
+									//height: '200px',
+								}} key={index}>
+									<div className="bg-info p-3 rounded">
+										<div className="text-uppercase">
+											{message.cursse[0].title}--
+											<span>{message.cursse[0].mencion}</span>
+										</div>
+
+										<img
+											className="p-1 m-auto wrapperestperfil"
+											src={
+												`${process.env.REACT_APP_URL}/${message.img}`
+											}
+											onError={(e) => {
+												e.target.src = authSvgwww; //replacement image imported above
+												e.target.style = "padding: 3px; margin: 1px"; // inline styles in html format
+											}}
+										/>
+										<div>
+											<Link
+												className="btn btn-light w-100 text-uppercase"
+												style={{ color: 'orange' }}
+												to={'/curso/' + message.cursse[0]._id}
+											>
+												Ir al curso
+											</Link>
+
+										</div>
+
+									</div>
+
+									<div className="componentWrapperbottom text-center">
+										{isAuth().role === 'admin'
+											? <div className="btn-group">
+												<button
+													className="btn btn-success"
+													onClick={() => {
+														this.UserUpdateSet(message._id);
+														this.open();
+													}}
+													style={{ color: '#ffff' }}
+												>
+													Editar usuario
+												</button>
+												<button
+													className="btn btn-danger"
+													onClick={() => this.deleteNote(message._id)}
+													style={{ color: '#ffff' }}
+												>
+													Delete user
+												</button>
+												<button
+													className="btn btn-warning"
+													onClick={() => {
+														//this.onSubmitCurse(message._id);
+														this.createCurse(message._id);
+														//this.open();
+													}}
+													style={{ color: '#ffff' }}
+												>
+													Crear curso
+												</button>
+
+											</div>
+											: null}
+									</div>
+								</div>
+							))}
+
+						</div>
+					</div>
+				}
+			</div>
+		);
+	}
+}

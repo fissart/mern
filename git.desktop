@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Name=Hello
+Exec=sh ./git.sh
+Icon=utilities-terminal
+Terminal=true
+Type=Application

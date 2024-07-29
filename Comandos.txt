@@ -1,0 +1,73 @@
+import logo from './logo.svg';
+import './App.css';
+import { BrowserRouter, Routes, Route} from "react-router-dom"
+import Appw from './App0'
+import Appww from './App1';
+
+function App() {
+  return (
+    <div className="App">
+    <BrowserRouter>
+      <Routes>
+        <Route path="expenses" element={<Appww />} />
+        <Route path="invoices" element={<Appw />} />
+      </Routes>
+    </BrowserRouter>
+    
+        
+        <a
+          className="App-link"
+          href="expenses"
+          rel="noopener noreferrer"
+        >
+          www
+        </a>
+        <a
+          className="App-link"
+          href="invoices"
+          rel="noopener noreferrer"
+        >
+          Learn Reactwwwwwwww
+        </a>
+    </div>
+  );
+}
+
+4s875IDy2Hqy
+adb start-server
+
+We sell domains, but do not sell SSL certificates. There is no need
+ to purchase one though as you can install free certificates on your server by using let's encrypt and certbot commands.
+ encrypt y certbot
+
+
+npx react-native start
+npx react-native run-android	
+
+git add --all
+git commit -m "Initial comment"
+git push origin
+
+
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm 
+
+
+
+ Rscript -e "rmarkdown::render_site(encoding='UTF-8')"
+ Rscript -e "rmarkdown::render_site('01.Rmd', encoding='UTF-8')"
+
+npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+lsof -i :8081 
+kill -9 27133
+
+export JAVA_HOME = / usr / local / jdk1.8.0_181 #jdk directorio de instalación
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib:$CLASSPATH
+export JAVA_PATH=${JAVA_HOME}/bin:${JRE_HOME}/bin 
+export PATH=$PATH:${JAVA_PATH}
+
+fallar te hace fuerte
+meditacion (antifragilidad)
+alejar la imagen.
