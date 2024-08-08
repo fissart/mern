@@ -230,13 +230,13 @@ export default class CreateNote extends Component {
                     <div className="h5 text-center text-uppercase">
                       {note.title}
                     </div>
-                    <div className="row p-0 mx-0">
+                    <div className="row p-0 mx-0 justify-content-center">
                       {note.temas.map((notew) => (
                         <div
                           className="col-md-6 col-lg-6 m-0 p-1"
                           key={notew._id}
                         >
-                          <div className={`rounded p-1 ${notew.dateb < this.state.noww && this.state.noww < notew.datee ? 'bg-warning' : 'border border-info rounded'}`}>
+                          <div className={`rounded p-1 justify-content-center ${notew.dateb < this.state.noww && this.state.noww < notew.datee ? 'bg-warning' : 'border border-info rounded'}`}>
                             <div className="text-uppercase">
                               {notew.title}
                             </div>

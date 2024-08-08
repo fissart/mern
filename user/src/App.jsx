@@ -1,25 +1,25 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { getCokie, signout, isAuth } from "./helpers/auth";
 import { ToastContainer, toast } from "react-toastify";
-import authSvg from "./assests/image.png";
-import gltf from "./assests/scene.gltf";
+// import authSvg from "./assests/image.png";
+// import gltf from "./assests/scene.gltf";
 //import gltf_w from "./assests/w_w.gltf";
 //import ww_w from "./assests/w_w.glb";
 //import authSvgwww from "./assests/foto.png";
 import Navigation from "./screens/Navigation";
 import Wwwwww from "./screens/downlist";
 //import Www from "./screens/ww1";
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+// import * as THREE from "three";
+// import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import Socket from "./screens/Chat";
 import axios from "axios";
-import { Modal, Row } from "react-bootstrap";
-import Www_w from "./screens/www";
+// import { Modal, Row } from "react-bootstrap";
+// import Www_w from "./screens/www";
 //import {Admin } from "./screens/Chat";
-import { Input } from "@material-ui/core";
+// import { Input } from "@material-ui/core";
 import "./App.css";
 
 

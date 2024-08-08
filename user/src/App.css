@@ -7,9 +7,10 @@
   height: 12cm
 }
 
-.ck-content blockquote {
-  padding-top: .3cm;
-  padding-bottom: .3cm;
+blockquote {
+  padding-left: .3cm;
+  border-left: solid .3em #1976d2;
+  margin: 0cm !important;
 }
 
 .cke_float .cke_top {
@@ -277,6 +278,17 @@
 .wrapperestperfil {
   width: 100px;
   height: 100px;
+  /* overflow: hidden; */
+  border-radius: 50%;
+  position: relative;
+  object-fit: cover;
+  /* background-color: #ade7f1; */
+  /* border: .15em solid rgb(212, 101, 203); */
+}
+
+.wrapperestchat {
+  width: 50px;
+  height: 50px;
   /* overflow: hidden; */
   border-radius: 50%;
   position: relative;

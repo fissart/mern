@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import authSvgwww from "../assests/foto.png";
 import { isAuth, getCokie } from "../helpers/auth";
 import axios from "axios";
 //import addNotification from "react-push-notification";
@@ -54,7 +55,7 @@ export default class Admin extends Component {
       messages: [],
       users: [],
       mensaje: "",
-      new: `<ul><li>Hallar los focos, los vertices y las directrices de la hipérbola $x^2-3y^2-5 x+2y+2=0$</li></ul><blockquote>Completando cuadrados $\\frac{\\left(x-\\frac{?}{?}\\right)^?}{\\left(\\frac{\\sqrt{?}}{?\\sqrt{?}}\\right)^?}-\\frac{\\left(y-\\frac{?}{?}\\right)^?}{\\left(\\frac{\\sqrt{?}}{?}\\right)^?}=\\dfrac{2}{3} = -2 $. El centro y parametros son $\left(h,\:k\right)=\left(\frac{?}{?},\:\frac{?}{?}\right),\:a=\frac{\sqrt{?}}{?\sqrt{?}},\:b=\frac{\sqrt{?}}{?}$.<iframe width='100%' height='350' src='https://www.dailymotion.com/embed/video/x8uv6iq'></iframe>`
+      
     };
   }
 
@@ -116,11 +117,7 @@ export default class Admin extends Component {
       console.log(ww, "load old msgs")
       for (let i = 0; i < ww.length; i++) {
         const www = { mensaje: ww[i].mensaje, email: ww[i].usser[0].email, name: ww[i].usser[0].name, create: ww[i].createdAt, foto: ww[i].usser[0].foto };
-         console.log(www.mensaje.replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$ \n$2 \n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$ $2 $$")
-         .replace(/&nbsp;/g, " ").replace(new RegExp('</p>', 'g'), '').replace(new RegExp('<p>', 'g'), '')
-         .replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, ` <iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe> `).replace(/(<oembed url="https:\/\/www.youtube.com\/watch\?v=)(.*?)(".*?oembed>|&.*?oembed>)/g, ` <iframe width='100%' height='350' src="https://www.youtube.com/embed/$2"></iframe> `)
-         .replace(/<figure class="media">/g, '').
-         replace(/<\/figure>/g, ''))
+         
         this.setState({
           messages: [www, ...this.state.messages],
         });
@@ -201,25 +198,11 @@ export default class Admin extends Component {
           <div className={`text-left ${isAuth().email === message.email ? 'text-info' : 'text-primary'}`} style={{ fontSize: 14 }}>
             {message.name + '-' + message.email}
           </div>
-          {/* {message.mensaje}          
-          ww_www
-          {message.mensaje.replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$")
-            .replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<oembed url="https:\/\/www.youtube.com\/watch\?v=)(.*?)(".*?oembed>|&.*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.youtube.com/embed/$2"></iframe>`)
-            .replace(/&nbsp;/g, " ").replace(new RegExp('</p>', 'g'), ' ').replace(new RegExp('<p>', 'g'), ' ')
-            .replace(/<figure class="media">/g, '').
-            replace(/<\/figure>/g, '')} */}
-
-          {/* <Markdownkatexnew>{message.mensaje.replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, " $$ $2 $$ ")
-            .replace(/&nbsp;/g, " ").replace(new RegExp('</p>', 'g'), '').replace(new RegExp('<p>', 'g'), '')
-            .replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, ` <iframe width='100%' height='350' src='https://www.dailymotion.com/embed/video/$2'></iframe> `).replace(/(<oembed url="https:\/\/www.youtube.com\/watch\?v=)(.*?)(".*?oembed>|&.*?oembed>)/g, ` <iframe width='100%' height='350' src="https://www.youtube.com/embed/$2"></iframe>`)
-            .replace(/<figure class="media">/g, '').
-            replace(/<\/figure>/g, '')
-          }
-          </Markdownkatexnew> */}
+          
           <Markdownkatexnew>
-          {message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<oembed url="https:\/\/www.youtube.com\/watch\?v=)(.*?)(".*?oembed>|&.*?oembed>)/g, ` <iframe width='100%' height='350' src="https://www.youtube.com/embed/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$").replace(/(<p>)/g, "").replace(/(<\/p>)/g, "").replace(/(<h2>)/g, "").replace(/(<\/h2>)/g, "").replace(/(<li>)/g, "").replace(/(<\/li>)/g, "").replace(/(<ol>)/g, "").replace(/(<\/ol>)/g, "")}
+          {message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<oembed url="https:\/\/www.youtube.com\/watch\?v=)(.*?)(".*?oembed>|&.*?oembed>)/g, ` <iframe width='100%' height='350' src="https://www.youtube.com/embed/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$").replace(/(<p>)/g, "").replace(/(<\/p>)/g, "").replace(/(<h2>)/g, "").replace(/(<\/h2>)/g, "").replace(/(<li>)/g, "\n 1. ").replace(/(<\/li>)/g, "").replace(/(<ol>)/g, "").replace(/(<\/ol>)/g, "").replace(/(<blockquote>)/g, "\n > ").replace(/(<\/blockquote>)/g, "\n\n ")}
           </Markdownkatexnew>
-          {message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n\n$$$$\n$2\n$$$$\n\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$").replace(/(<p>)/g, "").replace(/(<\/p>)/g, "")}
+          {/* {message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n\n$$$$\n$2\n$$$$\n\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$").replace(/(<p>)/g, "").replace(/(<\/p>)/g, "")} */}
           {/* <Markdownkatexnew>
           {"$\\epsilon$ entonces \n$$\n\\epsilon\n$$\n <iframe width='100%' height='350' src='https://www.dailymotion.com/embed/video/x8uv6iq'></iframe>"}
           </Markdownkatexnew> */}
@@ -231,9 +214,10 @@ export default class Admin extends Component {
           {/* <div dangerouslySetInnerHTML={{ __html: message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$") }} /> */}
           
           {/* ..................................................{message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "<InlineMath>$2</InlineMath>").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "<InlineMath>$2</InlineMath>")}
+        */} 
           <div className="text-secondary text-right" style={{ fontSize: 12 }}>
             {timeago(message.create)}
-          </div> */} 
+          </div> 
 
 
           
@@ -257,12 +241,25 @@ export default class Admin extends Component {
 
     const usser = this.state.users.map((user, i) => {
       return (
-        <div key={i}>
-          <ChatList
+        <div key={i} className="border border-info">
+          <img className="wrapperestchat p-0"
+                src={
+                  `${process.env.REACT_APP_URL}/profile/` + user.foto
+                }
+                onError={(e) => {
+                  e.target.src = authSvgwww;                   e.target.style = "padding: 3px; margin: 1px"; 
+                }}
+              />
+              <div className="text-secondary text-right" style={{ fontSize: 12 }}>
+                {user.email} {user.name}
+              </div> 
+              <div className="text-secondary text-right" style={{ fontSize: 12 }}>
+            {timeago(new Date())}
+          {/* <ChatList
             className="chat-list"
             dataSource={[
               {
-                avatar: user.foto ? `${process.env.REACT_APP_URL}/profile/` + user.foto : foto,
+                avatar: user.foto!=undefined ? `${process.env.REACT_APP_URL}/profile/` + user.foto : foto,
                 alt: "Reactjs",
                 title: user.email,
                 subtitle: user.name,
@@ -270,7 +267,8 @@ export default class Admin extends Component {
                 // unread: this.state.messages.length,
               },
             ]}
-          />
+          /> */}
+          </div>
         </div>
       );
     });
@@ -291,20 +289,7 @@ export default class Admin extends Component {
             <div className="w-100"> <button className="btn btn-info w-100 rounded-0" onClick={this.sendMessage} > Enviar </button> </div>
             {messagges}
           </div>
-
-
-
         </div>
-
-        <Markdownkatexnew>
-          {this.state.new}
-        </Markdownkatexnew>
-        <div ref={this.ref} className="bg-light">
-          <InlineMath>\int_0^\infty x^2dx</InlineMath >
-          <BlockMath>\int_0^\infty x^2dx</BlockMath >
-          <iframe width='100%' height='350' src='https://www.dailymotion.com/embed/video/x8uv6iq'></iframe>
-        </div>
-        {/* {this.state.new} */}
       </div>
     );
   }
