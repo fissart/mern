@@ -20,3 +20,6 @@ router.route("/:user/:sec/:chap").get(gett);
 router.route("/:id").get(get).delete(deleteS).put(updateS);
 
 module.exports = router;
+
+
+

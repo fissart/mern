@@ -2,21 +2,26 @@ const { Schema, model, ObjectId } = require("mongoose");
 
 const userSchema = new Schema(
   {
+    nota: String,
+    codigo: String,
+    teacher: {
+      type: Schema.Types.ObjectId,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+    },
     curse: {
       type: Schema.Types.ObjectId,
     },
-    foreign: {
-      type: Schema.Types.ObjectId,
-    },
-    identificadortema: { type: Schema.Types.ObjectId },
-    user: { type: Schema.Types.ObjectId },
-    comment: { type: String },
-    calification: { type: Number },
-    likes: { type: Number },
+    title: String,
+    ciclo: String,
+    credito: String,
+    mencion: String,
+    year: String,
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 
-module.exports = model("C2", userSchema);
+module.exports = model("Average", userSchema);

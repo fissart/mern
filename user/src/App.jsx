@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getCokie, signout, isAuth } from "./helpers/auth";
 import { ToastContainer, toast } from "react-toastify";
 // import authSvg from "./assests/image.png";
@@ -10,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 //import authSvgwww from "./assests/foto.png";
 import Navigation from "./screens/Navigation";
 import Wwwwww from "./screens/downlist";
-//import Www from "./screens/ww1";
+import Www from "./screens/ww1";
 // import * as THREE from "three";
 // import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -28,6 +28,7 @@ import "./App.css";
 export default class App extends Component {
   state = {
     files: [],
+    zz: [],
     user: [],
     name: "",
     showModal: false,
@@ -75,11 +76,25 @@ export default class App extends Component {
   // removeCookie("id");
   // removeLocalStorage("id");
 
+  getNotes = async () => {
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/land`
+    ).then(res => {
+      console.log(res.data);
+      this.setState({
+        zz: res.data,
+        // zzz: res.data[0],
+        // isDisabled: "false"
+      });
+    });
+  };
+
 
 
 
 
   async componentDidMount() {
+    this.getNotes();
     const token = getCokie("token");
     console.log(token)
     //this.getUser();
@@ -245,6 +260,56 @@ export default class App extends Component {
 
         <div className="container">
 
+          {this.state.zz.map((note, index) => (
+            <div className="col-md-6 p-1 m-0 text-center border" key={index}>
+                <button className="btn btn-info" onClick={this.onSubmit}>
+                Actualizar datos
+              </button>
+              {/* <Link to={note.link} > Navigate </Link> */}
+                {note.type} {note._id}                 {note.title}
+                {note.description}
+            </div>
+          ))}
+
+          <div class="container p-0 mb-5 d-flex  justify-content-center align-items-center">
+            <div class="justify-content-center align-items-center rounded row w-100"
+            >
+              <div class="jumbotron col-md-12 p-1 text-center">
+              </div>
+              <div class="jumbotron col-md-12 p-1">
+                <h1 class="display-3 p-1 text-center">Escuela Superior de Formación Artística
+                  Felipe Guamán Poma de Ayala -
+                  ESFAPA
+                  Ayacucho</h1>
+                <p class="lead text-center">
+                  Escuela Superior de Formación Artística pública de formación profesional en artes visuales desarrollado
+                  en un plan de estudios de 5 años ubicado en la ciudad de Ayacucho.
+                </p>
+                <p>
+                  La Escuela Superior de Formación Artística Pública “Felipe Guamán Poma de Ayala” de Ayacucho, fue creada
+                  el 13 de septiembre de 1952, en mérito a la R.M. 8078 como Escuela Regional de Bellas Artes Pública
+                  “Felipe Guamán Poma de Ayala” de acuerdo con la partida Nº. 28 del Pliego de Educación Pública del
+                  Presupuesto General de la Republica vigente, promoviendo a don José Ricardo Respaldiza Martínez, del
+                  cargo de jefe de la Sección de Museos y Monumentos Nacionales, al de director de la Escuela Regional de
+                  Bellas Artes “Felipe Guamán Poma de Ayala” de Ayacucho.
+
+                  La escuela se fundó con la finalidad de formar artistas profesionales en artes plástica es por eso que
+                  al
+                  inicio de sus labores académicas dio prioridad a los cursos prácticos como: Dibujo, Pintura y Escultura,
+                  posteriormente se incrementó nuevos talleres como Platería. Filigrana, Joyería, Cerámica, y cursos
+                  teóricos.
+                </p>
+
+                <a class="btn text-light" href="/Cmpt14MVComponent"
+                  role="button">Saber
+                  más</a>
+
+              </div>
+
+            </div>
+          </div>
+
+
           {/* <div>
             $$\sum_1^3f(x)=\int_1^2$$
             $\sum_1^3f(x)=\int_1^2$
@@ -381,7 +446,11 @@ export default class App extends Component {
               </div>
             </div>
           </div> */}
+
           {isAuth() ? <Socket /> : null}
+
+
+
           <Wwwwww />
         </div>
       </>

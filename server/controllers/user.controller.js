@@ -62,6 +62,7 @@ exports.usersId = async (req, res) => {
   res.json(user);
 };
 
+
 exports.usersUp = async (req, res) => {
   //console.log(req.params.id);
   //console.log(req.body);
@@ -92,6 +93,7 @@ exports.usersUp = async (req, res) => {
       email: req.body.email,
       password: req.body.password,
     };
+    console.log(nEw);
     await User.findByIdAndUpdate(req.params.id, nEw);
   }
 

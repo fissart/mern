@@ -50,6 +50,17 @@ export default class Wwwwww extends Component {
   render() {
     return (
       <div className=" text-center p-0 border-0">
+        <div class="container-flex p-0 mt-0">
+          <div class="container">
+            <iframe width={'100%'} height={500}
+              src="https://maps.google.com/maps?width=100%25&amp;height=500&amp;hl=es&amp;q=+(Escuela%20de%20Bellas%20Artes%20Felipe%20Guam%C3%A1n%20Poma%20de%20Ayala-Ayacucho)&amp;t=k&amp;z=18&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture full"><a
+                href="https://www.gps.ie/car-satnav-gps/">Car GPS</a></iframe>
+            {/* <iframe
+              src="https://www.google.com/maps/embed?pb=!4v1655850799758!6m8!1m7!1sGm3v-xYcR1tj1gz95RrkYg!2m2!1d-13.15635415471263!2d-74.2180525291301!3f124.85298126566764!4f2.1996870284465047!5f0.7820865974627469"
+              width={'100%'} height={500} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture full"></iframe> */}
+          </div>
+        </div>
+
         <div className="card-body">
           <div className="row d-flex justify-content-center align-items-center">
             <div className="text-center p-1  col-md-6 col-lg-4 col-xl-4">
@@ -68,7 +79,7 @@ export default class Wwwwww extends Component {
             <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
               <IconButton
                 className="btn"
-                // style={{ color: "#fff" }}
+              // style={{ color: "#fff" }}
               >
                 <MdMap />
               </IconButton>
@@ -105,7 +116,7 @@ export default class Wwwwww extends Component {
                 <IconButton
                   data-title="Wattsapp"
                   className="btn"
-                  //style={{ color: "#fff" }}
+                //style={{ color: "#fff" }}
                 >
                   <MdMessage />{" "}
                 </IconButton>
@@ -118,7 +129,7 @@ export default class Wwwwww extends Component {
                 <IconButton
                   data-title="Messenger"
                   className="btn"
-                  //style={{ color: "#fff" }}
+                //style={{ color: "#fff" }}
                 >
                   <MdPhoneBluetoothSpeaker />
                 </IconButton>
@@ -132,7 +143,7 @@ export default class Wwwwww extends Component {
                 <IconButton
                   data-title="Instagram"
                   className="btn"
-                  //style={{ color: "#fff" }}
+                //style={{ color: "#fff" }}
                 >
                   <IoLogoInstagram />
                 </IconButton>
@@ -146,7 +157,7 @@ export default class Wwwwww extends Component {
                 <IconButton
                   data-title="Github"
                   className="btn"
-                  //style={{ color: "#fff" }}
+                //style={{ color: "#fff" }}
                 >
                   <IoLogoGithub />
                 </IconButton>
@@ -159,7 +170,7 @@ export default class Wwwwww extends Component {
                 <IconButton
                   data-title="Blogspot"
                   className="btn"
-                  //style={{ color: "#fff" }}
+                //style={{ color: "#fff" }}
                 >
                   <IoLogoGoogle />
                 </IconButton>
@@ -173,7 +184,7 @@ export default class Wwwwww extends Component {
                 <IconButton
                   data-title="Facebook"
                   className="btn"
-                  //style={{ color: "#fff" }}
+                //style={{ color: "#fff" }}
                 >
                   <IoLogoFacebook />
                 </IconButton>

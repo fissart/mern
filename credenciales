@@ -144,8 +144,11 @@ User: bellasartes@esfapa.edu.pe
 Pass: @2Sl00sJ
 pass root: 
 ssh root@169.197.183.189
-0yMoKwHvG5Eu
+trvIDrLHK3Hp
 --------------------------
+scp -r html root@169.197.183.189:/var/www
+ext3grep /dev/sda3 --restore-all --after date -d '2024-23-01 00:00:00' '+%s' --before `date -d ‘2015-01-02 00:00:00’ ‘+%s’
+q1w2e3r4t5y6
 
 sudo certbot --apache
 sudo service mongod stop
@@ -192,3 +195,8 @@ sudo systemctl apache2 restart
 
 http://169.197.183.229/  
 MIIxwIG8KDxD
+
+
+
+
+

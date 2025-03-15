@@ -82,7 +82,7 @@ const Private = ({ history }) => {
     data.append("name", name)
     data.append("email", email)
     data.append("password", password)
-    //console.log(formData.files[0])
+    console.log(formData.files[0])
     await axios.put(`${process.env.REACT_APP_API_URL}/userUp/` + isAuth()._id, data);
     toast.info("Perfil actualizado satisfactoriamente");
     history.push("/");

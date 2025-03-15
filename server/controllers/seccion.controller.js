@@ -17,6 +17,7 @@ const upload = multer({ storage: storage }).single('file')
 */
 
 
+
 const Note = require("../models/seccion.model");
 
 notesww.file = async (req, res) => {
@@ -43,7 +44,7 @@ notesww.file = async (req, res) => {
   myFile.mv(`files/images/${myFile.name}`, function (err) {
     if (err) {
       console.log(err)
-      return res.status(500).send({ msg: "Error occured" });
+        return res.status(500).send({ msg: "Error occured" });
     }
     // returing the response with file path and name
     return res.send({ name: myFile.name, path: `/${myFile.name}` });

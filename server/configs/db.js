@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const connectDB = async () => {
   const connection = await mongoose.connect('mongodb://localhost/fgpa', {
     useNewUrlParser: true,
@@ -8,5 +7,5 @@ const connectDB = async () => {
     useUnifiedTopology: true,
   });
   console.log(`MongoDB Connected: ${connection.connection.host}`);
-};
-module.exports = connectDB;
+}
+module.exports = connectDB

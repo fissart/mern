@@ -42,9 +42,9 @@ notesww.getU = async (req, res) => {
 };
 
 notesww.getCURSOUser = async (req, res) => {
-    req.io.on("wwwww", async (www) => {
+  req.io.on("wwwww", async (www) => {
     console.log("www2768")
-    })
+  })
   const { ObjectId } = require("mongodb");
   const id = ObjectId(req.params.iduser);
   const user = ObjectId(id);

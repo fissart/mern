@@ -17,8 +17,8 @@ export default class ww1 extends Component {
 
 		//
 
-		//scene.background = new THREE.Color("rgb(250,250,200)");
-		scene.background = null;
+		scene.background = new THREE.Color("rgb(250,250,200)");
+		// scene.background = null;
 
 		/*
 	scene.background = new THREE.CubeTextureLoader()
@@ -32,7 +32,7 @@ export default class ww1 extends Component {
 		'nz.png'
 	  ] );
 */
-		var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+		var camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
 
 		loader.load(
 			// resource URL
@@ -94,23 +94,11 @@ export default class ww1 extends Component {
 			MIDDLE: THREE.MOUSE.DOLLY,
 			RIGHT: THREE.MOUSE.PAN,
 		};
-		camera.position.z = .7;
-		camera.position.y = .7;
-		camera.position.x = .7;
-		var animate = function () {
-			requestAnimationFrame(animate);
-			cube.rotation.x += 0.001;
-			cube.rotation.y += 0.01;
-			//cube.rotation.z += 0.01;
-			controls.update();
-			renderer.render(scene, camera);
-		};
-		animate();
 	}
 
 	render() {
 		return (
-			<div className="text-center bg-light rounded" ref={ref => this.mount = ref} />
+			<div className="text-center bg-light border  rounded" ref={ref => this.mount = ref} />
 		);
 	}
 }

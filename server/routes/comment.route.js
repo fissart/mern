@@ -9,7 +9,7 @@ const {
   deleteTheme,
   createComment,
   createComment2,
-getComment_User_Idtheme,
+  getComment_User_Idtheme,
   getComments,
   deleteComment,
   updateCommentget,

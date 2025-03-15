@@ -2,17 +2,25 @@ const { Schema, model, ObjectId } = require("mongoose");
 
 const userSchema = new Schema(
   {
-    foreign: {
+    nota: String,
+    teacher: {
       type: Schema.Types.ObjectId,
     },
-    user: { type: Schema.Types.ObjectId },
-    comment: { type: String },
-    calification: { type: Number },
-    likes: { type: Number },
+    user: {
+      type: Schema.Types.ObjectId,
+    },
+    curse: {
+      type: Schema.Types.ObjectId,
+    },
+    title: String,
+    ciclo: String,
+    credito: String,
+    especialidad: String,
+    year: String,
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 
-module.exports = model("C3", userSchema);
+module.exports = model("Cursesource", userSchema);

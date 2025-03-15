@@ -13,7 +13,6 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 //import * as moduleName from '../../public/ckeditor.js';
 import { MdEdit, MdDelete, MdOpenInNew, MdComment } from "react-icons/md";
 
-
 export default class Theme extends Component {
 
 	constructor(props) {

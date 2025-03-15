@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import authSvgwww from "../assests/foto.png";
 import { isAuth, getCokie } from "../helpers/auth";
 import axios from "axios";
 //import addNotification from "react-push-notification";
 // import { MeetingItem, SideBar, Navbar, MeetingList, Input, MessageBox, MeetingMessage, MessageList, ChatList, Button, Popup, ChatItem, } from "react-chat-elements";
-import { ChatList} from "react-chat-elements";
+import { ChatList } from "react-chat-elements";
 import "react-chat-elements/dist/main.css";
 //var beep = require("beepbeep");
 //import Notifier from "react-desktop-notification"
@@ -55,7 +55,7 @@ export default class Admin extends Component {
       messages: [],
       users: [],
       mensaje: "",
-      
+
     };
   }
 
@@ -117,7 +117,7 @@ export default class Admin extends Component {
       console.log(ww, "load old msgs")
       for (let i = 0; i < ww.length; i++) {
         const www = { mensaje: ww[i].mensaje, email: ww[i].usser[0].email, name: ww[i].usser[0].name, create: ww[i].createdAt, foto: ww[i].usser[0].foto };
-         
+
         this.setState({
           messages: [www, ...this.state.messages],
         });
@@ -198,9 +198,9 @@ export default class Admin extends Component {
           <div className={`text-left ${isAuth().email === message.email ? 'text-info' : 'text-primary'}`} style={{ fontSize: 14 }}>
             {message.name + '-' + message.email}
           </div>
-          
+
           <Markdownkatexnew>
-          {message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<oembed url="https:\/\/www.youtube.com\/watch\?v=)(.*?)(".*?oembed>|&.*?oembed>)/g, ` <iframe width='100%' height='350' src="https://www.youtube.com/embed/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$").replace(/(<p>)/g, "").replace(/(<\/p>)/g, "").replace(/(<h2>)/g, "").replace(/(<\/h2>)/g, "").replace(/(<li>)/g, "\n 1. ").replace(/(<\/li>)/g, "").replace(/(<ol>)/g, "").replace(/(<\/ol>)/g, "").replace(/(<blockquote>)/g, "\n > ").replace(/(<\/blockquote>)/g, "\n\n ")}
+            {message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<oembed url="https:\/\/www.youtube.com\/watch\?v=)(.*?)(".*?oembed>|&.*?oembed>)/g, ` <iframe width='100%' height='350' src="https://www.youtube.com/embed/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$").replace(/(<p>)/g, "").replace(/(<\/p>)/g, "").replace(/(<h2>)/g, "").replace(/(<\/h2>)/g, "").replace(/(<li>)/g, "\n 1. ").replace(/(<\/li>)/g, "").replace(/(<ol>)/g, "").replace(/(<\/ol>)/g, "").replace(/(<blockquote>)/g, "\n > ").replace(/(<\/blockquote>)/g, "\n\n ")}
           </Markdownkatexnew>
           {/* {message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n\n$$$$\n$2\n$$$$\n\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$").replace(/(<p>)/g, "").replace(/(<\/p>)/g, "")} */}
           {/* <Markdownkatexnew>
@@ -212,15 +212,15 @@ export default class Admin extends Component {
           <iframe width='100%' height='350' src='https://www.dailymotion.com/embed/video/x8uv6iq'></iframe>` }} /> */}
 
           {/* <div dangerouslySetInnerHTML={{ __html: message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$") }} /> */}
-          
+
           {/* ..................................................{message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "<InlineMath>$2</InlineMath>").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "<InlineMath>$2</InlineMath>")}
-        */} 
+        */}
           <div className="text-secondary text-right" style={{ fontSize: 12 }}>
             {timeago(message.create)}
-          </div> 
+          </div>
 
 
-          
+
           {/* <MessageList
             className="message-list"
             lockable={true}
@@ -241,21 +241,21 @@ export default class Admin extends Component {
 
     const usser = this.state.users.map((user, i) => {
       return (
-        <div key={i} className="border border-info">
+        <div key={i} className="border border-info p-1">
           <img className="wrapperestchat p-0"
-                src={
-                  `${process.env.REACT_APP_URL}/profile/` + user.foto
-                }
-                onError={(e) => {
-                  e.target.src = authSvgwww;                   e.target.style = "padding: 3px; margin: 1px"; 
-                }}
-              />
-              <div className="text-secondary text-right" style={{ fontSize: 12 }}>
-                {user.email} {user.name}
-              </div> 
-              <div className="text-secondary text-right" style={{ fontSize: 12 }}>
+            src={
+              `${process.env.REACT_APP_URL}/profile/` + user.foto
+            }
+            onError={(e) => {
+              e.target.src = authSvgwww; e.target.style = "padding: 3px; margin: 1px";
+            }}
+          />
+          <div className="text-secondary text-right" style={{ fontSize: 12 }}>
+            {user.email} {user.name}
+          </div>
+          <div className="text-secondary text-right" style={{ fontSize: 12 }}>
             {timeago(new Date())}
-          {/* <ChatList
+            {/* <ChatList
             className="chat-list"
             dataSource={[
               {

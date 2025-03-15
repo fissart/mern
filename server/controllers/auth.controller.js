@@ -10,14 +10,14 @@ const jwt = require("jsonwebtoken");
 const { errorHandler } = require("../helpers/dbErrorHandling");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(
-  
+
 );
 ////////////////////////////////////////////////////////
 exports.neww = (req, res) => {
   const { name, email, password } = req.body;
   const sgMail = require("@sendgrid/mail");
   sgMail.setApiKey(
-    
+
   );
   console.log(name, email, password);
   const msg = {
@@ -174,27 +174,38 @@ exports.activationController = (req, res) => {
 };
 
 exports.signinController = async (req, res) => {
-  console.log("www")
+  console.log(req.params.email, req.params.password)
   const email = req.params.email
   const password = req.params.password
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const firstError = errors.array().map((error) => error.msg)[0];
-    return res.status(422).json({
-      errors: firstError,
+  const user = await User.findOne({ email });
+  if (!user) //return res.status(401).send('The email doen\' exists');
+    return res.json({
+      user: { "msg": "El usuario no esta registrado" }
     });
-  } else {
-    User.findOne({
-      email,
-    }).exec((err, user) => {
-      if (err || !user) { return res.status(400).json({ errors: "Usuario con el email no existe", }); }
-      if (user.password !== password) {
-        return res.status(400).json({ errors: "Password incorrecto", });
-      }
-      const token = jwt.sign({ _id: user._id, }, process.env.JWT_SECRET, { expiresIn: "10m", })
-      return res.json({ token, user })
-    })
-  }
+  if (user.password !== password)// return res.status(401).send('Wrong Password');
+    return res.json({
+      user: { "msg": "Password incorrecto" }
+    });
+  return res.json( user );
+
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   const firstError = errors.array().map((error) => error.msg)[0];
+  //   return res.status(422).json({
+  //     errors: firstError,
+  //   });
+  // } else {
+  //   User.findOne({
+  //     email,
+  //   }).exec((err, user) => {
+  //     if (err || !user) { return res.status(400).json({ errors: "Usuario con el email no existe", }); }
+  //     if (user.password !== password) {
+  //       return res.status(400).json({ errors: "Password incorrecto", });
+  //     }
+  //     const token = jwt.sign({ _id: user._id, }, process.env.JWT_SECRET, { expiresIn: "10m", })
+  //     return res.json({ token, user })
+  //   })
+  // }
 };
 
 exports.requireSignin = expressJwt({
