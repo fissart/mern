@@ -2,11 +2,13 @@ const express = require("express");
 const socketIo = require("socket.io");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const http = require("http");
+// const http = require("http");
+var fs = require( 'fs' );
+const https = require("https");
 const port = process.env.PORT || 9997;
 const fileUpload = require('express-fileupload');
-// const path = require('path');
 const connectDB = require("./configs/db");
+// const path = require('path');
 // const Note = require("./models/chat.model");
 // const morgan = require("morgan");
 // var xss = require("xss")
@@ -16,10 +18,28 @@ require("dotenv").config({
   path: "./configs/config.env",
 })
 const app = express();
-const server = http.createServer(app);
+// var https        = require('https');
+// const server = http.createServer(app);
+var server = https.createServer(
+  //  {
+  //   cert: fs.readFileSync('/etc/letsencrypt/live/www.esfapa.edu.pe/fullchain.pem'),
+  //   key: fs.readFileSync('/etc/letsencrypt/live/www.esfapa.edu.pe/privkey.pem')
+  //  },
+
+  //   ca: fs.readFileSync('./test_ca.crt'),
+  //   requestCert: false,
+  //   rejectUnauthorized: false
+app);
+
+// var io = require('socket.io').listen(server);
 const io = socketIo(server, {
   cors: { origin: "*" }
 });
+
+// server.listen(8080);
+
+
+
 
 // app.io=io
 // app.use((req, res, next) => {
