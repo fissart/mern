@@ -5,6 +5,7 @@ const noteSchema = new Schema(
     user: { type: Schema.Types.ObjectId, },
     mensaje: { type: String, required: true },
     nombre: { type: String, required: true },
+    file: { type: String, required: true },
   },
   {
     timestamps: true,

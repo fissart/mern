@@ -42,9 +42,9 @@ notesww.getU = async (req, res) => {
 };
 
 notesww.getCURSOUser = async (req, res) => {
-  req.io.on("wwwww", async (www) => {
-    console.log("www2768")
-  })
+  // req.io.on("wwwww", async (www) => {
+  //   console.log("www2768")
+  // })
   const { ObjectId } = require("mongodb");
   const id = ObjectId(req.params.iduser);
   const user = ObjectId(id);
@@ -61,7 +61,9 @@ notesww.getCURSOUser = async (req, res) => {
         from: "curses",
         let: { www: "$_id" },
         pipeline: [
+
           { $match: { $expr: { $and: [{ $eq: ["$user", "$$www"] }, { $eq: ["$show", curseshow] },] } } },
+
           {
             $lookup: {
               from: "integers",
@@ -77,30 +79,9 @@ notesww.getCURSOUser = async (req, res) => {
         as: "curses",
       },
     },
-    {
-      $lookup: {
-        from: "integers",
-        let: { www: "$_id" },
-        pipeline: [
-          { $match: { $expr: { $and: [{ $eq: ["$user", "$$www"] }, { $eq: ["$show", curseshow] },] } } },
-          {
-            $lookup: {
-              from: "curses",
-              let: { curse: "$curse" },
-              pipeline: [
-                { $match: { $expr: { $eq: ["$_id", "$$curse"] } } }
-              ],
-              as: "cursse",
-            },
-
-          },
-        ],
-        as: "cursesstd",
-      },
-    },
   ])
   console.log("Curses")
-  req.io.emit("www", { content: Curses })
+  // req.io.emit("www", { content: Curses })
   //const Curses = await Curse.find();
 
   return res.json(Curses)
@@ -112,7 +93,7 @@ notesww.getCURSOThemes = async (req, res) => {
   const { ObjectId } = require("mongodb");
   const curse = ObjectId(req.params.id);
   const user = ObjectId(req.params.idw);
-  //console.log(curse,user)
+  console.log(curse,user)
   const Curseuser = await Curse.aggregate([
     {
       $match: {

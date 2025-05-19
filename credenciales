@@ -145,6 +145,7 @@ Pass: @2Sl00sJ
 pass root: 
 ssh root@169.197.183.189
 trvIDrLHK3Hp
+gDKEd5FFa63EUce
 --------------------------
 scp -r html root@169.197.183.189:/var/www
 ext3grep /dev/sda3 --restore-all --after date -d '2024-23-01 00:00:00' '+%s' --before `date -d ‘2015-01-02 00:00:00’ ‘+%s’

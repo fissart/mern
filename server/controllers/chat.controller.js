@@ -1,9 +1,8 @@
 const notesww = {};
-
+const fs = require("fs");
 const Note = require("../models/chat.model");
-const Average = require("../models/c2.model");
-const Cursesource = require("../models/c3.model");
-
+const Average = require("../models/average.model");
+const Cursesource = require("../models/cursesource.model");
 
 notesww.getUwww = async (req, res) => {
   const { ciclo, mencion, year } = req.params;
@@ -115,13 +114,14 @@ notesww.getUu = async (req, res) => {
 
 notesww.createU = async (req, res) => {
   const { user, name, message } = req.body
-  console.log(req.body)
+  console.log(req.files)
   if (req.files) {
     const myFile = req.files.foto
-    myFile.mv(`files/link/${req.params.id + "_" + myFile.name}`)
+    myFile.mv(`files/link/${myFile.size + "_" + myFile.name}`)
   }
   const newNote = new Note({
     nombre: name,
+    file: req.files? req.files.foto.size + "_" + req.files.foto.name:"www",
     user: user,
     mensaje: message,
   })
@@ -143,6 +143,13 @@ notesww.getU = async (req, res) => {
 };
 
 notesww.deleteU = async (req, res) => {
+  const note = await Note.findById(req.params.id);
+  const file = note.file;
+  try {
+    fs.unlinkSync("files/link/" + file);
+  } catch (err) {
+    console.error(err);
+  }
   await Note.findByIdAndDelete(req.params.id);
   res.json("Note Deleted");
 };

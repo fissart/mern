@@ -2,39 +2,47 @@ const notesww = {};
 const fs = require("fs");
 const Link = require("../models/link.model");
 
-notesww.getLink = async (req, res) => {
+// notesww.getLink = async (req, res) => {
+//   const ww = await Link.find({
+//     curse: req.params.idcurso,
+//   }).sort({ _id: -1 })
+//   res.json(ww);
+// };
+
+notesww.getLinkEditor = async (req, res) => {
   const ww = await Link.find({
-    curse: req.params.idcurso,
+    type: req.params.type,
   }).sort({ _id: -1 })
   res.json(ww);
 };
 
-notesww.createLink = async (req, res) => {
-  console.log(req.files);
 
+notesww.createLink = async (req, res) => {
+  // console.log(req.body)
   if (req.files) {
-    const myFile = req.files.archivo;
-    myFile.mv(`files/link/${req.body.curse + "_" + myFile.name}`);
+    const myFile = req.files.archivo
+    myFile.mv(`files/link/${req.body.curse + "_" + myFile.name}`)
     const newNote = new Link({
       file: req.body.curse + "_" + myFile.name,
       curse: req.body.curse,
-      link: req.body.link,
-      name: req.body.name,
+      user: req.body.user,
+      title: req.body.name,
+      description: req.body.detail,
       type: req.body.type,
     });
     await newNote.save();
   } else {
     const newNote = new Link({
       curse: req.body.curse,
-      link: req.body.link,
-      name: req.body.name,
+      user: req.body.user,
+      title: req.body.name,
+      description: req.body.detail,
       type: req.body.type,
     });
-    await newNote.save();
+    await newNote.save()
   }
-
-  res.json("notes");
-};
+  res.json("Creado correctamente")
+}
 
 notesww.getupdateLink = async (req, res) => {
   const note = await Link.find({
@@ -44,10 +52,10 @@ notesww.getupdateLink = async (req, res) => {
 };
 
 notesww.updateLink = async (req, res) => {
-  console.log(req.files);
+  // console.log(req.files);
+  // console.log(req.body);
+  // const { link, name } = req.body;
   console.log(req.body);
-  const { link, name } = req.body;
-  console.log(req.params.id);
 
   if (req.files) {
     const note = await Link.findById(req.params.id);
@@ -62,22 +70,18 @@ notesww.updateLink = async (req, res) => {
 
     await Link.findByIdAndUpdate(req.params.id, {
       file: req.body.curse + "_" + myFile.name,
-      link: req.body.link,
-      name: req.body.name,
+      title: req.body.name,
+      description: req.body.detail,
     });
   } else {
-    const newNote = new Link({
-      link: req.body.link,
-      name: req.body.name,
-    });
     await Link.findByIdAndUpdate(req.params.id, {
-      link,
-      name,
+      title: req.body.name,
+      description: req.body.detail,
     });
   }
 
 
-  res.json("notes");
+  res.json("Actualizado");
 };
 
 notesww.deleteLink = async (req, res) => {
@@ -90,7 +94,7 @@ notesww.deleteLink = async (req, res) => {
     console.error(err);
   }
   await Link.findByIdAndDelete(req.params.id);
-  res.json("Note Deleted");
+  res.json("Limpiado");
 };
 
 module.exports = notesww;

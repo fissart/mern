@@ -2,15 +2,15 @@ const express = require("express");
 const socketIo = require("socket.io");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-// const http = require("http");
-var fs = require( 'fs' );
+const http = require("http");
+var fs = require('fs');
 const https = require("https");
 const port = process.env.PORT || 9997;
 const fileUpload = require('express-fileupload');
 const connectDB = require("./configs/db");
-// const path = require('path');
+const path = require('path');
 // const Note = require("./models/chat.model");
-// const morgan = require("morgan");
+const morgan = require("morgan");
 // var xss = require("xss")
 
 
@@ -18,18 +18,18 @@ require("dotenv").config({
   path: "./configs/config.env",
 })
 const app = express();
-// var https        = require('https');
 // const server = http.createServer(app);
-var server = https.createServer(
+
+// var server = https.createServer(
+var server = http.createServer(
   //  {
   //   cert: fs.readFileSync('/etc/letsencrypt/live/www.esfapa.edu.pe/fullchain.pem'),
-  //   key: fs.readFileSync('/etc/letsencrypt/live/www.esfapa.edu.pe/privkey.pem')
-  //  },
-
-  //   ca: fs.readFileSync('./test_ca.crt'),
+  //   key: fs.readFileSync('/etc/letsencrypt/live/www.esfapa.edu.pe/privkey.pem'),
   //   requestCert: false,
   //   rejectUnauthorized: false
-app);
+  //  },
+  //   ca: fs.readFileSync('./test_ca.crt'),
+  app);
 
 // var io = require('socket.io').listen(server);
 const io = socketIo(server, {
@@ -52,7 +52,7 @@ app.use(bodyParser.json());
 app.use(cors()); // it enables all cors requests
 app.use(fileUpload());
 // static files
-// app.use(express.static(path.join(__dirname, 'files')));
+app.use(express.static(path.join(__dirname, 'files')));
 
 
 // if (process.env.NODE_ENV === "development") {
@@ -61,28 +61,26 @@ app.use(fileUpload());
 //         origin: process.env.CLIENT_URL,
 //       })
 //     );
-//   app.use(morgan("dev"));
 // }
+app.use(morgan("dev"));
 
 
 //Load routes
 //Use Routes
-const authRouter = require("./routes/auth.route");
-const userRouter = require("./routes/user.route");
-app.use("/api", authRouter);
-app.use("/api", userRouter);
 
-app.use("/api/land", require("./routes/cursesourcew"));
-app.use("/api/categories", require("./routes/category.route"));
-app.use("/api/curses", require("./routes/curse.route"));
-app.use("/api/chapters", require("./routes/chapter.route"));
-app.use("/api/seccions", require("./routes/seccion.route"));
-app.use("/api/tasks", require("./routes/task.route"));
-app.use("/api/comments", require("./routes/comment.route"));
-app.use("/api/mycurses", require("./routes/mycurse.route"));
-app.use("/api/tests", require("./routes/test.route"));
-app.use("/api/links", require("./routes/link.route"));
-app.use("/api", require("./routes/chat.route"));
+app.use("/api/land", require("./routes/cursesourcew"))
+app.use("/api/categories", require("./routes/category.route"))
+app.use("/api/curses", require("./routes/curse.route"))
+app.use("/api/chapters", require("./routes/chapter.route"))
+app.use("/api/seccions", require("./routes/seccion.route"))
+app.use("/api/tasks", require("./routes/task.route"))
+app.use("/api/mycurses", require("./routes/mycurse.route"))
+app.use("/api/tests", require("./routes/test.route"))
+app.use("/api/links", require("./routes/link.route"))
+app.use("/api", require("./routes/chat.route"))
+app.use("/api/auth", require("./routes/auth.route"))
+app.use("/api", require("./routes/user.route"))
+// app.use("/api/comments", require("./routes/comment.route"))
 
 io.on("connection", (socket) => {
   console.log("User www", socket.id);
