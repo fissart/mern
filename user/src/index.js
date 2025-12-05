@@ -33,12 +33,11 @@ import Home from './components/Meet';
 ReactDOM.render(
 	<BrowserRouter>
 		<Switch>
-			<PrivateRoute path="/meet/:curse" exact component={Home} />
-			<PrivateRoute path="/video/:url" component={Video} />
+			<Route path="/meet/:curse" exact component={Home} />
+			<Route path="/video/:url" component={Video} />
 			<Route path="/" exact render={props => <App {...props} />} />
-			<PrivateRoute path="/carpeta" exact component={List} />
+			<PrivateRoute path="/carpeta" exact component={List}  />
 			<Route path="/time" exact render={props => <Timecircle {...props} />} />
-			<PrivateRoute path="/private" exact component={Private} />
 			{/* <PrivateRoute path="/estudiante" exact component={Student} /> */}
 			{/* <PrivateRoute path="/estudianteAll" exact component={StudentAll} /> */}
 			<PrivateRoute path="/curso/:id" exact component={Curses} />
@@ -51,11 +50,12 @@ ReactDOM.render(
    
 			<PrivateRoute path="/curso/:id/:categ" exact component={Chapters} />
 			<PrivateRoute path="/curso/:chap/:curs/:categ" exact component={Sections} />
-			<Route path="/login" exact render={props => <Login {...props} />} />
+			<Route path="/login" exact component={Login}/>
 			<Route path="/register" exact render={props => <Register {...props} />} />
 			<Route path="/users/password/forget" exact render={props => <GetPassword {...props} />} />
 			<Route path="/users/password/reset/:token" exact render={props => <ResetPassword {...props} />} />
 			<Route path="/users/activate/:token" exact render={props => <Activate {...props} />} />
+			{/* <PrivateRoute path="/private" exact component={Private} /> */}
 			<PrivateRoute path="/private" exact component={Private} />
 			<AdminRoute path="/admin" exact component={Admin} />
 			<Redirect to="/" />

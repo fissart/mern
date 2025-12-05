@@ -30,12 +30,12 @@ export default class Navigation extends Component {
         })
       })
       .catch((err) => {
-        // // toast.error(`Error To Your Information ${err.response.statusText}`);
-        // if (err.response.status === 401) {
-        //   signout(() => {
-            // window.location.href = "/";
-        //   });
-        // }
+        // toast.error(`Error To Your Information ${err.response.statusText}`);
+        if (err.response.status === 401) {
+          signout(() => {
+            window.location.href = "/login";
+          });
+        }
       })
     //console.log(res.data  );
 
@@ -139,8 +139,8 @@ export default class Navigation extends Component {
                     <Link
                       to="/Login"
                       onClick={() => {
-                        signout(() => {
-                          window.location.href = "/login";
+                       signout (() => {
+                          window.location.href = "/contacto";
                         });
                       }}
                       className="nav-link"

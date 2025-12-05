@@ -68,7 +68,7 @@ task.gett = async (req, res) => {
   // console.log(req.params.sec);
   // console.log(req.params.user);
   const notes = await TasK.find();
-  console.log(notes,"www")
+  // console.log(notes,"www")
   res.json(notes)
 };
 task.get = async (req, res) => {

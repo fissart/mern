@@ -11,7 +11,7 @@ const connectDB = require("./configs/db");
 const path = require('path');
 // const Note = require("./models/chat.model");
 const morgan = require("morgan");
-// var xss = require("xss")
+var xss = require("xss")
 
 
 require("dotenv").config({
@@ -69,7 +69,7 @@ app.use(morgan("dev"));
 //Use Routes
 
 app.use("/api/land", require("./routes/cursesourcew"))
-app.use("/api/categories", require("./routes/category.route"))
+app.use("/api/category", require("./routes/category.route"))
 app.use("/api/curses", require("./routes/curse.route"))
 app.use("/api/chapters", require("./routes/chapter.route"))
 app.use("/api/seccions", require("./routes/seccion.route"))
@@ -82,45 +82,46 @@ app.use("/api/auth", require("./routes/auth.route"))
 app.use("/api", require("./routes/user.route"))
 // app.use("/api/comments", require("./routes/comment.route"))
 
-io.on("connection", (socket) => {
-  console.log("User www", socket.id);
-  socket.on("send_message", (data, data2, callback) => {
-    console.log("Message Received ", data, data2);
-    io.emit("receive_message", data);
-    callback({
-      status: "ok"
-    })
-  })
+// io.on("connection", (socket) => {
+//   console.log("User www", socket.id);
+//   socket.on("send_message", (data, data2, callback) => {
+//     console.log("Message Received ", data, data2);
+//     io.emit("receive_message", data);
+//     callback({
+//       status: "ok"
+//     })
+//   })
 
-  socket.on("disconnect", () => {
-    console.log("left connection")
-    // var diffTime = Math.abs(timeOnline[socket.id] - new Date());
-    // var key;
-    // for (const [k, v] of JSON.parse(
-    //   JSON.stringify(Object.entries(connections))
-    // )) {
-    //   for (let a = 0; a < v.length; ++a) {
-    //     if (v[a] === socket.id) {
-    //       key = k;
+// socket.on("disconnect", () => {
+//   console.log("left connection")
+// var diffTime = Math.abs(timeOnline[socket.id] - new Date());
+// var key;
+// for (const [k, v] of JSON.parse(
+//   JSON.stringify(Object.entries(connections))
+// )) {
+//   for (let a = 0; a < v.length; ++a) {
+//     if (v[a] === socket.id) {
+//       key = k;
 
-    //       for (let a = 0; a < connections[key].length; ++a) {
-    //         io.to(connections[key][a]).emit("user-left", socket.id);
-    //       }
+//       for (let a = 0; a < connections[key].length; ++a) {
+//         io.to(connections[key][a]).emit("user-left", socket.id);
+//       }
 
-    //       var index = connections[key].indexOf(socket.id);
-    //       connections[key].splice(index, 1);
+//       var index = connections[key].indexOf(socket.id);
+//       connections[key].splice(index, 1);
 
-    //       console.log(key, socket.id, Math.ceil(diffTime / 1000));
+//       console.log(key, socket.id, Math.ceil(diffTime / 1000));
 
-    //       if (connections[key].length === 0) {
-    //         delete connections[key];
-    //       }
-    //     }
-    //   }
-    // }
-  })
+//       if (connections[key].length === 0) {
+//         delete connections[key];
+//       }
+//     }
+//   }
+// }
+// })
 
-})
+// })
+
 
 
 // let interval;
@@ -370,114 +371,100 @@ io.on("connection", (socket) => {
 // }
 
 
-// sanitizeString = (str) => {
-//   return xss(str);
-// };
-
-// connections = {};
-// messages = {};
-// timeOnline = {};
-
-// io.on("connection", (socket) => {
-//   socket.on("join-call", (path) => {
-//     if (connections[path] === undefined) {
-//       connections[path] = [];
-//     }
-//     connections[path].push(socket.id);
-
-//     timeOnline[socket.id] = new Date();
-
-//     for (let a = 0; a < connections[path].length; ++a) {
-//       io.to(connections[path][a]).emit(
-//         "user-joined",
-//         socket.id,
-//         connections[path]
-//       );
-//     }
-
-//     if (messages[path] !== undefined) {
-//       for (let a = 0; a < messages[path].length; ++a) {
-//         io.to(socket.id).emit(
-//           "chat-message",
-//           messages[path][a]["data"],
-//           messages[path][a]["sender"],
-//           messages[path][a]["socket-id-sender"]
-//         );
-//       }
-//     }
-
-//     console.log(path, connections[path]);
-//   });
-
-//   socket.on("signal", (toId, message) => {
-//     io.to(toId).emit("signal", socket.id, message);
-//   });
-
-//   socket.on("chat-message", (data, sender) => {
-//     data = sanitizeString(data);
-//     sender = sanitizeString(sender);
-
-//     var key;
-//     var ok = false;
-//     for (const [k, v] of Object.entries(connections)) {
-//       for (let a = 0; a < v.length; ++a) {
-//         if (v[a] === socket.id) {
-//           key = k;
-//           ok = true;
-//         }
-//       }
-//     }
-
-//     if (ok === true) {
-//       if (messages[key] === undefined) {
-//         messages[key] = [];
-//       }
-//       messages[key].push({
-//         sender: sender,
-//         data: data,
-//         "socket-id-sender": socket.id,
-//       });
-//       console.log("message", key, ":", sender, data);
-
-//       for (let a = 0; a < connections[key].length; ++a) {
-//         io.to(connections[key][a]).emit(
-//           "chat-message",
-//           data,
-//           sender,
-//           socket.id
-//         );
-//       }
-//     }
-//   });
+sanitizeString = (str) => {
+  return xss(str);
+};
 
 
-//   socket.on("disconnect", () => {
-//     var diffTime = Math.abs(timeOnline[socket.id] - new Date());
-//     var key;
-//     for (const [k, v] of JSON.parse(
-//       JSON.stringify(Object.entries(connections))
-//     )) {
-//       for (let a = 0; a < v.length; ++a) {
-//         if (v[a] === socket.id) {
-//           key = k;
+connections = {};
+messages = {};
+timeOnline = {};
+io.on("connection", (socket) => {
+  // console.log(timeOnline)
 
-//           for (let a = 0; a < connections[key].length; ++a) {
-//             io.to(connections[key][a]).emit("user-left", socket.id);
-//           }
+  socket.on("join-call", (path) => {
+    if (connections[path] === undefined) {
+      connections[path] = [];
+    }
+    connections[path].push(socket.id);
 
-//           var index = connections[key].indexOf(socket.id);
-//           connections[key].splice(index, 1);
+    timeOnline[socket.id] = new Date();
 
-//           console.log(key, socket.id, Math.ceil(diffTime / 1000));
+    for (let a = 0; a < connections[path].length; ++a) {
+      io.to(connections[path][a]).emit("user-joined", socket.id, connections[path])
+    }
 
-//           if (connections[key].length === 0) {
-//             delete connections[key];
-//           }
-//         }
-//       }
-//     }
-//   });
-// });
+    if (messages[path] !== undefined) {
+      for (let a = 0; a < messages[path].length; ++a) {
+        io.to(socket.id).emit("chat-message", messages[path][a]["data"], messages[path][a]["sender"], messages[path][a]["socket-id-sender"])
+      }
+    }
+
+    console.log(path, connections[path]);
+  });
+
+  socket.on("signal", (toId, message) => {
+    io.to(toId).emit("signal", socket.id, message);
+  });
+
+  socket.on("chat-message", (data, sender) => {
+    data = sanitizeString(data);
+    sender = sanitizeString(sender);
+
+    var key;
+    var ok = false;
+    for (const [k, v] of Object.entries(connections)) {
+      for (let a = 0; a < v.length; ++a) {
+        if (v[a] === socket.id) {
+          key = k;
+          ok = true;
+        }
+      }
+    }
+
+    if (ok === true) {
+      if (messages[key] === undefined) {
+        messages[key] = [];
+      }
+      messages[key].push({
+        sender: sender,
+        data: data,
+        "socket-id-sender": socket.id,
+      });
+      console.log("message", key, ":", sender, data);
+
+      for (let a = 0; a < connections[key].length; ++a) {
+        io.to(connections[key][a]).emit("chat-message", data, sender, socket.id)
+      }
+    }
+  });
+
+
+  socket.on("disconnect", () => {
+    var diffTime = Math.abs(timeOnline[socket.id] - new Date());
+    var key;
+    for (const [k, v] of JSON.parse(JSON.stringify(Object.entries(connections)))) {
+      for (let a = 0; a < v.length; ++a) {
+        if (v[a] === socket.id) {
+          key = k;
+
+          for (let a = 0; a < connections[key].length; ++a) {
+            io.to(connections[key][a]).emit("user-left", socket.id);
+          }
+
+          var index = connections[key].indexOf(socket.id);
+          connections[key].splice(index, 1);
+
+          console.log(key, socket.id, Math.ceil(diffTime / 1000));
+
+          if (connections[key].length === 0) {
+            delete connections[key];
+          }
+        }
+      }
+    }
+  });
+});
 
 
 /////////////////////////////////////////////////////////////////////////////////////////

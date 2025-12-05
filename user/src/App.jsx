@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { getCokie, signout, isAuth } from "./helpers/auth";
 import { ToastContainer, toast } from "react-toastify";
 // import authSvg from "./assests/image.png";
 // import gltf from "./assests/scene.gltf";
 //import gltf_w from "./assests/w_w.gltf";
-//import ww_w from "./assests/w_w.glb";
+import ww_w from "./assests/w_w.glb";
 //import authSvgwww from "./assests/foto.png";
 import Navigation from "./screens/Navigation";
 import Wwwwww from "./screens/downlist";
-import Www from "./screens/ww1";
+// import Www from "./screens/ww1";
 // import * as THREE from "three";
 // import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -271,17 +271,17 @@ export default class App extends Component {
             </div>
           ))}
 
-          <div class="container p-0 mb-5 d-flex  justify-content-center align-items-center">
-            <div class="justify-content-center align-items-center rounded row w-100"
+          <div className="container p-0 mb-5 d-flex  justify-content-center align-items-center">
+            <div className="justify-content-center align-items-center rounded row w-100"
             >
-              <div class="jumbotron col-md-12 p-1 text-center">
+              <div className="jumbotron col-md-12 p-1 text-center">
               </div>
-              <div class="jumbotron col-md-12 p-1">
-                <h1 class="display-3 p-1 text-center">Escuela Superior de Formación Artística
+              <div className="jumbotron col-md-12 p-1">
+                <h1 className="display-3 p-1 text-center">Escuela Superior de Formación Artística
                   Felipe Guamán Poma de Ayala -
                   ESFAPA
                   Ayacucho</h1>
-                <p class="lead text-center">
+                <p className="lead text-center">
                   Escuela Superior de Formación Artística pública de formación profesional en artes visuales desarrollado
                   en un plan de estudios de 5 años ubicado en la ciudad de Ayacucho.
                 </p>
@@ -300,7 +300,7 @@ export default class App extends Component {
                   teóricos.
                 </p>
 
-                <a class="btn text-light" href="/Cmpt14MVComponent"
+                <a className="btn text-light" href="/Cmpt14MVComponent"
                   role="button">Saber
                   más</a>
 
@@ -316,7 +316,7 @@ export default class App extends Component {
           </div>
 
           <iframe className="video" frameBorder="0" type="text/html" src="https://www.dailymotion.com/embed/video/x8uv6iq"></iframe>
-          <figure class="media">
+          <figure className="media">
             www
             <iframe className="video" frameBorder="0" type="text/html" src="https://www.dailymotion.com/embed/video/x8r5idr"></iframe>
             www     <iframe className="video" frameBorder="0" type="text/html" src="https://www.youtube.com/embed/y881t8ilMyc"></iframe>
@@ -418,28 +418,28 @@ export default class App extends Component {
           </div> */}
 
           {/* <div className="w-100 text-center d-none" ref={(ref) => (this.mount = ref)} />
-          <div class="container p-0">
-            <div class="card-body ">
-              <div class="row align-items-center">
-                <div class="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
+          <div className="container p-0">
+            <div className="card-body ">
+              <div className="row align-items-center">
+                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
                   <iframe title="Fractal Alien Landmark" frameborder="0" width="100%" height="480" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/a2be9c119f7848df9864c0df1272af06/embed"> </iframe>
                 </div>
-                <div class="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
+                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
                   <iframe title="Cthulhu (Animated)" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="100%" height="480" src="https://sketchfab.com/models/e4593e6681e84889a4d1df34ae30b5c6/embed"> </iframe>
                 </div>
-                <div class="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
+                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
                   <iframe title="Fractal Alien Landmark" frameborder="0" width="100%" height="480" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/a2be9c119f7848df9864c0df1272af06/embed"> </iframe>
                 </div>
-                <div class="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
+                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
                   <iframe title="Study" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="100%" height="480" src="https://sketchfab.com/models/9b3f278bacc54f219addd98215008ceb/embed"> </iframe>
                 </div>
-                <div class="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
+                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
                   <iframe title="Sculpture Allure" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" width="100%" height="480" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/eb51e179d6634973875205a8485940d4/embed"> </iframe>
                 </div>
-                <div class="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
+                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
                   <iframe title="Rossebändiger" frameborder="0" allowfullscreen mozallowfullscreen="true" width="100%" height="480" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/fd8153d1cd8d4fefaf4825d8a0c6abe3/embed"> </iframe>
                 </div>
-                <div class="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
+                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
                   <iframe title="My Sketchfab Mesh" frameborder="0" width="100%" height="480" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/f39c1bc8170c44348f3bea92868a8dae/embed"> </iframe>
                 </div>
 

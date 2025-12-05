@@ -1,3 +1,13 @@
+https://commons.wikimedia.org/wiki/File:AirborneExercise2017_16.jpg
+https://www.radios-argentinas.org/us/frisky-radio
+You can hide all images in Firefox by typing 
+about:config
+
+in the address bar, searching for 
+permissions.default.image, 
+
+and changing its value to 2. To hide images on a specific site, go to the site, click the Page Info icon (a little "i" in a circle) at the start of the address bar, click "More information," go to the "Permissions" tab, and uncheck "Use Default" next to "Load images" and check "Block".
+
 www_g hp_lapYGbkB1sFdLzbY8UZGeBh6SvUJAt1bjBki
 
 git config --global user.name "fissart"
@@ -5,7 +15,8 @@ git config --global user.email ricardomallqui6@gmail.com
 git config --global user.password "@Qqwerty123456"
 git config --global credential.helper "cache --timeout=360000000"
 git config --list
-
+066-633542
+PEdom190v52@
 12.14 
 12
 git config --global http.postBuffer 500M
@@ -62,7 +73,7 @@ Hit ESC when done.
 
 sudo add-apt-repository ppa:sunderme/texstudio
 
-
+find . -name "*.jpg" -exec echo  '<img src="{}">' \; > index.html
 
 
 sudo apt install texstudio
@@ -139,13 +150,16 @@ Acceso control panel
 https://portal.datapacket.net/login
 https://proxweb.datapacket.net
 email:ayacucho.bellasartes@gmail.com
-pass:esfapa.edu.pe22
+pass:	esfapa.edu.pe22
 User: bellasartes@esfapa.edu.pe
 Pass: @2Sl00sJ
 pass root: 
 ssh root@169.197.183.189
 trvIDrLHK3Hp
 gDKEd5FFa63EUce
+T)o2*bghLg!m
+
+169.197.183.76
 --------------------------
 scp -r html root@169.197.183.189:/var/www
 ext3grep /dev/sda3 --restore-all --after date -d '2024-23-01 00:00:00' '+%s' --before `date -d ‘2015-01-02 00:00:00’ ‘+%s’

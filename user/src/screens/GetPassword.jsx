@@ -19,16 +19,10 @@ const ForgetPassword = ({ history }) => {
     e.preventDefault();
     if (email) {
       setFormData({ ...formData, textChange: "Enviando" });
-      axios
-        .put(`${process.env.REACT_APP_API_URL}/forgotpassword`, {
-          email,
-        })
+      axios .put(`${process.env.REACT_APP_API_URL}/auth/forgotpassword`, { email, })
         .then((res) => {
-          setFormData({
-            ...formData,
-            email: "",
-          });
-          toast.success(`Por favor verifique su email`);
+          setFormData({ ...formData, email: "", });
+          console.log(res);
         })
         .catch((err) => {
           console.log(err.response);

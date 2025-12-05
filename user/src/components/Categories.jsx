@@ -62,7 +62,7 @@ export default class CreateNote extends Component {
 		console.log(res.data[0], "w wwwwww")
 		this.setState({
 			zz: res.data[0].curses,
-			zzstd: res.data[0].cursesstd,
+			zzstd: res.data[0].cursesstd?res.data[0].cursesstd:[],
 		});
 	};
 
@@ -232,6 +232,7 @@ export default class CreateNote extends Component {
 							</div>
 						))}
 					</div>
+						{localStorage.getItem("token")}wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 				</div>
 			</>
 		);

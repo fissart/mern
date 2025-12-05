@@ -77,11 +77,12 @@ const Login = ({ history }) => {
     e.preventDefault();
     if (email && password1) {
       setFormData({ ...formData, textChange: "Submitting" });
-      axios.get(`${process.env.REACT_APP_API_URL}/login/${email}/${password1}`, {
+      axios.get(`${process.env.REACT_APP_API_URL}/auth/login/${email}/${password1}`, {
           email,
           password: password1,
         })
         .then((res) => {
+          console.log(res)
           authenticate(res, () => {
             console.log(res.data);
             isAuth() && isAuth().rol === "1"
@@ -105,7 +106,7 @@ const Login = ({ history }) => {
       <Navigation />
       <div className="row">
         <div className="container col-lg-6 col-md-8 p-2 text-center rounded-left">
-          {isAuth() ? <Redirect to="/" /> : null}
+          {/* {isAuth() ? <Redirect to="/" /> : null} */}
           <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} newestOnTop={false} closeOnClick={true} rtl={false} pauseOnFocusLoss={false} draggable pauseOnHover={false} closeButton={false} />
 
           <h5 className="">Iniciar sesión en Fisart</h5>
@@ -146,7 +147,7 @@ const Login = ({ history }) => {
             Registrarse
           </Link>
 
-          <div className="text-center">O inicie sesión con e-mail</div>
+          {/* <div className="text-center">O inicie sesión con e-mail</div> */}
 
           <form onSubmit={handleSubmit} className="col-lg-12">
             <input
@@ -169,12 +170,12 @@ const Login = ({ history }) => {
               </button>
             </div>
 
-            {/* <Link
+            <Link
               to="/users/password/forget"
               className="btn btn-warning btn-sm"
             >
               Olvidaste tu contaseña?
-            </Link> */}
+            </Link>
           </form>
         </div>
         {/*      <div className="container col-md-8 bg-light p-5 rounded-right">

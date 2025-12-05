@@ -3,15 +3,16 @@ const expressJwt = require("express-jwt");
 const _ = require("lodash");
 const { OAuth2Client } = require("google-auth-library");
 const fetch = require("node-fetch");
-
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-//const expressJWT = require('express-jwt');
 const { errorHandler } = require("../helpers/dbErrorHandling");
 const sgMail = require("@sendgrid/mail");
+//const expressJWT = require('express-jwt');
+
 sgMail.setApiKey(
 
 );
+
 ////////////////////////////////////////////////////////
 exports.neww = (req, res) => {
   const { name, email, password } = req.body;
@@ -84,31 +85,31 @@ exports.registerController = (req, res) => {
       }
     });
 
-    // const token = jwt.sign(
-    //   {
-    //     name,
-    //     email,
-    //     password,
-    //   },
-    //   process.env.JWT_ACCOUNT_ACTIVATION,
-    //   {
-    //     expiresIn: "5m",
-    //   }
-    // );
+    const token = jwt.sign(
+      {
+        name,
+        email,
+        password,
+      },
+      process.env.JWT_ACCOUNT_ACTIVATION,
+      {
+        expiresIn: "5m",
+      }
+    );
 
-    // const emailData = {
-    //   from: process.env.EMAIL_FROM,
-    //   to: email,
-    //   subject: "Account activation link",
-    //   html: `
-    //             <h1>Por favor use en siguiente link para activar su cuenta</h1>
-    //             <p>${process.env.CLIENT_URL}/users/activate/${token}</p>
-    //             <hr />
-    //             <p>This email may containe sensetive information</p>
-    //             <p>${process.env.CLIENT_URL}</p>
-    //         `,
-    // };
-    ////////////////////
+    const emailData = {
+      from: process.env.EMAIL_FROM,
+      to: email,
+      subject: "Account activation link",
+      html: `
+                <h1>Por favor use en siguiente link para activar su cuenta</h1>
+                <p>${process.env.CLIENT_URL}/users/activate/${token}</p>
+                <hr />
+                <p>This email may containe sensetive information</p>
+                <p>${process.env.CLIENT_URL}</p>
+            `,
+    };
+    //////////////////
 
     ////////////////////
 
@@ -178,34 +179,30 @@ exports.signinController = async (req, res) => {
   const email = req.params.email
   const password = req.params.password
   const user = await User.findOne({ email });
-  if (!user) //return res.status(401).send('The email doen\' exists');
-    return res.json({
-      user: { "msg": "El usuario no esta registrado" }
-    });
-  if (user.password !== password)// return res.status(401).send('Wrong Password');
-    return res.json({
-      user: { "msg": "Password incorrecto" }
-    });
-  return res.json( user );
-
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   const firstError = errors.array().map((error) => error.msg)[0];
-  //   return res.status(422).json({
-  //     errors: firstError,
+  // if (!user) //return res.status(401).send('The email doen\' exists');
+  //   return res.json({
+  //     user: { "msg": "El usuario no esta registrado" }
   //   });
-  // } else {
-  //   User.findOne({
-  //     email,
-  //   }).exec((err, user) => {
-  //     if (err || !user) { return res.status(400).json({ errors: "Usuario con el email no existe", }); }
-  //     if (user.password !== password) {
-  //       return res.status(400).json({ errors: "Password incorrecto", });
-  //     }
-  //     const token = jwt.sign({ _id: user._id, }, process.env.JWT_SECRET, { expiresIn: "10m", })
-  //     return res.json({ token, user })
-  //   })
-  // }
+  // if (user.password !== password)// return res.status(401).send('Wrong Password');
+  //   return res.json({
+  //     user: { "msg": "Password incorrecto" }
+  //   });
+  // return res.json( user );
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const firstError = errors.array().map((error) => error.msg)[0];
+    return res.status(422).json({ errors: firstError, })
+  } else {
+    User.findOne({
+      email,
+    }).exec((err, user) => {
+      if (err || !user) { return res.status(400).json({ errors: "Usuario con el email no existe", }); }
+      if (user.password !== password) { return res.status(400).json({ errors: "Password incorrecto", }); }
+      const token = jwt.sign({ _id: user._id, }, process.env.JWT_SECRET, { expiresIn: "55m", })
+      return res.json({ token, user })
+    })
+  }
 };
 
 exports.requireSignin = expressJwt({
@@ -238,76 +235,52 @@ exports.forgotPasswordController = (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
+    console.log(email)
     const firstError = errors.array().map((error) => error.msg)[0];
     return res.status(422).json({
       errors: firstError,
     });
   } else {
-    User.findOne(
-      {
-        email,
-      },
-      (err, user) => {
-        if (err || !user) {
-          return res.status(400).json({
-            error: "Usuario con el email no existe",
-          });
-        }
+    User.findOne({ email, }, (err, user) => {
+      if (err || !user) { return res.status(400).json({ error: "Usuario con el email no existe", }); }
 
-        const token = jwt.sign(
-          {
-            _id: user._id,
-          },
-          process.env.JWT_RESET_PASSWORD,
-          {
-            expiresIn: "1",
-          }
-        );
-
-        const emailData = {
-          from: process.env.EMAIL_FROM,
-          to: email,
-          subject: `Link reseteo de password`,
-          html: `
+      const token = jwt.sign({ _id: user._id, }, process.env.JWT_RESET_PASSWORD, { expiresIn: "1m", });
+      const emailData = {
+        from: process.env.EMAIL_FROM,
+        to: "ricardomallqui6@gmail.com",//email
+        subject: `Link reseteo de password`,
+        html: `
                     <h1>Siga el siguente el link para resetear su password</h1>
                     <p>${process.env.CLIENT_URL}/users/password/reset/${token}</p>
                     <hr />
                     <p>Este email contiene información sencitiva</p>
                     <p>${process.env.CLIENT_URL}</p>
-                `,
-        };
+              `,
+      };
 
-        return user.updateOne(
-          {
-            resetPasswordLink: token,
-          },
-          (err, success) => {
-            if (err) {
-              console.log("RESET PASSWORD LINK ERROR", err);
-              return res.status(400).json({
-                error:
-                  "Database connection error on user password forgot request",
+      return user.updateOne({ resetPasswordLink: token, },
+        (err, success) => {
+          if (err) {
+            console.log("RESET PASSWORD LINK ERROR", err);
+            return res.status(400).json({
+              error: "Database connection error on user password forgot request",
+            });
+          } else {
+            sgMail.send(emailData).then((sent) => { // console.log('SIGNUP EMAIL SENT', sent)
+              return res.json({
+                message: `Email has been sent to ${email}. Follow the instruction to activate your account`,
               });
-            } else {
-              sgMail
-                .send(emailData)
-                .then((sent) => {
-                  // console.log('SIGNUP EMAIL SENT', sent)
-                  return res.json({
-                    message: `Email has been sent to ${email}. Follow the instruction to activate your account`,
-                  });
-                })
-                .catch((err) => {
-                  // console.log('SIGNUP EMAIL SENT ERROR', err)
-                  return res.json({
-                    message: err.message,
-                  });
-                });
-            }
+            }).catch((err) => {
+              // console.log('SIGNUP EMAIL SENT ERROR', err)
+              return res.json({
+                message: err.message,
+              });
+            });
           }
-        );
-      }
-    );
+        }
+      );
+
+    });
   }
 };
 
@@ -323,47 +296,41 @@ exports.resetPasswordController = (req, res) => {
     });
   } else {
     if (resetPasswordLink) {
-      jwt.verify(
-        resetPasswordLink,
-        process.env.JWT_RESET_PASSWORD,
-        function (err, decoded) {
-          if (err) {
-            return res.status(400).json({
-              error: "Link expirado. Intente otra vez",
-            });
-          }
+      jwt.verify(resetPasswordLink, process.env.JWT_RESET_PASSWORD, function (err, decoded) {
+        if (err) {
+          return res.status(400).json({
+            error: "Link expirado. Intente otra vez",
+          });
+        }
 
-          User.findOne(
-            {
-              resetPasswordLink,
-            },
-            (err, user) => {
-              if (err || !user) {
-                return res.status(400).json({
-                  error: "Error. Intente mas tarde",
-                });
-              }
-
-              const updatedFields = {
-                password: newPassword,
-                resetPasswordLink: "",
-              };
-
-              user = _.extend(user, updatedFields);
-
-              user.save((err, result) => {
-                if (err) {
-                  return res.status(400).json({
-                    error: "Error en el reseteo del password",
-                  });
-                }
-                res.json({
-                  message: `Grandioso! Ahora tu puedes ingresar con tu nuevo password`,
-                });
+        User.findOne(
+          { resetPasswordLink, }, (err, user) => {
+            if (err || !user) {
+              return res.status(400).json({
+                error: "Error. Intente mas tarde",
               });
             }
-          );
-        }
+
+            const updatedFields = {
+              password: newPassword,
+              resetPasswordLink: "",
+            };
+
+            user = _.extend(user, updatedFields);
+
+            user.save((err, result) => {
+              if (err) {
+                return res.status(400).json({
+                  error: "Error en el reseteo del password",
+                });
+              }
+              res.json({
+                message: `Grandioso! Ahora tu puedes ingresar con tu nuevo password`,
+              });
+            });
+          }
+        );
+      }
       );
     }
   }

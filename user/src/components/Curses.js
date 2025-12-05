@@ -20,7 +20,8 @@ import '@ckeditor/ckeditor5-build-classic/build/translations/es';
 
 
 
-export default class CreateNote extends Component {
+export default class 
+CreateNote extends Component {
   state = {
     category: this.props.match.params.id,
     nombre: "",

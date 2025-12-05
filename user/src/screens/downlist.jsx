@@ -65,7 +65,7 @@ export default class Wwwwww extends Component {
           <div className="row d-flex justify-content-center align-items-center">
             <div className="text-center p-1  col-md-6 col-lg-4 col-xl-4">
               <h3>Fisart.cf</h3>
-              < Www />
+              < Www />www
               {/*<div className="container col-md-5 px-1">
                   <img className="img-fluid" src={authSvg} alt="img" />
                 </div>*/}

@@ -1,6 +1,7 @@
 const User = require("../models/auth.model");
 const Mycurse = require("../models/mycurse.model");
 const expressJwt = require("express-jwt");
+const jwt = require("jsonwebtoken");
 
 const fs = require("fs");
 
@@ -108,14 +109,26 @@ exports.DelUser = async (req, res) => {
 
 exports.readController = (req, res) => {
   const userId = req.params.id;
-  User.findById(userId).exec((err, user) => {
-    if (err || !user) {
-      return res.status(400).json({
-        error: "User not found",
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
+  // const decode = jwt.verify(token, process.env.JWT_SECRET);
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({
+        error: "Link expirado. Intente otra vez",
       });
     }
-    user.hashed_password = undefined;
-    res.json(user);
+    
+    console.log(jwt.verify(token, process.env.JWT_SECRET))
+    User.findById(userId).exec((err, user) => {
+      if (err || !user) {
+        return res.status(400).json({
+          error: "User not found",
+        });
+      }
+      user.hashed_password = undefined;
+      res.json(user);
+    })
   })
 }
 

@@ -32,7 +32,7 @@ router.post("/activation", activationController);
 router.put(
   "/forgotpassword",
   forgotPasswordValidator,
-  forgotPasswordController
+  neww
 );
 router.put("/resetpassword", resetPasswordValidator, resetPasswordController);
 // Google and Facebook Login

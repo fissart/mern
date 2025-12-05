@@ -2,43 +2,43 @@ import React, { useState, useEffect } from 'react';
 //import authSvg from '../assests/reset.svg';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
-const ResetPassword = ({match}) => {
+const ResetPassword = ({ match }) => {
   const [formData, setFormData] = useState({
-      password1: '',
-      password2: '',
-      token: '',
+    password1: '',
+    password2: '',
+    token: '',
     textChange: 'Submit'
   });
-    const { password1, password2, token } = formData;
+  const { password1, password2, token } = formData;
 
-    useEffect(() => {
-      let token = match.params.token;
-      if (token) {
-        setFormData({ ...formData, token });
-      }
-      // eslint-disable-next-line
-    }, [])
+  useEffect(() => {
+    let token = match.params.token;
+    if (token) {
+      setFormData({ ...formData, token });
+    }
+    // eslint-disable-next-line
+  }, [])
   const handleChange = text => e => {
     setFormData({ ...formData, [text]: e.target.value });
   };
-    const handleSubmit = e => {
-      console.log(password1, password2)
+  const handleSubmit = e => {
+    console.log(password1, password2)
     e.preventDefault();
     if ((password1 === password2) && password1 && password2) {
       setFormData({ ...formData, textChange: 'Submitting' });
       axios
         .put(`${process.env.REACT_APP_API_URL}/resetpassword`, {
-            newPassword: password1,
-            resetPasswordLink: token
+          newPassword: password1,
+          resetPasswordLink: token
         })
         .then(res => {
           console.log(res.data.message)
-            setFormData({
-              ...formData,
-               password1: '',
-              password2: ''
-            });
-            toast.success(res.data.message);
+          setFormData({
+            ...formData,
+            password1: '',
+            password2: ''
+          });
+          toast.success(res.data.message);
 
         })
         .catch(err => {
@@ -69,8 +69,8 @@ const ResetPassword = ({match}) => {
                   placeholder='password'
                   onChange={handleChange('password1')}
                   value={password1}
-                  />
-                  <input
+                />
+                <input
                   className='w-full mt-5 px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white'
                   type='password'
                   placeholder='Confirm password'
@@ -89,7 +89,7 @@ const ResetPassword = ({match}) => {
           </div>
         </div>
         <div className='flex-1 bg-indigo-100 text-center hidden lg:flex'>
-  {/*        <div
+          {/*        <div
             className='m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat'
             style={{ backgroundImage: `url(${authSvg})` }}
           ></div>*/}

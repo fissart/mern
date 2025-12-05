@@ -14,7 +14,7 @@ export const setCokie = (key, value) => {
 export const removeCokie = (key) => {
   if (window !== "undefined") {
     cookie.remove(key, {
-       expires: 1,
+      expires: 1,
     });
   }
 };
@@ -45,6 +45,7 @@ export const removeLocalStorage = (key) => {
 export const authenticate = (response, next) => {
   // console.log("AUTHENTICATE HELPER ON SIGNIN RESPONSE ww", response);
   setCokie("token", response.data.token);
+  setLocalStorage("token", response.data.token);
   setLocalStorage("user", response.data.user);
   // const myObject = {
   //   name : "john doe",
@@ -59,15 +60,16 @@ export const authenticate = (response, next) => {
 // Access user info from localstorage
 export const isAuth = () => {
   if (window !== "undefined") {
-    // console.log(getCokie("token"),"wwwisauth")
     const cookieChecked = getCokie("token");
     if (cookieChecked) {
+      console.log(localStorage.getItem("user"))
       if (localStorage.getItem("user")) {
         return JSON.parse(localStorage.getItem("user"));
       } else {
         return false;
       }
     } else {
+      // signout()
       console.log("www")
     }
   }
