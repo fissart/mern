@@ -1,6 +1,7 @@
 const task = {};
 const TasK = require("../models/cursesourcew");
 const cloudinary = require("cloudinary");
+const jwt = require("jsonwebtoken");
 cloudinary.config({
   cloud_name: "ciencias",
   api_key: "665428354914471",
@@ -65,11 +66,20 @@ task.create = async (req, res) => {
 };
 
 task.gett = async (req, res) => {
-  // console.log(req.params.sec);
-  // console.log(req.params.user);
-  const notes = await TasK.find();
-  // console.log(notes,"www")
-  res.json(notes)
+  jwt.verify(req.headers['authorization'].split(' ')[1], process.env.JWT_SECRET, async (err, decoded) => {
+    // console.log(req.headers['authorization'].split(' ')[1], err)
+    if (err) {
+      return res.status(401).json({
+        error: "Link expirado. Intente otra vez",
+      });
+    }
+
+
+    // console.log(req.params.user);
+    const notes = await TasK.find();
+    // console.log(notes,"www")
+    res.json(notes)
+  })
 };
 task.get = async (req, res) => {
   const notes = await TasK.find({

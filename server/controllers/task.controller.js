@@ -1,5 +1,7 @@
 const task = {};
 const TasK = require("../models/task.model");
+const Certificate = require("../models/diploma");
+const Encuesta = require("../models/Encuesta");
 const cloudinary = require("cloudinary");
 cloudinary.config({
   cloud_name: "ciencias",
@@ -8,6 +10,74 @@ cloudinary.config({
 });
 
 const fs = require("fs");
+// const { Certificate } = require("crypto");
+
+
+task.createencuestaController = async (req, res) => {
+  const year = new Date().getFullYear()
+  var mongoose = require('mongoose')
+  // const { idstudent, idteacher, idcurso, codigo, ciclo, mencion, w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15, w16, w17, w18, w19, w20 } = req.body
+  console.log(req.body)
+  //const newCurse = { idstudent, idteacher, idcurso, year, codigo, ciclo, mencion, items: [w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15, w16, w17, w18, w19, w20] };
+  // const Cursew = new Encuesta.default(newCurse);
+  // await Cursew.save()
+  return res.json({
+    msgok: "ok",
+  });
+}
+
+task.getencuestaController = async (req, res) => {
+  // async function getencuestaController(req, res) {
+  // const ciclo = req.params.ciclo
+  // const mencion = req.params.mencion
+  const { ObjectId } = require("mongodb");
+  const id = req.params.idtest
+  const idt = ObjectId(id)
+  console.log(id, "ciclo")
+  const integers = await Encuesta.default.aggregate([
+    {
+      $match: {
+        _id: idt,
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        let: { www: "$idstudent" },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$_id", "$$www"] } } },
+        ],
+        as: "userw",
+      },
+    },
+    { '$sort': { 'userw.name': 1 } },
+    {
+      $lookup: {
+        from: "users",
+        let: { www: "$idteacher" },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$_id", "$$www"] } } },
+        ],
+        as: "userwwteach",
+      },
+    },
+  ]);
+  console.log(integers);
+  return res.json(integers);
+}
+
+
+task.UpdateTest = async (req, res) => {
+  // const { ObjectId } = require("mongodb");
+  // const id = req.params.idtest
+  // const idt = ObjectId(id)
+  console.log(req.params.idtest, "ciclo", req.body)
+  await TasK.findByIdAndUpdate(req.params.idtest, { items: req.body.items, note: req.body.note });
+  res.json("Note Updated");
+
+}
+
+
 
 task.create = async (req, res) => {
   // console.log(req.body);
@@ -75,43 +145,53 @@ task.gett = async (req, res) => {
   });
   res.json(notes);
 };
-task.get = async (req, res) => {
+
+task.getTests = async (req, res) => {
+  const { ObjectId } = require("mongodb");
+  console.log(req.params.user);
   const notes = await TasK.find({
-    _id: req.params.id,
+    curse: ObjectId(req.params.idcurse),
+    user: ObjectId(req.params.iduser),
   });
+  console.log(notes);
+  res.json(notes);
+};
+
+task.get = async (req, res) => {
+  console.log(req.params.id, req.params.theme, req.params.user);
+  const notes = await TasK.find({
+    curse: req.params.id,
+    codetheme: req.params.theme,
+    user: req.params.user,
+  });
+  console.log(notes);
   res.json(notes);
 };
 
 task.createS = async (req, res) => {
-  const {
-    note,
-    task,
-    theme,
-    unidad,
-    curse,
-    user,
-    solution,
-    dateb,
-    datee
-  } = req.body;
-  const newNote = new TasK({
-    note,
-    task,
-    theme,
-    unidad,
-    curse,
-    user,
-    solution,
-    dateb,
-    datee
-  });
-  //console.log(newNote);
+  const newNote = new TasK(req.body);
+  console.log(newNote);
   await newNote.save();
   res.json("New TasK added");
 };
 
-task.getSs = async (req, res) => {
+task.CreateDiploma = async (req, res) => {
+  const newNote = new Certificate(req.body);
+  console.log(req.body);
+  await newNote.save();
+  res.json("New TasK added");
+};
+
+task.getSTak = async (req, res) => {
   const note = await TasK.findById(req.params.id);
+  res.json(note);
+};
+
+task.getDiploma = async (req, res) => {
+  
+  const note = await Certificate.findById(req.params.id);
+  console.log(note);
+  // res.json("New TasK added");
   res.json(note);
 };
 task.getSSW = async (req, res) => {
@@ -146,30 +226,30 @@ task.updaterestrictDatetaskSTD = async (req, res) => {
 
 task.updateS = async (req, res) => {
   // console.log(req.files);
-  //console.log(req.body);
+  console.log(req.body);
   //console.log(req.files.archivo.size);
 
-  if (req.files) {
-    const note = await TasK.findById(req.params.id);
-    const file = note.file;
-    try {
-      fs.unlinkSync("files/tasks/" + file);
-    } catch (err) {
-      console.error(err);
-    }
-    const myFile = req.files.archivo;
-    myFile.mv(
-      `files/tasks/${req.body.user + "_" + req.body.idsec + "_" + myFile.name}`
-    );
-    const nEw = {
-      file: req.body.user + "_" + req.body.idsec + "_" + myFile.name,
-      content: req.body.contenido,
-    };
-    await TasK.findByIdAndUpdate(req.params.id, nEw);
-  } else {
-    await TasK.findByIdAndUpdate(req.params.id, { task: req.body.task, solution: req.body.solution, note: req.body.note });
-  }
-  res.json("Note Updated");
+  // if (req.files) {
+  //   const note = await TasK.findById(req.params.id);
+  //   const file = note.file;
+  //   try {
+  //     fs.unlinkSync("files/tasks/" + file);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  //   const myFile = req.files.archivo;
+  //   myFile.mv(
+  //     `files/tasks/${req.body.user + "_" + req.body.idsec + "_" + myFile.name}`
+  //   );
+  //   const nEw = {
+  //     file: req.body.user + "_" + req.body.idsec + "_" + myFile.name,
+  //     content: req.body.contenido,
+  //   };
+  //   await TasK.findByIdAndUpdate(req.params.id, nEw);
+  // } else {
+    await TasK.findByIdAndUpdate(req.params.id, req.body);
+  // }
+  res.json("Task Updated");
 };
 
 module.exports = task;

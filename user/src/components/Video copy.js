@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
-import { isAsignature, isAuth } from "../helpers/auth";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { isAsignature, isAuth } from "../helpers/auth";
 import { IoMdText } from "react-icons/io"
 import { IconButton, Badge, Input, Button } from "@material-ui/core";
 import { MdCallEnd } from "react-icons/md";
@@ -10,12 +8,16 @@ import { MdVideocam, MdVideocamOff, MdStopScreenShare, MdScreenShare, MdMic, MdM
 //import { message } from "antd";
 //import "antd/dist/antd.css";
 import { Modal, Row } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Navigation from "../screens/Navigation.jsx";
+import { isAuth } from "../helpers/auth.js";
 
 const server_url =
   process.env.NODE_ENV === "production"
-    ? "https://video.sebastienbiollo.com"
-    : "http://localhost:9997";
+    ? process.env.REACT_APP_URL
+    : process.env.REACT_APP_URL
+//:"http://localhost:9997";
 
 var connections = {};
 const peerConnectionConfig = {
@@ -30,6 +32,9 @@ var elms = 0;
 
 class Video extends Component {
 
+  async componentDidMount() {
+    document.title = "Conferencia ESFA"
+  }
 
   constructor(props) {
     super(props);
@@ -316,37 +321,20 @@ class Video extends Component {
   //////////////////////////////////////////
 
   changeCssVideos = (main) => {
-    let widthMain = main.offsetWidth;
-    let minWidth = "30%";
-    if ((widthMain * 30) / 100 < 300) {
-      minWidth = "300px";
-    }
-    let minHeight = "40%";
-
     let height = String(100 / elms) + "%";
     let width = "";
-    if (elms === 0 || elms === 1) {
-      width = "100%";
-      height = "100%";
-    } else if (elms === 2) {
-      width = "45%";
-      height = "100%";
-    } else if (elms === 3 || elms === 4) {
-      width = "35%";
-      height = "50%";
-    } else {
-      width = String(100 / elms) + "%";
-    }
+    if (elms === 0 || elms === 1) { width = "100%"; height = "100%"; } else if (elms === 2) { width = "45%"; height = "100%"; } else if (elms === 3 || elms === 4) { width = "31%"; height = "50%"; } else { width = String(100 / elms) + "%"; }
 
     let videos = main.querySelectorAll("video");
+
     for (let a = 0; a < videos.length; ++a) {
-      videos[a].style.minWidth = minWidth;
-      videos[a].style.minHeight = minHeight;
+      // videos[a].style.minWidth = minWidth;
+      // videos[a].style.minHeight = minHeight;
       videos[a].style.setProperty("width", width);
       videos[a].style.setProperty("height", height);
     }
-
-    return { minWidth, minHeight, width, height };
+    return { width, height }
+    // return { minWidth, minHeight, width, height };
   };
   //////////////////////////////////////////
 
@@ -399,30 +387,45 @@ class Video extends Component {
               searchVidep.srcObject = event.stream;
             } else {
               elms = clients.length;
+              elms = clients.length;
               let main = document.getElementById("main");
-              let cssMesure = this.changeCssVideos(main);
+              // let cssMesure = this.changeCssVideos(main);
+              // console.log(cssMesure)
+
+              const parentElement = document.createElement('div');
+              parentElement.className = 'p-1 bg-info col-md-4  w-100';
 
               let video = document.createElement("video");
-
-              let css = {
-                minWidth: cssMesure.minWidth,
-                minHeight: cssMesure.minHeight,
-                maxHeight: "100%",
-                margin: "10px",
-                borderStyle: "solid",
-                borderColor: "#bdbdbd",
-                objectFit: "fill",
-              };
-              for (let i in css) video.style[i] = css[i];
-
-              video.style.setProperty("width", cssMesure.width);
-              video.style.setProperty("height", cssMesure.height);
-              video.setAttribute("data-socket", socketListId);
+              video.className = 'bg-info w-100 h-100';
+              // video.style.setProperty("height", cssMesure.height);
+              video.setAttribute("data-socket", socketListId[0]);
               video.srcObject = event.stream;
               video.autoplay = true;
-              video.playsinline = true;
+              // video.playsinline = true
 
-              main.appendChild(video);
+              const titlet = document.createElement('div');
+              titlet.textContent = socketListId;
+              titlet.className = 'rounded bg-light p-1 text-center';
+
+
+              // let css = { minWidth: cssMesure.minWidth, minHeight: cssMesure.minHeight, minHeight: "100%", borderStyle: "solid", borderColor: "orange", objectFit: "fill", }
+
+              // for (let i in css) { video.style[i] = css[i] }
+
+              // for (let i in css) www.style[i] = css[i]
+
+              parentElement.appendChild(video);
+              parentElement.appendChild(titlet);
+
+                // www.style.setProperty("width", cssMesure.width);
+              // www.style.setProperty("height", cssMesure.height);
+              // www.setAttribute("data-socket", socketListId[0]);
+              // www.srcObject = event.stream;
+              // www.autoplay = true;
+              // www.playsinline = true
+              // www.textContent = 'This is the name';
+              main.appendChild(parentElement)
+              // video.appendChild(www)
             }
           };
 
@@ -504,12 +507,13 @@ class Video extends Component {
     } catch (e) { }
 
   };
+
   handleEndCall = () => {
     try {
       let tracks = this.localVideoref.current.srcObject.getTracks();
       tracks.forEach((track) => track.stop());
     } catch (e) { }
-    window.location.href = "/meetwww";
+    window.location.href = "/";
   };
   //////////////////////////////////////////
 
@@ -602,62 +606,53 @@ class Video extends Component {
 
     return (
       <div>
-        <ToastContainer />
+        <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} newestOnTop={false} closeOnClick={true} rtl={false} pauseOnFocusLoss={false} draggable pauseOnHover={false} closeButton={false} />
         <Navigation />
         {this.state.askForUsername === true ? (
-          <div className="container my-3 bg-info p-1">
-            <div className="container bg-light p-1 text-center">
-              <Button
-                variant="contained"
-                color="primary"
+          <div className="container my-1 border border-info p-1 rounded">
+            {/* <div className="container bg-light p-1 text-center">
+              <button
+                className="btn btn-info mt-1"
                 onClick={this.connect}
               >
-                Conectarse al curso ]
-              </Button>
-            </div>
+                Conectarse a la conferencia
+              </button>
+            </div> */}
 
-            <div className="container bg-warning text-center d-none">
-              <p>Set your username</p>
-              <Input
+            {/* <div className="container bg-warning text-center"> */}
+            {/* <p>Set your username</p> */}
+            {/* <Input
                 placeholder="Username"
                 value={this.state.username}
                 onChange={(e) => this.handleUsername(e)}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.connect}
-                style={{ margin: "20px" }}
-              >
-                Conectarse
-              </Button>
-            </div>
-
-            <div
-              style={{
-                justifyContent: "center",
-                textAlign: "center",
-                paddingTop: "40px",
-              }}
+                /> */}
+            <button
+              className="btn btn-info w-100 mb-1"
+              onClick={this.connect}
             >
+              Conectarse como {isAuth().email}
+            </button>
+            {/* </div> */}
+
+            <div className="text-center">
               <video
                 id="my-video"
                 ref={this.localVideoref}
                 autoPlay
                 muted
                 style={{
-                  borderStyle: "solid",
-                  borderColor: "rgb(0,101,100)",
-                  objectFit: "fill",
-                  width: "60%",
-                  height: "30%",
+                  // borderStyle: "solid",
+                  // borderColor: "rgba(134, 234, 232, 1)",
+                  // objectFit: "fill",
+                  // width: "100%",
+                  height: "100%",
                 }}
               ></video>
             </div>
           </div>
         ) : (
-          <div className="container my-3 border pb-3 p-0">
-            <div className="container bg-light text-center">
+          <div className="container my-2 rounded border p-1">
+            <div className="container text-center fixed-bottom">
               <IconButton
                 style={{ color: "#424242" }}
                 onClick={this.handleVideo}
@@ -750,39 +745,25 @@ class Video extends Component {
               </Modal.Footer>
             </Modal>
 
-            <div className="container bg-primary text-center">
-              <div className="card d-none">
-                <Input
+            <div className="container bg-warning rounded justify-content-center align-items-center p-1">
+              {/* <div className="card"> */}
+              {/* <Input
                   className="form-class"
                   value={window.location.href}
                   disable="true"
-                ></Input>
-                <Button
-                  variant="contained"
-                  color="info"
-                  onClick={this.copyUrl}
-                  style={{ margin: "20px" }}
-                >
-                  Copy invite link
-                </Button>
-              </div>
+                ></Input> */}
+              <button
+                className="btn btn-info w-100"
+                onClick={this.copyUrl}
+              >
+                Copiar y enviar link
+              </button>
+              {/* </div> */}
 
-              <Row id="main">
-                <video
-                  id="my-video"
-                  ref={this.localVideoref}
-                  autoPlay
-                  muted
-                  style={{
-                    borderStyle: "solid",
-                    borderColor: "#bdbdbd",
-                    margin: "5px",
-                    objectFit: "fill",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                ></video>
-              </Row>
+              <div id="main" className="row justify-content-center align-items-center border" style={{margin: ".0em", padding: ".1em", }}>
+                <video className="w-100 h-100 col-md-4" id="my-video" ref={this.localVideoref} autoPlay muted >
+                </video>
+              </div>
             </div>
           </div>
         )}

@@ -6,10 +6,11 @@ const http = require("http");
 var fs = require('fs');
 const https = require("https");
 const port = process.env.PORT || 9997;
-const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 const connectDB = require("./configs/db");
 const path = require('path');
-// const Note = require("./models/chat.model");
+const Theme = require("./models/theme.model");
+const Note = require("./models/chat.model");
 const morgan = require("morgan");
 var xss = require("xss")
 
@@ -21,13 +22,13 @@ const app = express();
 // const server = http.createServer(app);
 
 // var server = https.createServer(
-var server = http.createServer(
-  //  {
-  //   cert: fs.readFileSync('/etc/letsencrypt/live/www.esfapa.edu.pe/fullchain.pem'),
-  //   key: fs.readFileSync('/etc/letsencrypt/live/www.esfapa.edu.pe/privkey.pem'),
-  //   requestCert: false,
-  //   rejectUnauthorized: false
-  //  },
+var server = https.createServer(
+   {
+    cert: fs.readFileSync('/etc/letsencrypt/live/www.esfapa.edu.pe/fullchain.pem'),
+    key: fs.readFileSync('/etc/letsencrypt/live/www.esfapa.edu.pe/privkey.pem'),
+    requestCert: false,
+    rejectUnauthorized: false
+   },
   //   ca: fs.readFileSync('./test_ca.crt'),
   app);
 
@@ -50,9 +51,9 @@ const io = socketIo(server, {
 // body parser
 app.use(bodyParser.json());
 app.use(cors()); // it enables all cors requests
-app.use(fileUpload());
+// app.use(fileUpload());
 // static files
-app.use(express.static(path.join(__dirname, 'files')));
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 
 // if (process.env.NODE_ENV === "development") {
@@ -77,10 +78,10 @@ app.use("/api/tasks", require("./routes/task.route"))
 app.use("/api/mycurses", require("./routes/mycurse.route"))
 app.use("/api/tests", require("./routes/test.route"))
 app.use("/api/links", require("./routes/link.route"))
-app.use("/api", require("./routes/chat.route"))
 app.use("/api/auth", require("./routes/auth.route"))
-app.use("/api", require("./routes/user.route"))
-// app.use("/api/comments", require("./routes/comment.route"))
+// app.use("/api", require("./routes/chat.route"))
+app.use("/api/users", require("./routes/user.route"))
+app.use("/api/foros", require("./routes/comment.route"))
 
 // io.on("connection", (socket) => {
 //   console.log("User www", socket.id);
@@ -124,271 +125,143 @@ app.use("/api", require("./routes/user.route"))
 
 
 
-// let interval;
-// let users = [];
 
 // io.on("connection", async (socket) => {
-//   // socket.join("www");
-//   console.log("Nuevo cliente", socket.id, socket.connected);
-//   const mensajes = await Note.aggregate([
-//     { $sort: { _id: -1 } },
-//     { $limit: 19 },
-//     {
-//       $lookup: {
-//         from: "users",
-//         let: { www: "$user" },
-//         pipeline: [
-//           { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-//         as: "usser",
-//       },
-//     },
-//   ])
-//   console.log(mensajes.reverse())
-
-//   //sort({ createdAt: 1 }).
-//   socket.emit("load old msgs", mensajes);
-
-//   socket.on("mesagess", async (body) => {
-//     io.emit("mesages", body)
-//     //console.log(body,"body")
-//     const newNote = new Note({
-//       mensaje: body.mensaje,
-//       user: body.user,
-//     });
-//     const www = await newNote.save();
-//     console.log(www, "newNote")
-//   })
-
-//   socket.on("message", async ({ name, message }) => {
-//     io.sockets.emit("message", { name, message });
-//     console.log(name, message);
-//     const newNote = new Note({
-//       nombre: name,
-//       mensaje: message,
-//     });
-//     await newNote.save();
-//   })
-
+//   ussers.push(socket.id)
+//   io.emit("ussers", ussers)
 //   socket.on("disconnect", () => {
-//     var diffTime = Math.abs(timeOnline[socket.id] - new Date());
-//     var key;
-//     for (const [k, v] of JSON.parse(
-//       JSON.stringify(Object.entries(connections))
-//     )) {
-//       for (let a = 0; a < v.length; ++a) {
-//         if (v[a] === socket.id) {
-//           key = k;
-
-//           for (let a = 0; a < connections[key].length; ++a) {
-//             io.to(connections[key][a]).emit("user-left", socket.id);
-//           }
-
-//           var index = connections[key].indexOf(socket.id);
-//           connections[key].splice(index, 1);
-
-//           console.log(key, socket.id, Math.ceil(diffTime / 1000));
-
-//           if (connections[key].length === 0) {
-//             delete connections[key];
-//           }
-//         }
-//       }
+//     if (ussers.indexOf(socket.id) != -1) {
+//       ussers.splice(ussers.indexOf(socket.id), 1);
+//       io.emit("ussers", ussers);
+//     console.log(ussers)
 //     }
-//   })
-// })
-
-
-
-// socket.on("usssers", async (user) => {
-//   console.log(users, user, "w1");
-//   console.log(users.indexOf(user.email) != -1)
-//   if (users.indexOf(user.email) != -1) { } else {
-//     socket.userww = user;
-//     users.push(socket.userww);
-//     console.log(users, user, "w2");
-//   }
-//   socket.on("disconnect", () => {
-//     console.log(users, "newClient disconnected", socket.id, socket.connected);
-//     if (!socket.userww) return;
-//     users.splice(users.indexOf(socket.userww), 1);
-//     io.emit("users", users);
-//     // console.log(users, user, "w2")
-//     //clearInterval(interval);
 //   });
-//   io.emit("users", users);
-// });
 
-// socket.on("notes", async (curse) => {
-//   const { ObjectId } = require("mongodb");
-//   const id = ObjectId(curse);
-//   const cursse = ObjectId(id)
-//   const themes = await Theme.aggregate([
-//     { $match: { curse: cursse, }, },
-//     {
-//       $lookup: {
-//         from: "comments",
-//         let: { www: "$_id" },
-//         pipeline: [
-//           { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
-//           {
-//             $lookup: {
-//               from: "comments",
-//               let: { www: "$_id" },
-//               pipeline: [
-//                 { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
-//                 {
-//                   $lookup: {
-//                     from: "comments",
-//                     let: { www: "$_id" },
-//                     pipeline: [
-//                       { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
-//                       {
-//                         $lookup: {
-//                           from: "comments",
-//                           let: { www: "$_id" },
-//                           pipeline: [
-//                             { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
-//                             {
-//                               $lookup: {
-//                                 from: "comments",
-//                                 let: { www: "$_id" },
-//                                 pipeline: [
-//                                   { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
-//                                   {
-//                                     $lookup: {
-//                                       from: "users",
-//                                       let: { www: "$user" },
-//                                       pipeline: [
-//                                         { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-//                                       as: "usser",
-//                                     },
-//                                   },
-//                                   { $sort: { "_id": -1 } }
-//                                 ],
-//                                 as: "comments",
-//                               },
-//                             },
-//                             {
-//                               $lookup: {
-//                                 from: "users",
-//                                 let: { www: "$user" },
-//                                 pipeline: [
-//                                   { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-//                                 as: "usser",
-//                               },
-//                             },
-//                             { $sort: { "_id": -1 } }
-//                           ],
-//                           as: "comments",
-//                         },
-//                       },
-//                       {
-//                         $lookup: {
-//                           from: "users",
-//                           let: { www: "$user" },
-//                           pipeline: [
-//                             { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-//                           as: "usser",
-//                         },
-//                       },
-//                       { $sort: { "_id": -1 } }
-//                     ],
-//                     as: "comments",
-//                   },
-//                 },
-//                 {
-//                   $lookup: {
-//                     from: "users",
-//                     let: { www: "$user" },
-//                     pipeline: [
-//                       { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-//                     as: "usser",
-//                   },
-//                 },
-//                 { $sort: { "_id": -1 } }
-
-//               ],
-//               as: "comments",
-//             },
-//           },
-//           {
-//             $lookup: {
-//               from: "users",
-//               let: { www: "$user" },
-//               pipeline: [
-//                 { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-//               as: "usser",
-//             },
-//           },
-//           { $sort: { "_id": -1 } }
-//         ],
-//         as: "comments",
-//       },
-//     },
-//   ]).sort({ _id: -1 })
-
-//   console.log("themes");
-//   io.to(cursse).emit("forum", themes);
-// });
-
-// socket.on("disconnect", () => {
-//   console.log(users, "notesnewClient disconnected", socket.id, socket.connected);
-// });
-
-// socket.on('forocurse', function (idw) {
-//   socket.join(idw)
-//   console.log(idw, "foro")
-// });
-
-
-//console.log(req.body);
-
-
-
-
-// io.on("disconnect", () => {
-//   console.log(users, "Client disconnected", socket.id, socket.connected);
-//   // if (!socket.userww) return;
-//   // users.splice(users.indexOf(socket.userww), 1);
-//   // io.emit("users", users);
-//   // console.log(users, user, "w2")
-//   //clearInterval(interval);
 // });
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////
 
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(__dirname + "/build"));
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname + "/build/index.html"));
-//   });
-// }
+// let interval;
+let usserws = [];
+
+io.on("connection", async (socket) => {
+  // console.log("Nuevo chat", socket.id, socket.connected)
+
+  const mensajes = await Note.aggregate([
+    { $sort: { _id: -1 } },
+    { $limit: 19 },
+    {
+      $lookup: {
+        from: "users",
+        let: { www: "$user" },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
+        as: "usser",
+      },
+    },
+  ])
+
+  socket.emit("load old msgs", mensajes);
+
+  socket.on("mesagess", async (body) => {
+    io.emit("mesages", body)
+    // console.log(body, "body")
+    const newNote = new Note(body)
+    const www = await newNote.save();
+    // console.log(www, "newNote")
+  })
+
+  socket.on("message", async ({ name, message }) => {
+    io.sockets.emit("message", { name, message });
+    // console.log(name, message);
+    const newNote = new Note({
+      nombre: name,
+      mensaje: message,
+    });
+    await newNote.save();
+  })
+
+  socket.on("usssers", async (user) => {
+    // console.log("usssersNEW", user)
+    // console.log(user.email && usserws.findIndex(obj => obj.id === socket.id) === -1)
+    if (user.email && usserws.findIndex(obj => obj.id === socket.id) === -1) {
+      user = {
+        ...user, idsocket: socket.id, ip: socket.request.connection.remoteAddress, time: new Date()
+      }
+      socket.www = user
+      usserws.push(socket.www)
+      // console.log("usssers", { usserws })
+      io.emit('usersss', usserws);
+    }
+
+    socket.on("disconnect", () => {
+      // console.log(usserws, "Client disconnected", socket.id);
+      usserws.splice(usserws.findIndex(obj => obj.idsocket === socket.id), 1);
+      // console.log(usserws, "Client disconnected", socket.id);
+      //clearInterval(interval);
+      io.emit("usersss", usserws);
+    });
+
+  })
+});
+
+
+let users = [];
+io.on("connection", async (socket) => {
+  socket.join("www")
+  console.log("Nuevo foroesfa", socket.id, socket.connected)
+  socket.on("temas", async (curse) => {
+    console.log("Nuevo www", curse)
+
+    const { ObjectId } = require("mongodb");
+    const id = ObjectId(curse);
+    const cursse = ObjectId(id)
+    const themes = await Theme.aggregate([
+      { $match: { curse: cursse, }, },
+      {
+        $lookup: {
+          from: "users",
+          let: { www: "$user" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
+          as: "usser",
+        },
+      }
+    ]).sort({ _id: -1 })
+    io.to(curse).emit("foro", themes);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(users, "foro disconnected", socket.id, socket.connected);
+  });
+
+  socket.on('foroesfa', function (idw) {
+    socket.join(idw)
+    console.log(idw, "foro")
+  })
+
+});
+
 
 
 sanitizeString = (str) => {
-  return xss(str);
-};
+  return xss(str)
+}
 
+connections = {}
+messages = {}
+timeOnline = {}
 
-connections = {};
-messages = {};
-timeOnline = {};
-io.on("connection", (socket) => {
-  // console.log(timeOnline)
+io.on('connection', (socket) => {
 
-  socket.on("join-call", (path) => {
+  socket.on('join-call', (path) => {
     if (connections[path] === undefined) {
-      connections[path] = [];
+      connections[path] = []
     }
-    connections[path].push(socket.id);
+    connections[path].push(socket.id)
 
-    timeOnline[socket.id] = new Date();
+    timeOnline[socket.id] = new Date()
 
     for (let a = 0; a < connections[path].length; ++a) {
       io.to(connections[path][a]).emit("user-joined", socket.id, connections[path])
@@ -396,76 +269,71 @@ io.on("connection", (socket) => {
 
     if (messages[path] !== undefined) {
       for (let a = 0; a < messages[path].length; ++a) {
-        io.to(socket.id).emit("chat-message", messages[path][a]["data"], messages[path][a]["sender"], messages[path][a]["socket-id-sender"])
+        io.to(socket.id).emit("chat-message", messages[path][a]['data'],
+          messages[path][a]['sender'], messages[path][a]['socket-id-sender'])
       }
     }
 
-    console.log(path, connections[path]);
-  });
+    console.log(path, connections[path])
+  })
 
-  socket.on("signal", (toId, message) => {
-    io.to(toId).emit("signal", socket.id, message);
-  });
+  socket.on('signal', (toId, message) => {
+    io.to(toId).emit('signal', socket.id, message)
+  })
 
-  socket.on("chat-message", (data, sender) => {
-    data = sanitizeString(data);
-    sender = sanitizeString(sender);
+  socket.on('chat-message', (data, sender) => {
+    data = sanitizeString(data)
+    sender = sanitizeString(sender)
 
-    var key;
-    var ok = false;
+    var key
+    var ok = false
     for (const [k, v] of Object.entries(connections)) {
       for (let a = 0; a < v.length; ++a) {
         if (v[a] === socket.id) {
-          key = k;
-          ok = true;
+          key = k
+          ok = true
         }
       }
     }
 
     if (ok === true) {
       if (messages[key] === undefined) {
-        messages[key] = [];
+        messages[key] = []
       }
-      messages[key].push({
-        sender: sender,
-        data: data,
-        "socket-id-sender": socket.id,
-      });
-      console.log("message", key, ":", sender, data);
+      messages[key].push({ "sender": sender, "data": data, "socket-id-sender": socket.id })
+      console.log("message", key, ":", sender, data)
 
       for (let a = 0; a < connections[key].length; ++a) {
         io.to(connections[key][a]).emit("chat-message", data, sender, socket.id)
       }
     }
-  });
+  })
 
-
-  socket.on("disconnect", () => {
-    var diffTime = Math.abs(timeOnline[socket.id] - new Date());
-    var key;
+  socket.on('disconnect', () => {
+    var diffTime = Math.abs(timeOnline[socket.id] - new Date())
+    var key
     for (const [k, v] of JSON.parse(JSON.stringify(Object.entries(connections)))) {
       for (let a = 0; a < v.length; ++a) {
         if (v[a] === socket.id) {
-          key = k;
+          key = k
 
           for (let a = 0; a < connections[key].length; ++a) {
-            io.to(connections[key][a]).emit("user-left", socket.id);
+            io.to(connections[key][a]).emit("user-left", socket.id)
           }
 
-          var index = connections[key].indexOf(socket.id);
-          connections[key].splice(index, 1);
+          var index = connections[key].indexOf(socket.id)
+          connections[key].splice(index, 1)
 
-          console.log(key, socket.id, Math.ceil(diffTime / 1000));
+          console.log(key, socket.id, Math.ceil(diffTime / 1000))
 
           if (connections[key].length === 0) {
-            delete connections[key];
+            delete connections[key]
           }
         }
       }
     }
-  });
-});
-
+  })
+})
 
 /////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////

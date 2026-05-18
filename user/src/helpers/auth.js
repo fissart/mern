@@ -44,10 +44,11 @@ export const removeLocalStorage = (key) => {
 // Authenticate user by passing data to cookie and localstorage during signin
 export const authenticate = (response, next) => {
   // console.log("AUTHENTICATE HELPER ON SIGNIN RESPONSE ww", response);
-  setCokie("token", response.data.token);
-  setLocalStorage("token", response.data.token);
-  setLocalStorage("user", response.data.user);
-  // const myObject = {
+  if (response.data) {
+    setCokie("token", response.data.token);
+    setLocalStorage("token", response.data.token);
+    setLocalStorage("user", response.data.user);
+  }  // const myObject = {
   //   name : "john doe",
   //   age : 32,
   //   gender : "male",
@@ -60,18 +61,18 @@ export const authenticate = (response, next) => {
 // Access user info from localstorage
 export const isAuth = () => {
   if (window !== "undefined") {
-    const cookieChecked = getCokie("token");
-    if (cookieChecked) {
-      console.log(localStorage.getItem("user"))
-      if (localStorage.getItem("user")) {
-        return JSON.parse(localStorage.getItem("user"));
-      } else {
-        return false;
-      }
+    // const cookieChecked = getCokie("token");
+    // if (cookieChecked) {
+    // console.log("localStorage.getItem('user')")
+    if (localStorage.getItem("user")) {
+      return JSON.parse(localStorage.getItem("user"));
     } else {
-      // signout()
-      console.log("www")
+      return false;
     }
+    // } else {
+    // signout()
+    // console.log("signout")
+    // }
   }
 };
 
@@ -79,6 +80,7 @@ export const isAsignature = () => {
   if (window !== "undefined") {
     const cookieChecked = getCokie("token");
     if (cookieChecked) {
+    //  console.log(localStorage.getItem("curse"), "localStorage.getItem()")
       if (localStorage.getItem("curse")) {
         return JSON.parse(localStorage.getItem("curse"));
       } else {
@@ -97,10 +99,10 @@ export const signout = (next) => {
   removeLocalStorage("idcat");
   removeCokie("idc");
   removeLocalStorage("idc");
-  removeCokie("id");
-  removeLocalStorage("id");
-  removeCokie("namecurse");
-  removeLocalStorage("namecurse");
+  removeCokie("token");
+  removeLocalStorage("token");
+  removeCokie("curse");
+  removeLocalStorage("curse");
   next();
 };
 

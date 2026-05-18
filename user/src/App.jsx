@@ -1,41 +1,81 @@
-import React, { Component } from "react";
-import "bootstrap/dist/css/bootstrap.css";
-// import { Link } from "react-router-dom";
-import { getCokie, signout, isAuth } from "./helpers/auth";
-import { ToastContainer, toast } from "react-toastify";
-// import authSvg from "./assests/image.png";
-// import gltf from "./assests/scene.gltf";
-//import gltf_w from "./assests/w_w.gltf";
-import ww_w from "./assests/w_w.glb";
-//import authSvgwww from "./assests/foto.png";
-import Navigation from "./screens/Navigation";
-import Wwwwww from "./screens/downlist";
-// import Www from "./screens/ww1";
-// import * as THREE from "three";
-// import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import Socket from "./screens/Chat";
-import axios from "axios";
-// import { Modal, Row } from "react-bootstrap";
+// npm i @react-three/drei@10.0.0-rc.3
+// npm i @react-three/fiber@9.0.0-alpha.8
+// npm i @xyflow/react@12.8.3
+// npm i exceljs@3.10.0
+// import { SiGooglemeet } from "react-icons/si"
+// import { HexColorPicker } from "react-colorful"
+// import { Canvas } from '@react-three/fiber'
+// import { Center, AccumulativeShadows, RandomizedLight, OrbitControls, Environment, useGLTF, ContactShadows } from '@react-three/drei'
 // import Www_w from "./screens/www";
-//import {Admin } from "./screens/Chat";
-// import { Input } from "@material-ui/core";
+// import { IconButton } from "@material-ui/core";
+import React, { Component } from "react";
+import TimeAgo from 'timeago-react'; // var TimeAgo = require('timeago-react');
+import { FaBloggerB, FaCertificate, FaExpandAlt, FaFileArchive, FaForumbee } from "react-icons/fa"
+import { MdAppBlocking, MdForum, MdOutlineCircleNotifications, MdOutlineForum, MdOutlineSmartDisplay, MdOutlineVideoCameraFront } from "react-icons/md"
+import { MdModeEdit } from "react-icons/md"
+import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { Modal } from "react-bootstrap";
+import { Input } from "@material-ui/core";
+// import { MdMap, } from "react-icons/md";
+import { GiCursedStar, GiDiploma, GiVideoConference } from "react-icons/gi"
+// import { PiVideoConferenceFill } from "react-icons/pi"
+// import { PiVideoConferenceFill } from "react-icons/pi"
+import { IoMdCreate, IoIosAlert, IoMdAlert, IoIosAddCircleOutline, IoIosAirplane } from "react-icons/io";
+import { getCokie, setLocalStorage, removeCokie, removeLocalStorage, isAuth } from './helpers/auth.js';
+import Markdownkatexnew from "../src/components/Markdown";
+import Navigate from "./screens/Navigation";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import '@ckeditor/ckeditor5-build-classic/build/translations/es';
 
-
-
+import Headroom from "react-headroom";
+import Wwwwww from "./screens/downlist";
+import Socket from "./screens/Chat.jsx";
+import authSvgwww from "./assests/www3.svg";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { Navigation, Pagination, EffectCoverflow, EffectCube, EffectFlip, EffectFade, Autoplay, Scrollbar, A11y } from 'swiper';
+import { BiCertification, BiFile, BiLogoBlogger, BiSolidCertification } from "react-icons/bi";
+// import authSvg from "./assests/www.jpg";
+// import { title } from "process";
+// import { detach } from "@react-three/fiber/dist/declarations/src/core/utils";
+// import { Swiper, SwiperSlide } from 'swiper/react';
+SwiperCore.use([Navigation, Pagination, EffectCoverflow, EffectCube, EffectFlip, EffectFade, Autoplay, Scrollbar, A11y])
 
 export default class App extends Component {
+  // swiper = new Swiper('.swiper', {
+  //   centeredSlides: true,
+  //   slidesPerView: 'auto', // Often used together for best effect
+  // });
+
   state = {
     files: [],
+    file: "",
+    news: [],
+    newsw: [],
     zz: [],
     user: [],
-    name: "",
+    id: "",
+    i: "",
+    j: "",
+    k: "",
+    foreign: "",
+    type: "",
+    select: "",
+    title: "",
+    detail: "",
+    userssocket: [],
     showModal: false,
+    showModalw: false,
   };
 
   open = () => this.setState({ showModal: true });
   close = () => this.setState({ showModal: false });
+  openw = () => this.setState({ showModalw: true });
+  closew = () => this.setState({ showModalw: false });
 
 
   fileSelectHandler = (files) => {
@@ -61,398 +101,631 @@ export default class App extends Component {
     });
   };
 
-  onSubmit = async (e) => {
+  crearGeneral = async (e) => {
     e.preventDefault()
-    //console.log(this.state.files[0])
     const data = new FormData()
+    data.append("type", this.state.type)
+    data.append("subtype", this.state.subtype)
+    data.append("title", this.state.title)
+    data.append("detail", this.state.detail)
+    data.append("foreign", this.state.foreign)
+    data.append("user", isAuth()._id)
     data.append("foto", this.state.files[0])
-    data.append("name", this.state.name)
-    console.log(this.state.files[0], this.state.name)
-    //await axios.put(`${process.env.REACT_APP_API_URL}/userUp/` + isAuth()._id, data);
+    console.log(this.state.subtype)
+    await axios.post(`${process.env.REACT_APP_API_URL}/links/lands`, data);
     this.close()
     toast.dark("Actualizado correctamente")
+    if (this.state.type === 'reference') {
+      this.getnewsw()
+    }
+    if (this.state.type === 'general') {
+      this.getNotes()
+    }
+    if (this.state.type === 'nuevas') {
+      this.getnews()
+    }
+    this.setState({
+      files: [],
+      foreign: "",
+      i: "",
+      select: "",
+      title: "",
+      detail: "",
+    })
   };
 
-  // removeCookie("id");
-  // removeLocalStorage("id");
+
+  onSubmitUpdate = async (e) => {
+    e.preventDefault()
+    const data = new FormData()
+    data.append("title", this.state.title)
+    data.append("description", this.state.detail)
+    data.append("user", isAuth()._id)
+    data.append("foto", this.state.files[0])
+    await axios.put(`${process.env.REACT_APP_API_URL}/links/lands/` + this.state.id, data).then(res => {
+      console.log(res.data, "wwwww");
+      toast.dark(res.data)
+      this.close()
+      this.getNotes();
+      this.getnews();
+      this.setState({
+        files: [],
+        foreign: "",
+        type: "",
+        select: "",
+        title: "",
+        detail: "",
+      })
+      // if (this.state.type === 'reference') {
+      this.getnewsw()
+      // }
+      // if (this.state.type === 'general') {
+      this.getNotes()
+      // }
+      // if (this.state.type === 'nuevas') {
+      this.getnews()
+      // }
+
+    }).catch((err) => {
+      console.log(err.response.statusText);
+      toast.error(`Error To Your Information ${err.response.statusText}`);
+      if (err.response.status === 401) {
+        // signout(() => {
+        // history.push("/login");
+        // });
+      }
+    })
+
+  };
+
+  onSubmitRemove = async (id) => {
+    const response = window.confirm('Deseas eliminar este capítulo?');
+    if (response) {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/links/lands/` + id);
+      this.getNotes();
+      toast.dark('Removido correctamente');
+    }
+  };
+
+
 
   getNotes = async () => {
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/land`
+    await axios.get(
+      `${process.env.REACT_APP_API_URL}/links/lands`, {
+      headers: {
+        Authorization: `Bearer ${getCokie("token")}`,
+      },
+    }
     ).then(res => {
-      console.log(res.data);
+      console.log(res.data, "wwwww");
       this.setState({
         zz: res.data,
-        // zzz: res.data[0],
-        // isDisabled: "false"
       });
+    }).catch((err) => {
+      console.log(err.response.statusText);
+      toast.error(`Error To Your Information ${err.response.statusText}`);
+      if (err.response.status === 401) {
+        // signout(() => {
+        // history.push("/login");
+        // });
+      }
     });
   };
 
 
+  getnews = async () => {
+    await fetch(process.env.REACT_APP_API_URL + "/links/lands/news")
+      .then((response) => response.json())
+      .then((www) => {
+        this.setState({
+          news: www,
+        });
+        console.log(www, "wwwwwwwwwwwwwwwwwwwwwww")
+      })
+      .catch(error => console.error(error))
+  }
 
-
-
-  async componentDidMount() {
-    this.getNotes();
-    const token = getCokie("token");
-    console.log(token)
-    //this.getUser();
-    if (isAuth()) {
-      const user = await axios.get(
-        `${process.env.REACT_APP_API_URL}/userId/` + isAuth()._id
-      );
-      this.setState({
-        user: user.data,
-        name: user.data.name,
-      });
-      console.log(this.state.user);
-    }
-    const pStyle = {
-      fontSize: "15px",
-      textAlign: "center",
-    };
-    //     var scene = new THREE.Scene();
-    //     const loader = new GLTFLoader();
-    //     const loaderglb = new GLTFLoader();
-
-    //     //scene.background = new THREE.Color("rgb(250,30,200)");
-    //     scene.background = null;
-
-    //     /*
-    //     scene.background = new THREE.CubeTextureLoader()
-    //       .setPath( "./assets/" )
-    //       .load( [
-    //         src,
-    //         src,
-    //         'foto.png',
-    //         'ny.png',
-    //         'pz.png',
-    //         'nz.png'
-    //       ] );
-    // */
-    //     var camera = new THREE.PerspectiveCamera(
-    //       75,
-    //       window.innerWidth / window.innerHeight,
-    //       0.1,
-    //       1000
-    //     );
-
-    //     loader.load(
-    //       // resource URL
-    //       gltf,
-    //       // called when the resource is loaded
-    //       function (gltf) {
-    //         scene.add(gltf.scene);
-    //       }
-    //     );
-
-    //     loader.load(
-    //       // resource URL
-    //       `${process.env.REACT_APP_URL}/profile/${this.state.user.foto}`,
-    //       //ww_w,
-    //       // called when the resource is loaded
-    //       function (gltf) {
-    //         var sword = gltf.scene;  // sword 3D object is loaded
-    //         sword.scale.set(.1, .1, .1);
-    //         sword.position.y = 0;
-    //         scene.add(sword);
-    //         scene.add(gltf.scene);
-    //       }
-    //     );
-    //     var renderer = new THREE.WebGLRenderer({ antialias: true, autoSize: true, alpha: true });
-    //     renderer.setSize(0.9 * window.innerWidth, 0.9 * window.innerHeight);
-    //     //this.mount.appendChild(renderer.domElement);
-    //     renderer.domElement.style.height = '50%';
-    //     renderer.domElement.style.width = '100%';
-    //     //renderer.domElement.style.border = '1px solid blue';
-    //     //renderer.domElement.style.position = 'relative';
-    //     //renderer.domElement.style.display = "block";
-    //     const controls = new OrbitControls(camera, renderer.domElement);
-    //     //controls.target.set( 0, 0.5, 0 );
-    //     controls.mouseButtons = { ORBIT: THREE.MOUSE.LEFT, ZOOM: THREE.MOUSE.MIDDLE, PAN: THREE.MOUSE.RIGHT };
-    //     controls.keys = {
-    //       LEFT: 'ArrowLeft', //left arrow
-    //       UP: 'ArrowUp', // up arrow
-    //       RIGHT: 'ArrowRight', // right arrow
-    //       BOTTOM: 'ArrowDown' // down arrow
-    //     }
-    //     controls.touches = {
-    //       ONE: THREE.TOUCH.ROTATE,
-    //       TWO: THREE.TOUCH.DOLLY_PAN
-    //     }
-    //     controls.update();
-
-    //     var geometry = new THREE.TorusKnotGeometry(0.7, 0.05, 200, 32, 1, 3);
-    //     var geometry2 = new THREE.SphereGeometry(0.3, 10, 20);
-    //     var geometry3 = new THREE.SphereGeometry(0.2, 10, 20);
-    //     var material = new THREE.MeshPhongMaterial({
-    //       color: "orange",
-    //       flatShading: true,
-    //       shading: THREE.SmoothShading,
-    //     });
-    //     var material1 = new THREE.MeshPhongMaterial({
-    //       color: "orange",
-    //     });
-    //     var cube = new THREE.Mesh(geometry, material);
-    //     //var sphere = new THREE.Mesh(geometry2, material1);
-    //     var sphere2 = new THREE.Mesh(geometry3, material);
-    //     scene.add(cube, sphere2);
-
-    //     const light = new THREE.SpotLight("rgb(20,250,250)", .5);
-    //     light.position.set(0, 3, 0);
-    //     light.castShadow = true;
-    //     light.shadow.bias = -0.0001;
-    //     light.shadow.mapSize.width = 1024 * 4;
-    //     light.shadow.mapSize.height = 1024 * 4;
-
-
-    //     const light1 = new THREE.DirectionalLight("rgb(250,250,20)", .5);
-    //     light1.position.set(0, -3, 0);
-    //     light1.castShadow = true;
-    //     light1.shadow.bias = -0.01;
-    //     light1.shadow.mapSize.width = 1024 * 4;
-    //     light1.shadow.mapSize.height = 1024 * 4;
-    //     scene.add(light);
-    //     scene.add(light1);
-
-    //     const light3 = new THREE.AmbientLight("rgb(250,250,250)", 1); // soft white light
-    //     scene.add(light3);
-
-    //     controls.mouseButtons = {
-    //       LEFT: THREE.MOUSE.ROTATE,
-    //       MIDDLE: THREE.MOUSE.DOLLY,
-    //       RIGHT: THREE.MOUSE.PAN
-    //     }//griffmd
-    //     camera.position.set(.5, .8, 1);
-    //     var animate = function () {
-    //       requestAnimationFrame(animate);
-    //       cube.rotation.x += 0.001;
-    //       cube.rotation.y += 0.01;
-    //       //cube.rotation.z += 0.01;
-    //       controls.update();
-    //       renderer.render(scene, camera);
-    //     };
-    //     animate()
+  getnewsw = async () => {
+    await fetch(process.env.REACT_APP_API_URL + "/links/lands/newsw")
+      .then((response) => response.json())
+      .then((www) => {
+        this.setState({
+          newsw: www,
+        });
+        console.log(www, "wwwwwwwwwwwwwwwwwwwwwww")
+      })
+      .catch(error => console.error(error))
   }
 
 
+  openInNewTab = async (url) => {
+    window.open(url, "_blank", "noreferrer");
+  }
 
+  async componentDidMount() {
+    this.getNotes();
+    document.title = "INICIO ESFA"
+    this.getnews()
+    this.getnewsw()
+
+    document.title = "PANEL USUARIO"
+    removeCokie('idc');
+    removeLocalStorage('idc');
+    removeCokie('idcat');
+    removeLocalStorage('idcat');
+    removeCokie('curse');
+    removeLocalStorage('curse');
+
+  }
+
+
+  remove = (i, j) => {
+    const response = window.confirm("Deseas eliminar este item?");
+    if (response) {
+      var data = this.state.zz ? this.state.zz : []
+      data[i].usertask.splice(j, 1);
+      console.log(data, "www")
+      this.setState({ zz: data })
+      const id = data[i]._id
+      this.save(this.state.zz[i], id)
+    }
+  }
+
+  removelink = (id) => {
+    const response = window.confirm("Deseas eliminar este item?");
+    if (response) {
+      fetch(`${process.env.REACT_APP_URL}/api/links/lands/${id}`, {
+        method: 'delete',
+      })
+        .then(response => response.json())
+        .then(data => {
+          toast.info(data);
+          this.getnewsw()
+          this.getNotes()
+          this.getnews()
+        })
+        .catch(error => console.error(error))
+    }
+  }
+
+  updatefirst = () => {
+    console.log(this.state.type)
+    if (this.state.type === 'general') {
+      const data = this.state.zz
+      data[this.state.i].usertask[this.state.j].title = this.state.title
+      data[this.state.i].usertask[this.state.j].detail = this.state.detail
+      this.setState({ zz: data })
+      const id = data[this.state.i]._id
+      this.save(this.state.zz[this.state.i], id)
+    }
+    if (this.state.type === 'nuevas') {
+      const data = this.state.news
+      data[this.state.i].usertask[this.state.j].title = this.state.title
+      data[this.state.i].usertask[this.state.j].detail = this.state.detail
+      this.setState({ news: data })
+      const id = data[this.state.i]._id
+      this.save(this.state.news[this.state.i], id)
+    }
+  }
+
+  createSesion = () => {
+    var data = this.state.zz ? this.state.zz : []
+    for (var k = 0; k < data.length; k++) {
+      if (k === this.state.i) {
+        var www = data[k].usertask
+        // console.log(data)
+        www.push(
+          {
+            "title": this.state.title,
+            "detail": this.state.detail,
+            "link": "",
+          }
+        )
+      }
+    }
+    this.setState({ zz: data })
+    const id = data[this.state.i]._id
+    this.save(this.state.zz[this.state.i], id)
+  }
+
+  createSesionw = () => {
+    const data = this.state.zz
+    if (data[this.state.i].usertask[this.state.j].usetask === undefined) {
+      data[this.state.i].usertask[this.state.j].usertast = []
+    }
+    data[this.state.i].usertask[this.state.j].usertast.push({
+      "title": this.state.title,
+      "detail": this.state.detail,
+      "link": "",
+    })
+    console.log(data, "www")
+    this.setState({ zz: data })
+    const id = data[this.state.i]._id
+    this.save(this.state.zz[this.state.i], id)
+  }
+
+
+  save = (data, id) => {
+    fetch(`${process.env.REACT_APP_URL}/api/links/landswithoutfile/${id}`, {
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(data => {
+        toast.info(data);
+        this.close()
+      })
+      .catch(error => console.error(error))
+  }
+
+
+  createSesionww = () => {
+    var units = this.state.zz ? this.state.zz : []
+    for (var k = 0; k < units.usertask.length; k++) {
+      if (units.usertask[k].wwwusertask.length > 0) {
+        for (var t = 0; t < units.usertask[k].wwwusertask.length; t++) {
+          var www = units.usertask[k].wwwusertask[t]
+          if (t === 1) {
+            www.newusertask.push(
+              {
+                "title": "Change title",
+                "newdescription": "www",
+                "newtask": "www",
+                "newusertask": [],
+                "newusertaskteacher": []
+              }
+            )
+          }
+        }
+      }
+    }
+    this.setState({ unidades: units })
+    console.log(units)
+  }
+
+  createSesionwww = () => {
+    var units = this.state.unidades ? this.state.unidades : []
+    for (var k = 0; k < units.usertask.length; k++) {
+      if (units.usertask[k].wwwusertask.length > 0) {
+        for (var t = 0; t < units.usertask[k].wwwusertask.length; t++) {
+          if (units.usertask[k].wwwusertask[t].newusertask.length > 0) {
+            for (var w = 0; w < units.usertask[k].wwwusertask[t].newusertask.length; w++) {
+              if (w === 1) {
+                var www = units.usertask[k].wwwusertask[t].newusertask[w]
+                www.newusertask.push(
+                  {
+                    "wwwnew": "Change title",
+                    "wwwnewdescription": "www",
+                    "wwwnewtask": "www",
+                    "wwwnewusertask": [],
+                    "wwwnewusertaskteacher": []
+                  }
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+    this.setState({ unidades: units })
+  }
 
 
   render() {
     return (
       <>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick={true}
-          rtl={false}
-          pauseOnFocusLoss={false}
-          draggable
-          pauseOnHover={false}
-          closeButton={false}
-        />
-        <Navigation />
+        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick={true} rtl={false} pauseOnFocusLoss={false} draggable pauseOnHover={false} closeButton={false} />
 
+        <Headroom>
+          <Navigate />
+        </Headroom>
+        <div className="py-1"></div>
 
         <div className="container">
+          <div className="row justify-content-center align-items-center">
+            <div className="p-1 col-md-6 text-center">
+              <h1 className="p-1 text-center ffont" >Escuela Superior de Formación Artística Pública Ayacucho
+                "Felipe Guamán Poma de Ayala" (ESFAPA)
+              </h1>
+              <div className="text-center" >
+                Escuela Superior de Formación Artística pública de formación profesional en artes visuales desarrollado en un plan de estudios de 5 años ubicado en la ciudad de Ayacucho. <Link to='/acerca' className="" >Saber más
+                </Link>
+              </div>
 
-          {this.state.zz.map((note, index) => (
-            <div className="col-md-6 p-1 m-0 text-center border" key={index}>
-                <button className="btn btn-info" onClick={this.onSubmit}>
-                Actualizar datos
-              </button>
-              {/* <Link to={note.link} > Navigate </Link> */}
-                {note.type} {note._id}                 {note.title}
-                {note.description}
+              <Link to="/cursos"
+                className="btn btn-outline-info ffont" style={{ margin: '.1em' }}>
+                ESFACAP<br />
+                <BiCertification style={{ fontSize: '54px' }} />
+              </Link>
+              <Link to={`/video/${Math.random().toString(36).substring(2, 11).toUpperCase()}`}
+                className="btn btn-outline-warning ffont" style={{ margin: '.1em' }} >
+                WebRTC<br />
+                <MdOutlineVideoCameraFront style={{ fontSize: '54px' }} />
+              </Link>
+              <Link to="/foroesfa"
+                className="btn btn-outline-success ffont" style={{ margin: '.1em' }}>
+                Blog<br />
+                <MdForum style={{ fontSize: '54px' }} />
+              </Link>
+              <Link to="/tramites"
+                className="btn btn-outline-warning ffont" style={{ margin: '.1em' }}>
+                Tramites<br />
+                <FaFileArchive style={{ fontSize: '54px' }} />
+              </Link>
             </div>
-          ))}
+            <div className="p-1 col-md-6 text-center">
+              <Swiper
+                modules={[Navigation, Pagination, EffectCoverflow, EffectFade, Autoplay, Scrollbar, A11y]}
+                spaceBetween={50}
+                // effect="coverflow"
+                effect="fade"
+                slidesPerView={3}
+                grabCursor={true}
+                centeredSlides={true}
+                coverflowEffect={{ rotate: 50, stretch: 0, depth: 100, modifier: 1, slideShadows: true, }}
+                fadeEffect={{ crossFade: true, }}
+                autoplay={{ delay: 2500, disableOnInteraction: true }}
+                loop={true}
+                pagination={{ clickable: true }}
+              // scrollbar={{ draggable: true }}
+              // onSwiper={(swiper) => console.log(swiper)}
+              // onSlideChange={() => console.log('slide change')}
+              >
+                {this.state.news ? this.state.news.map((www, i) =>
+                  <SwiperSlide key={www._id}>
+                    <h1 className="text-left text-info ffont">{www.title}</h1>
+                    <Markdownkatexnew>
+                      {www.description}
+                    </Markdownkatexnew>
+                    <button className="btn" onClick={() => { this.openw(); this.setState({ select: "crear", files: [], file: www.file, title: www.title, detail: www.description }) }}>
+                      <FaExpandAlt style={{ color: '#3d85bdff', fontSize: '34px' }} />
+                    </button>
 
-          <div className="container p-0 mb-5 d-flex  justify-content-center align-items-center">
-            <div className="justify-content-center align-items-center rounded row w-100"
+                    {isAuth().rol === '1' ?
+                      <>
+                        <button className="btn" onClick={() => { this.open(); this.setState({ select: "clase", type: "nuevas", files: [], title: www.title, detail: www.description, foreign: isAuth()._id, id: www._id }) }}>
+                          <IoMdCreate style={{ color: '#3d85bdff', fontSize: '34px' }} />
+                        </button>
+                        <button className="btn" onClick={() => { this.removelink(www._id) }}>
+                          <IoIosAlert style={{ color: '#bd3d50ff', fontSize: '34px' }} />
+                        </button>
+                      </>
+                      : ''}
+
+                    <img className="img-fluid" src={`${process.env.REACT_APP_URL}/collections/${www.file}`} alt="Thumb" onError={(e) => { e.target.src = authSvgwww; e.target.style = "padding: 3px; margin: 1px"; }} />
+                  </SwiperSlide>
+                ) : ''}
+              </Swiper>
+              {isAuth().rol === '1' ? <button className="btn btn-primary" onClick={() => { this.open(); this.setState({ select: "crear", files: [], type: "nuevas", title: "", detail: "", foreign: isAuth()._id }) }}>
+                Generar referencias
+              </button> : ""}
+            </div>
+          </div >
+
+          <div className="p-1 text-center">
+            <Swiper
+              modules={[Navigation, Pagination, EffectCube, EffectCoverflow, EffectFade, EffectFlip, Autoplay, Scrollbar, A11y]}
+              spaceBetween={50}
+              // effect="coverflow"
+              effect='flip'
+              // effect='cube'
+              // effect='flip'
+              slidesPerView={3}
+              grabCursor={true}
+              centeredSlides={true}
+              // coverflowEffect={{ rotate: 50, stretch: 0, depth: 100, modifier: 1, slideShadows: true, }}
+              // fadeEffect={{ crossFade: true, }}
+              // flipEffect={{ crossFade: true, }}
+              autoplay={{ delay: 2500, disableOnInteraction: true }}
+              loop={true}
+              pagination={{ clickable: true }}
+            // scrollbar={{ draggable: true }}
+            // onSwiper={(swiper) => console.log(swiper)}
+            // onSlideChange={() => console.log('slide change')}
             >
-              <div className="jumbotron col-md-12 p-1 text-center">
-              </div>
-              <div className="jumbotron col-md-12 p-1">
-                <h1 className="display-3 p-1 text-center">Escuela Superior de Formación Artística
-                  Felipe Guamán Poma de Ayala -
-                  ESFAPA
-                  Ayacucho</h1>
-                <p className="lead text-center">
-                  Escuela Superior de Formación Artística pública de formación profesional en artes visuales desarrollado
-                  en un plan de estudios de 5 años ubicado en la ciudad de Ayacucho.
-                </p>
-                <p>
-                  La Escuela Superior de Formación Artística Pública “Felipe Guamán Poma de Ayala” de Ayacucho, fue creada
-                  el 13 de septiembre de 1952, en mérito a la R.M. 8078 como Escuela Regional de Bellas Artes Pública
-                  “Felipe Guamán Poma de Ayala” de acuerdo con la partida Nº. 28 del Pliego de Educación Pública del
-                  Presupuesto General de la Republica vigente, promoviendo a don José Ricardo Respaldiza Martínez, del
-                  cargo de jefe de la Sección de Museos y Monumentos Nacionales, al de director de la Escuela Regional de
-                  Bellas Artes “Felipe Guamán Poma de Ayala” de Ayacucho.
+              {this.state.newsw ? this.state.newsw.map((www, i) =>
+                <SwiperSlide key={www._id} className="">
+                  <h1 className="text-left text-info ffont">{www.title}</h1>
+                  <div className="text-secondary text-right" style={{ fontSize: 12 }}>Creado <TimeAgo datetime={www.createdAt} locale='es_ES' />. Actualizado <TimeAgo datetime={www.updatedAt} locale='es_ES' /> [{www.usser[0].email}]</div>
+                  <Markdownkatexnew>
+                    {www.description}
+                  </Markdownkatexnew>
 
-                  La escuela se fundó con la finalidad de formar artistas profesionales en artes plástica es por eso que
-                  al
-                  inicio de sus labores académicas dio prioridad a los cursos prácticos como: Dibujo, Pintura y Escultura,
-                  posteriormente se incrementó nuevos talleres como Platería. Filigrana, Joyería, Cerámica, y cursos
-                  teóricos.
-                </p>
+                  <button className="btn" onClick={() => { this.openw(); this.setState({ select: "crear", files: [], file: www.file, title: www.title, detail: www.description }) }}>
+                    <FaExpandAlt style={{ color: '#3d85bdff', fontSize: '34px' }} />
+                  </button>
 
-                <a className="btn text-light" href="/Cmpt14MVComponent"
-                  role="button">Saber
-                  más</a>
+                  {isAuth().rol === '1' ?
+                    <>
+                      <button className="btn" onClick={() => { this.open(); this.setState({ select: "clase", type: "nuevas", files: [], title: www.title, detail: www.description, foreign: isAuth()._id, id: www._id }) }}>
+                        <MdModeEdit style={{ color: '#3d85bdff', fontSize: '34px' }} />
+                      </button>
+                      <button className="btn" onClick={() => { this.removelink(www._id) }}>
+                        <IoIosAlert style={{ color: '#bd3d50ff', fontSize: '34px' }} />
+                      </button>
+                    </>
+                    : ''}
+                  <img className="img-fluid" src={`${process.env.REACT_APP_URL}/collections/${www.file}`} alt="Thumb" onError={(e) => { e.target.src = authSvgwww; e.target.style = "padding: 3px; margin: 1px"; }} />
 
-              </div>
-
-            </div>
+                </SwiperSlide>
+              ) : ''}
+            </Swiper>
+            {isAuth().rol === '1' ? <button className="btn btn-info" onClick={() => { this.open(); this.setState({ select: "crear", files: [], type: "reference", title: "", detail: "", foreign: isAuth()._id }) }}>
+              Generar comunicado
+            </button> : ""}
           </div>
 
 
-          {/* <div>
-            $$\sum_1^3f(x)=\int_1^2$$
-            $\sum_1^3f(x)=\int_1^2$
-          </div>
+          {isAuth() ? <Socket /> : null}
+          {/* < Socket /> */}
 
-          <iframe className="video" frameBorder="0" type="text/html" src="https://www.dailymotion.com/embed/video/x8uv6iq"></iframe>
-          <figure className="media">
-            www
-            <iframe className="video" frameBorder="0" type="text/html" src="https://www.dailymotion.com/embed/video/x8r5idr"></iframe>
-            www     <iframe className="video" frameBorder="0" type="text/html" src="https://www.youtube.com/embed/y881t8ilMyc"></iframe>
-          </figure> */}
-
-          {/* <Modal show={this.state.showModal} onHide={() => { this.close(); }} animation={false}>
+          {/* //////////////////////////////////////////////////////////////////////////// */}
+          {/* //////////////////////////////////////////////////////////////////////////// */}
+          {/* //////////////////////////////////////////////////////////////////////////// */}
+          <Modal size="lg" show={this.state.showModalw} onHide={() => { this.closew(); }} animation={false}>
+            <Modal.Header>
+              <div className="text-uppercase ">
+                {this.state.title}
+              </div>
+            </Modal.Header>
             <Modal.Body>
-              <div className="card form-group">
+              <Markdownkatexnew>
+                {this.state.detail}
+              </Markdownkatexnew>
+              <img className="img-fluid" src={`${process.env.REACT_APP_URL}/collections/${this.state.file}`} alt="Thumb" onError={(e) => { e.target.src = authSvgwww; e.target.style = "padding: 3px; margin: 1px"; }} />
+            </Modal.Body>
+            <Modal.Footer>
+              <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => { this.closew() }}>
+                Cerrar
+              </button>
+            </Modal.Footer>
+          </Modal>
+
+          <Modal size="lg" show={this.state.showModal} onHide={() => { this.close(); }} animation={false}>
+            <Modal.Body> {this.state.type}
+              {(this.state.select === 'subclase' && this.state.subtype !== 'link') || this.state.type === 'nuevas' || this.state.type === 'reference' ? <div className="card form-group">
                 <Input type="file" className="custom-file-input" onChange={(e) => { this.fileSelectHandler(e.target.files); }} ></Input>
                 <label className="custom-file-label" htmlFor="customFile">
-                  Cambiar foto actual
+                  Subir archivo
                 </label>
+              </div> : ""}
+              <div className="card form-group">
+                <input type="text" placeholder="Título" name="title" onChange={this.onInputChange} value={this.state.title} required />
               </div>
               <div className="card form-group">
-                <div className="componentWrappertextleft ">
-                  Apellidos y nombres
-                </div>
-                <input type="text" placeholder="Apellidos y nombres" name="name" onChange={this.onInputChange} value={this.state.name} required />
+                {this.state.select === 'subclase' ? < textarea type="text" placeholder="Detalles" name="detail" onChange={this.onInputChange} value={this.state.detail} required /> :
+                  <CKEditor editor={ClassicEditor} config={{
+                    language: 'es', placeholder: "Descripción",
+                    toolbar: ["math", "|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList", "numberedList", "|", "indent", "outdent", "|", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "heading"]
+                  }} data={this.state.detail} onChange={(event, editor) => {
+                    //wwWw(editor.getData())
+                    this.setState({ detail: editor.getData() })
+                  }} onReady={editor => {
+                    console.log('Editor is ready to use!', editor)
+                    //wwWw(editor.getData())
+                  }}
+                    name="detail"
+                  />
+                }
               </div>
             </Modal.Body>
-
             <Modal.Footer>
-              <button className="btn btn-info" onClick={this.onSubmit}>
-                Actualizar datos
-              </button>
+
+              {this.state.select === 'crear' ?
+                <button className="btn btn-info" onClick={this.crearGeneral}> Crear </button> : ""
+              }
+              {this.state.select === 'subclase' ?
+                <button className="btn btn-info" onClick={this.updatefirst}> Actualizarsubclase </button> : ""
+              }
+              {this.state.select === 'clase' ?
+                <button className="btn btn-info" onClick={this.onSubmitUpdate}> Actualizarclase </button> : ""
+              }
+              {this.state.select === 'newclass' ?
+                <button className="btn btn-info" onClick={this.createSesion}>Crearsubclase</button> : ""
+              }
+              <button className="btn btn-info" onClick={this.createSesionw}>Crearsubsubclase</button>
+
               <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => { this.close() }}>
                 Cerrar
               </button>
             </Modal.Footer>
           </Modal>
- */}
-          {/* {isAuth() ? (
-            <div className="card-body p-3 my-5">
-              <a className="text-center btn btn-info " onClick={() => { this.open(); this.setState({ user: this.state.user._id, name: this.state.user.name }) }}>
-                Actualizar
-              </a>
-              <div className="text-uppercase p-1">
-              </div>
+          {/* //////////////////////////////////////////////////////////////////////////// */}
+          {/* //////////////////////////////////////////////////////////////////////////// */}
+          {/* //////////////////////////////////////////////////////////////////////////// */}
+
+
+
+
+          {isAuth() && isAuth().rol === '1' ? (
+            <div className="card-body p-3 my-5 text-center">
+              <button className="text-center btn btn-secondary" onClick={() => { this.open(); this.setState({ select: "crear", files: [], type: "general", subtype: "image", foreign: isAuth()._id }) }}>Generar documentos</button>
             </div>
-          ) : null} */}
+          ) : null}
 
 
 
 
 
-          {/*<Www_w />*/}
-          {/* <div className={isAuth() ? "container p-1 my-3 text-center" : null}>
-            <ToastContainer
-              position="bottom-right"
-              autoClose={2000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-            />
-            {35 == 35 ? (
-              <>
-                {isAuth().role === "admin" ? (
-                  <>
-                    <Link
-                      to="/admin"
-                      className="btn btn-info text-white mx-1"
-                    >
-                      Perfil administrador
-                    </Link>
-                    <Link
-                      to="/estudianteAll"
-                      className="btn btn-info text-white mx-1 text-uppercase"
-                    >
-                      Estudiantes
-                    </Link>
-                  </>
-                ) : (
-                  <Link
-                    to="/private"
-                    className="btn btn-info text-white mx-1"
-                  >
-                    Perfil estudiante
-                  </Link>
-                )}
-              </>
-            ) : null}
-            <>
-              <div className="card my-3 sky text-light">
-                <div className="row sky">
-                  <div className="container col-md-4 p-3 text-center rounded-left ">
-                    <h1>Fisart.cf</h1>
-                  </div>
-
-                  <div className="container col-md-8 p-5 rounded-right">
-                    <img className="img-fluid" src={authSvg} alt="img" />
+          <div id="section-one" className="justify-content-center align-items-center" style={{ minHeight: '200px' }} >
+            {this.state.zz ? this.state.zz.map((note, i) => (
+              <div className="border border-primary p-1 mt-2 rounded" key={i} >
+                <div className="text-primary text-center h1 p-1 ffont">
+                  {note.title}
+                </div>
+                {isAuth() && isAuth().rol === '1' ?
+                  <button className="btn btn-warning w-100" style={{ height: '11px', padding: '.1px' }} type="button" data-toggle="collapse" data-target={"#collapseOne" + note._id} aria-expanded="false">
+                  </button> : ""}
+                <div className="collapse" id={"collapseOne" + note._id}>
+                  <div className="btn btn-group w-100">
+                    <button className="btn btn-info" onClick={() => { this.open(); this.setState({ select: "newclass", files: [], type: "general", i: i, title: "", detail: "" }) }}>
+                      <IoIosAddCircleOutline style={{ fontSize: '34px' }} />
+                    </button>
+                    <button className="btn  btn-success" onClick={() => { this.open(); this.setState({ select: "clase", type: "general", files: [], title: note.title, detail: note.description, id: note._id }) }}>
+                      <IoMdCreate style={{ fontSize: '34px' }} />
+                    </button>
+                    <button className="btn  btn-info" onClick={() => { this.removelink(note._id) }}>
+                      <IoIosAlert style={{ color: '#bd3d50ff', fontSize: '34px' }} />
+                    </button>
                   </div>
                 </div>
+                <div className="text-warning">
+                  <Markdownkatexnew>
+                    {note.description}
+                  </Markdownkatexnew>
+                </div>
+
+                <div className="row d-flex justify-content-center align-items-center" style={{ margin: '1px', padding: '1px' }}>
+                  {note.usertask ? note.usertask.map((notte, j) => (
+                    <div className="col-md-6 col-lg-4 p-1" key={j} >
+                      <div className="w-100 h-100">
+                        <button className="btn btn-outline-primary w-100 h-100" onClick={() => { this.openInNewTab(notte.detail) }}>{notte.title}</button>
+                        {isAuth() && isAuth().rol === '1' ?
+                          <button className="btn btn-primary w-100" style={{ height: '9px', padding: '.1px' }} type="button" data-toggle="collapse" data-target={"#collapseOne" + j} aria-expanded="false">
+                          </button> : ""}
+                        <div className="collapse" id={"collapseOne" + j}>
+                          {isAuth() && isAuth().rol === '1' ?
+                            <div className="btn btn-group w-100">
+                              <button className="btn p-0" onClick={() => { this.open(); this.setState({ select: "newclass", files: [], type: "general", i: i, j: j, title: "", detail: "" }) }}>
+                                <IoIosAddCircleOutline style={{ color: '#3d85bdff', fontSize: '34px' }} />
+                              </button>
+
+                              <button className="btn text-center" onClick={() => { this.open(); this.setState({ select: "subclase", type: "general", files: [], title: notte.title, detail: notte.detail, i: i, j: j }) }}>
+                                <IoMdCreate style={{ color: '#3d85bdff', fontSize: '34px' }} />
+                              </button>
+                              <button className="btn text-center" onClick={() => { this.remove(i, j) }}>
+                                <IoMdAlert style={{ color: '#3d85bdff', fontSize: '34px' }} />
+                              </button>
+                            </div> : ''}
+                        </div>
+
+                        <div className="justify-content-center align-items-center">
+                          {notte.usertask ? notte.usertask.map((nottte, k) => (
+                            <div className="border border-warning col-md-6 col-lg-6 p-1" key={k} >
+                              <div className="border border-warning rounded p-1 mt-3">
+                                {k + 1}
+                              </div>
+                            </div>
+                          ))
+                            : null}
+                        </div>
+
+                      </div>
+
+                    </div>
+                  ))
+                    : null}
+                </div>
               </div>
-            </>
-          </div> */}
-
-          {/* <div className="w-100 text-center d-none" ref={(ref) => (this.mount = ref)} />
-          <div className="container p-0">
-            <div className="card-body ">
-              <div className="row align-items-center">
-                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
-                  <iframe title="Fractal Alien Landmark" frameborder="0" width="100%" height="480" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/a2be9c119f7848df9864c0df1272af06/embed"> </iframe>
-                </div>
-                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
-                  <iframe title="Cthulhu (Animated)" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="100%" height="480" src="https://sketchfab.com/models/e4593e6681e84889a4d1df34ae30b5c6/embed"> </iframe>
-                </div>
-                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
-                  <iframe title="Fractal Alien Landmark" frameborder="0" width="100%" height="480" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/a2be9c119f7848df9864c0df1272af06/embed"> </iframe>
-                </div>
-                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
-                  <iframe title="Study" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="100%" height="480" src="https://sketchfab.com/models/9b3f278bacc54f219addd98215008ceb/embed"> </iframe>
-                </div>
-                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
-                  <iframe title="Sculpture Allure" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" width="100%" height="480" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/eb51e179d6634973875205a8485940d4/embed"> </iframe>
-                </div>
-                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
-                  <iframe title="Rossebändiger" frameborder="0" allowfullscreen mozallowfullscreen="true" width="100%" height="480" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/fd8153d1cd8d4fefaf4825d8a0c6abe3/embed"> </iframe>
-                </div>
-                <div className="container text-center p-1 col-md-6 col-lg-4 col-xl-4">
-                  <iframe title="My Sketchfab Mesh" frameborder="0" width="100%" height="480" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/f39c1bc8170c44348f3bea92868a8dae/embed"> </iframe>
-                </div>
-
-              </div>
-            </div>
-          </div> */}
-
-          {isAuth() ? <Socket /> : null}
-
-
-
-          <Wwwwww />
-        </div>
+            ))
+              : ''}
+          </div>
+          <hr />
+        </div >
+        <Wwwwww />
       </>
     );
   }

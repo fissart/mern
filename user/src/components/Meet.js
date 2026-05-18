@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 //import { Input, Button } from "@material-ui/core";
 import axios from "axios";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 // import { Document, Page } from "react-pdf";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
@@ -63,7 +63,7 @@ class Home extends Component {
   };
 
   componentDidMount() {
-    document.title =  `FILES ${isAsignature().title}`
+    document.title = `FILES ${isAsignature().title}`
     this.getLink();
   }
 
@@ -114,9 +114,9 @@ class Home extends Component {
     const data = new FormData();
     data.append("archivo", this.state.files[0]);
     data.append("curse", this.props.match.params.curse);
-    data.append("link", this.state.link);
-    data.append("name", this.state.name);
-    data.append("type", this.state.type);
+    data.append("detail", this.state.files[0].size);
+    data.append("title", this.state.files[0].name);
+    data.append("type", this.state.files[0].type);
     //console.log(data);
     if (!this.state.editing) {
       axios
@@ -158,6 +158,7 @@ class Home extends Component {
   };
 
   fileSelectHandler = (files) => {
+    console.log(files)
     this.setState({
       files,
     });
@@ -202,28 +203,32 @@ class Home extends Component {
 
         <div className="container my-3 p-0">
           <div className="container p-1 my-3 text-center text-uppercase">
-            Archivos de {isAsignature().title} [{isAsignature().mencion}]
+            Archivos de {isAsignature().title}
+            {/* [{isAsignature().mencion}] */}
           </div>
 
-          {isAuth().rol === "2" ? (
+          {isAuth().rol === "1" ? (
             <button className="btn btn-info w-100" onClick={() => { this.createLink(); this.open(); }} >
               Agregar archivo
             </button>
           ) : null}
 
-          <div className="card p-1">
+          <div className="row justify-content-center align-items-center p-1">
             {this.state.links.map((note, index) => (
-              <div className="my-1 border border-info p-1" key={index} >
-                <div className="text-uppercase">
-                  {index + 1}--{note.type}--{note.name}
-                </div>
-                <div className="btn-group">
-                  {isAuth().rol === "2" ?
-                    <><button className="btn btn-danger" onClick={() => this.delteLink(note._id)} > <MdDelete /> </button>
-                      <button data-toggle="modal" className="btn btn-info" onClick={() => { this.upDateLink(note._id); this.open(); }} > <MdEdit /> </button>
-                    </>
-                    : null}
-                  <a className="btn btn-secondary" target="_blank" href={`${process.env.REACT_APP_URL}/link/${note.file}`} > <MdFileDownload /> </a>
+              <div className="col-md-4 p-1 m-0 text-center my-1 p-1" key={index} >
+                <div className="border border-info rounded">
+                  {index + 1}--{note.type}--{note.title}
+                  <br/>
+                  <div className="btn-group">
+                    {isAuth().rol === "1" ?
+                      <>
+                        <button data-toggle="modal" className="btn" onClick={() => { this.upDateLink(note._id); this.open(); }} > <MdEdit style={{ color: '#92bee0ff', fontSize: '34px' }} /> </button>
+                        <button className="btn" onClick={() => this.delteLink(note._id)} > <MdDelete style={{ color: '#92bee0ff', fontSize: '34px' }} /> </button>
+                      </>
+                      : null}
+                    <a className="btn" target="_blank" href={`${process.env.REACT_APP_URL}/collections/${note.file}`} > <MdFileDownload style={{ color: '#92bee0ff', fontSize: '34px' }} />
+                    </a>
+                  </div>
                 </div>
 
                 {note.type === "imagen" ?

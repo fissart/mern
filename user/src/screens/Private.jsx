@@ -1,24 +1,27 @@
 import React, { useState, useEffect } from "react"
+import { useRef } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { isAuth, getCokie, signout } from "../helpers/auth";
+import { isAuth, getCokie, signout, updateUser } from "../helpers/auth";
 import Navigation from "../screens/Navigation.jsx";
 import authSvgwww from "../assests/foto.png";
+import foto from "../assests/foto.png";
 
 const Private = ({ history }) => {
   const [formData, setFormData] = useState({
+    fileInputRef: "",
     name: "",
     photoSelected: "",
     namefile: "",
     files: [],
     email: "",
     password: "",
-    textChange: "Actualizar",
+    textChange: "Actualizar perfil",
     rol: "",
   })
 
   const fileSelectHandler = (file) => {
-    //console.log(formData.files, file);
+    console.log(formData.files, file);
     // var array = ["image/jpeg", "image/jpg", "image/png", "image/PNG", "image/svg+xml"];
     // console.log(array.includes(files[0].type));
     // if (files) {
@@ -40,12 +43,11 @@ const Private = ({ history }) => {
 
   const loadProfile = () => {
     const token = getCokie("token");
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/user/${isAuth()._id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    axios.get(`${process.env.REACT_APP_API_URL}/users/user/${isAuth()._id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => {
         console.log(res)
         const { rol, name, email, foto, password } = res.data;
@@ -75,17 +77,26 @@ const Private = ({ history }) => {
     //const token = getCookie("token");
     //console.log(token);
     e.preventDefault();
-    setFormData({ ...formData, textChange: "Submitting" });
+    setFormData({ ...formData, textChange: "Actualizando" });
     const data = new FormData()
     data.append("foto", formData.files[0])
     data.append("rol", rol)
     data.append("name", name)
     data.append("email", email)
     data.append("password", password)
-    console.log(formData.files[0])
-    await axios.put(`${process.env.REACT_APP_API_URL}/userUp/` + isAuth()._id, data);
-    toast.info("Perfil actualizado satisfactoriamente");
-    history.push("/");
+    console.log(rol, name, email, password)
+    await axios.put(`${process.env.REACT_APP_API_URL}/users/user/` + isAuth()._id, data).then(res => {
+      // setFormData({ ...formData, textChange: "Actualizar" });
+      toast.info("Perfil actualizado satisfactoriamente")
+      loadProfile()
+    }).catch((err) => {
+      console.log(err.response.statusText);
+      toast.error(`Error To Your Information ${err.response.statusText}`);
+      if (err.response.status === 401) {
+      }
+    })
+    // history.push("/");
+
 
     // axios.put(`${process.env.REACT_APP_API_URL}/user/update`, data, { headers: { Authorization: `Bearer ${token}`, }, }).then((res) => {
     //   updateUser(res, () => {
@@ -94,29 +105,49 @@ const Private = ({ history }) => {
     // }).catch((err) => { console.log(err.response); });
   };
 
-  // const fotto = async () => {
-  //   foto.click();
-  // }
+  const fileInputRef = useRef(null);
+  const handleButtonClick = () => {
+    console.log("www")
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   return (
     <>
       <Navigation />
-      <div className="container my-3 text-center">
-        <div className="row">
-          <div className="container p-3 rounded-left bg-light">
-            <ToastContainer />
-            <h5>Actualizar perfil</h5>
-            <form onSubmit={handleSubmit} className="row">
-              <input className="form-control my-1 md-col-6" type="text" placeholder="rol" onChange={handleChange("rol")} value={rol} />
-              <input className="form-control my-1" type="email" placeholder="Email" onChange={handleChange("email")} value={email} />
-              <input className="form-control my-1" type="text" placeholder="Name" onChange={handleChange("name")} value={name} />
-              <input className="form-control my-1" type="text" placeholder="Password" onChange={handleChange("password")} value={password} />
-              <input type="file" className="form-control d-none" onChange={(e) => { fileSelectHandler(e.target.files); }} id="foto"></input>
-              <button type="submit" className="btn btn-info mb-1 w-100">
+      <div className="container">
+        <ToastContainer />
+        <div className="row d-flex justify-content-center align-items-center">
+          <div className="col-md-6 p-2 rounded-left">
+            {/* <h5>Actualizar perfil</h5> */}
+            <form onSubmit={handleSubmit} className="">
+              <div class="form-group">
+                <label class="form-label text-info">Rol</label>
+                <input className="form-control my-1" disabled={true} type="text" placeholder="rol" onChange={handleChange("rol")} value={rol} />
+              </div>
+              <div class="form-group">
+                <label class="form-label text-info">Correo</label>
+                <input className="form-control my-1" disabled={true} type="email" placeholder="Email" onChange={handleChange("email")} value={email} />
+              </div>
+              <div class="form-group">
+                <label class="form-label text-info">Nombre</label>
+                <input className="form-control my-1" disabled={true} type="text" placeholder="Name" onChange={handleChange("name")} value={name} />
+              </div>
+              <div class="form-group">
+                <label class="form-label text-info">Password</label>
+                <input className="form-control my-1" type="text" placeholder="Password" onChange={handleChange("password")} value={password} />
+              </div>
+
+              <input type="file" className="form-control d-none" onChange={(e) => { fileSelectHandler(e.target.files); }} ref={fileInputRef}>
+              </input>
+              <button type="submit" className="btn btn-warning w-100">
                 {textChange} {formData.namefile}
               </button>
             </form>
-            {/* <img className="img-fluid" src={formData.photoSelected ? formData.photoSelected : `${process.env.REACT_APP_URL}/profile/${formData.foto}`} alt="Thumb" onClick={fotto} onError={(e) => { e.target.src = authSvgwww; e.target.style = "padding: 3px; margin: 1px"; }} /> */}
+          </div>
+          <div className="col-md-6 p-2 rounded-right">
+            <img className="img-fluid" src={formData.photoSelected ? formData.photoSelected : `${process.env.REACT_APP_URL}/collections/${formData.foto}`} alt="Thumb" onClick={() => { handleButtonClick() }} onError={(e) => { e.target.src = authSvgwww; e.target.style = "padding: 3px; margin: 1px"; }} />
           </div>
         </div>
       </div>

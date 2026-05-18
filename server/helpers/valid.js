@@ -1,6 +1,5 @@
-const {
-  check
-} = require('express-validator');
+const { check } = require('express-validator');
+
 exports.validSign = [
   check("name", "Nombre es requerido")
     .notEmpty()
@@ -23,13 +22,13 @@ exports.validSign = [
 exports.validLogin = [
   check("email").isEmail().withMessage("Debe ser un email aceptable"),
   check("password", "password es requerido").notEmpty(),
-  //   check("password")
-  //     .isLength({
-  //       min: 3,
-  //     })
-  //     .withMessage("El password debe contener 3 caracteres minímo")
-  //     .matches(/\d/)
-  //     .withMessage("El password debe contener un número"),
+  check("password")
+    .isLength({
+      min: 3,
+    })
+    .withMessage("El password debe contener 3 caracteres minímo")
+    .matches(/\d/)
+    .withMessage("El password debe contener un número"),
 ];
 
 

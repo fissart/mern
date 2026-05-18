@@ -1,146 +1,135 @@
 const comment = {};
 
 const Theme = require("../models/theme.model");
-const Comment = require("../models/comment");
-const C2 = require("../models/c2.model");
-const C3 = require("../models/c3.model");
-const C4 = require("../models/c4.model");
-const C5 = require("../models/c5.model");
 
 comment.getTheme = async (req, res) => {
   // const notes = await Theme.find({ curse: req.params.curse });
   // res.json(notes);
-    const { ObjectId } = require("mongodb");
-    const id = ObjectId(req.params.curse);
-    const cursse = ObjectId(id)
-    const Curseuser = await Theme.aggregate([
-      {
-        $match: {
-          curse: cursse,
-        },
+  const { ObjectId } = require("mongodb");
+  const id = ObjectId(req.params.curse);
+  const cursse = ObjectId(id)
+  const Curseuser = await Theme.aggregate([
+    {
+      $match: {
+        curse: cursse,
       },
-      {
-        $lookup: {
-          from: "comments",
-          let: { www: "$_id" },
-          pipeline: [
-            { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
-            {
-              $lookup: {
-                from: "comments",
-                let: { www: "$_id" },
-                pipeline: [
-                  { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
-                  {
-                    $lookup: {
-                      from: "comments",
-                      let: { www: "$_id" },
-                      pipeline: [
-                        { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
-                        {
-                          $lookup: {
-                            from: "comments",
-                            let: { www: "$_id" },
-                            pipeline: [
-                              { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
-                              {
-                                $lookup: {
-                                  from: "comments",
-                                  let: { www: "$_id" },
-                                  pipeline: [
-                                    { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
-                                    {
-                                      $lookup: {
-                                        from: "users",
-                                        let: { www: "$user" },
-                                        pipeline: [
-                                          { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-                                        as: "usser",
-                                      },
+    },
+    {
+      $lookup: {
+        from: "comments",
+        let: { www: "$_id" },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
+          {
+            $lookup: {
+              from: "comments",
+              let: { www: "$_id" },
+              pipeline: [
+                { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
+                {
+                  $lookup: {
+                    from: "comments",
+                    let: { www: "$_id" },
+                    pipeline: [
+                      { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
+                      {
+                        $lookup: {
+                          from: "comments",
+                          let: { www: "$_id" },
+                          pipeline: [
+                            { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
+                            {
+                              $lookup: {
+                                from: "comments",
+                                let: { www: "$_id" },
+                                pipeline: [
+                                  { $match: { $expr: { $eq: ["$theme", "$$www"] } } },
+                                  {
+                                    $lookup: {
+                                      from: "users",
+                                      let: { www: "$user" },
+                                      pipeline: [
+                                        { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
+                                      as: "usser",
                                     },
-                                    { $sort: { "_id": -1 } }
-                                  ],
-                                  as: "comments",
-                                },
+                                  },
+                                  { $sort: { "_id": -1 } }
+                                ],
+                                as: "comments",
                               },
-                              {
-                                $lookup: {
-                                  from: "users",
-                                  let: { www: "$user" },
-                                  pipeline: [
-                                    { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-                                  as: "usser",
-                                },
+                            },
+                            {
+                              $lookup: {
+                                from: "users",
+                                let: { www: "$user" },
+                                pipeline: [
+                                  { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
+                                as: "usser",
                               },
-                              { $sort: { "_id": -1 } }
-                            ],
-                            as: "comments",
-                          },
+                            },
+                            { $sort: { "_id": -1 } }
+                          ],
+                          as: "comments",
                         },
-                        {
-                          $lookup: {
-                            from: "users",
-                            let: { www: "$user" },
-                            pipeline: [
-                              { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-                            as: "usser",
-                          },
+                      },
+                      {
+                        $lookup: {
+                          from: "users",
+                          let: { www: "$user" },
+                          pipeline: [
+                            { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
+                          as: "usser",
                         },
-                        { $sort: { "_id": -1 } }
-                      ],
-                      as: "comments",
-                    },
+                      },
+                      { $sort: { "_id": -1 } }
+                    ],
+                    as: "comments",
                   },
-                  {
-                    $lookup: {
-                      from: "users",
-                      let: { www: "$user" },
-                      pipeline: [
-                        { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-                      as: "usser",
-                    },
+                },
+                {
+                  $lookup: {
+                    from: "users",
+                    let: { www: "$user" },
+                    pipeline: [
+                      { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
+                    as: "usser",
                   },
-                  { $sort: { "_id": -1 } }
+                },
+                { $sort: { "_id": -1 } }
 
-                ],
-                as: "comments",
-              },
+              ],
+              as: "comments",
             },
-            {
-              $lookup: {
-                from: "users",
-                let: { www: "$user" },
-                pipeline: [
-                  { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
-                as: "usser",
-              },
+          },
+          {
+            $lookup: {
+              from: "users",
+              let: { www: "$user" },
+              pipeline: [
+                { $match: { $expr: { $eq: ["$_id", "$$www"] } } }],
+              as: "usser",
             },
-            { $sort: { "_id": -1 } }
-          ],
-          as: "comments",
-        },
+          },
+          { $sort: { "_id": -1 } }
+        ],
+        as: "comments",
       },
-    ]).sort({ _id: -1 })
-    //console.log(Curseuser)
+    },
+  ]).sort({ _id: -1 })
+  //console.log(Curseuser)
   return res.json(Curseuser)
 }
 
 comment.getComment_User_Idtheme = async (req, res) => {
-  const notes = await Comment.find({
-    identificador_tema: req.params.idtheme,
-    user: req.params.user,
-  });
-  res.json(notes);
+  // const notes = await Comment.find({
+  //   identificador_tema: req.params.idtheme,
+  //   user: req.params.user,
+  // });
+  // res.json(notes);
 };
 comment.createTheme = async (req, res) => {
-  const { user, theme, curse, title } = req.body;
-  const newTheme = new Theme({
-    user,
-    title,
-    theme,
-    curse,
-  });
-  console.log(newTheme);
+  console.log(req.body);
+  const newTheme = new Theme(req.body);
   await newTheme.save();
   res.json("Added theme");
 };
@@ -152,16 +141,17 @@ comment.updateThemeget = async (req, res) => {
 };
 
 comment.updateTheme = async (req, res) => {
-  const { theme, title } = req.body;
-  await Theme.findByIdAndUpdate(req.params.idtheme, {
-    title, theme
-  }).then();
-  res.json("Added theme");
+  await Theme.findByIdAndUpdate(req.params.id, req.body).then((res) => {
+    console.log("Added theme")
+  });
+  const www = Theme.findById(req.params.id)
+  // console.log(req.params.id, www);
+  res.json("NotAdded theme")
 };
 
 comment.deleteTheme = async (req, res) => {
-  console.log(req.params.idtheme);
-  await Theme.findByIdAndDelete(req.params.idtheme);
+  // console.log(req.params.idtheme);
+  await Theme.findByIdAndDelete(req.params.id);
   res.json("Deleted theme");
 };
 
@@ -169,9 +159,9 @@ comment.deleteTheme = async (req, res) => {
 
 comment.createComment = async (req, res) => {
   const { theme, curse, user, comment, } = req.body; //const ww=req.body;
-  const newcomment = new Comment({ theme, curse, user, comment, });
-  console.log(newcomment);
-  await newcomment.save();
+  // const newcomment = new Comment({ theme, curse, user, comment, });
+  // console.log(newcomment);
+  // await newcomment.save();
   res.json("Added");
 };
 comment.createComment2 = async (req, res) => {
@@ -326,8 +316,8 @@ comment.getU = async (req, res) => {
 };
 
 comment.deleteComment = async (req, res) => {
-  console.log(req.params.idcoment, "www");
-  await Comment.findByIdAndDelete(req.params.idcoment);
+  // console.log(req.params.idcoment, "www");
+  // await Comment.findByIdAndDelete(req.params.idcoment);
   res.json("Note Deleted");
 };
 
@@ -339,16 +329,16 @@ comment.updateCommentget = async (req, res) => {
 
   }
   if (req.params.index === "2") {
-    const notes = await C2.find({ _id: req.params.id });
+    // const notes = await C2.find({ _id: req.params.id });
     res.json(notes);
 
   }
 };
 comment.updateComment = async (req, res) => {
   const { comment, calification } = req.body;
-  await Comment.findByIdAndUpdate(req.params.id, {
-    comment, calification
-  });
+  // await Comment.findByIdAndUpdate(req.params.id, {
+  //   comment, calification
+  // });
   res.json("Note Updated");
 };
 module.exports = comment;

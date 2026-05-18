@@ -8,10 +8,16 @@ const userSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
     },
+    foreign: {
+      type: Schema.Types.ObjectId,
+    },
+    usertask: [],
+    parent: { type: String },
     file: { type: String },
     title: { type: String },
     description: { type: String },
     type: { type: String },
+    subtype: { type: String },
   },
   {
     timestamps: true,

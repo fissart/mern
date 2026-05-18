@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { updateUser, isAuth, getCokie, signout } from '../helpers/auth';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Admin = ({ history }) => {
 	const [ formData, setFormData ] = useState({
@@ -91,7 +91,7 @@ const Admin = ({ history }) => {
 		<div className="container my-3">
 			<div className="row">
 				<ToastContainer />
-				<div className="container col-md-4 p-3 rounded-left text-center bg-info">
+				<div className="container p-3 rounded-left text-center bg-info">
 					<h5 className="">Admin Update</h5>
 					<form onSubmit={handleSubmit}>
 						<input disabled className="form-control my-1" type="text" placeholder="Role" value={role} />

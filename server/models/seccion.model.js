@@ -2,15 +2,19 @@ const { Schema, model } = require("mongoose");
 
 const userSchema = new Schema(
   {
-    chapter: {
+    user: {
+      type: Schema.Types.ObjectId
+    },
+    curse: {
       type: Schema.Types.ObjectId
     },
     title: { type: String },
+    idtheme: { type: String },
     description: { type: String},
     task: { type: String },
-    dateb: { type: String },
-    datee: { type: String },
-    fechaexa: Date,
+    dateb: { type: Date },
+    datee: { type: Date },
+    fechaexa: { type: Date },
     timexa: Number,
   },
   {

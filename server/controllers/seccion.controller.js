@@ -16,8 +16,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single('file')
 */
 
-
-
+const TasK = require("../models/task.model");
 const Note = require("../models/seccion.model");
 
 notesww.file = async (req, res) => {
@@ -44,7 +43,7 @@ notesww.file = async (req, res) => {
   myFile.mv(`files/images/${myFile.name}`, function (err) {
     if (err) {
       console.log(err)
-        return res.status(500).send({ msg: "Error occured" });
+      return res.status(500).send({ msg: "Error occured" });
     }
     // returing the response with file path and name
     return res.send({ name: myFile.name, path: `/${myFile.name}` });
@@ -59,82 +58,52 @@ notesww.getS = async (req, res) => {
 };
 
 notesww.createS = async (req, res) => {
-  console.log(req.body);
-  const {
-    chapter,
-    nombre,
-    contenido,
-    tarea,
-    fechaexa,
-  } = req.body;
-  const newNote = new Note({
-    chapter,
-    nombre,
-    contenido,
-    tarea,
-    fechaexa,
-  });
-  console.log(newNote);
-  await newNote.save();
-  res.json("New Note added");
+  const { ObjectId } = require("mongodb");
+  const ifdata = await Note.find({ idtheme: req.body.idtheme, curse: ObjectId(req.body.curse) })
+  console.log(ifdata, req.body.curse, req.body.idtheme, "req.body.curse");
+  if (ifdata.length > 0) {
+    res.json("New Note Not added");
+  } else {
+    const newNote = new Note(req.body)
+    await newNote.save();
+    res.json("New Note added")
+  }
 };
 
 notesww.getSs = async (req, res) => {
   const { ObjectId } = require("mongodb");
   const cursse = ObjectId(req.params.id);
-  const curssse = ObjectId(req.params.curssse);
+  const usser = ObjectId(req.params.iduser);
+  const curssse = req.params.curssse
+  // console.log(curssse, cursse)
   const Curses = await Note.aggregate([
     {
       $match: {
-        _id: cursse,
+        curse: cursse,
+        idtheme: curssse,
       },
     },
     {
       $lookup: {
-        from: "integers",
-        let: { w_ww: "$curse", ww_w: "$_id" },
+        from: "tasks", let: { usser: "$user", www: "$_id" },
         pipeline: [
-          { $match: { $expr: { $eq: ["$curse", curssse] } } },
-          {
-            $lookup: {
-              from: "users",
-              let: { www_: "$user" },
-              pipeline: [
-                { $match: { $expr: { $eq: ["$_id", "$$www_"] } } },
-                {
-                  $lookup: {
-                    from: "tasks",
-                    let: { w_ww: "$_id" },
-                    pipeline: [
-                      { $match: { $expr: { $and: [{ $eq: ["$user", "$$w_ww"] }, { $eq: ["$theme", '$$ww_w'] },] } } },
-                    ],
-                    as: "tassk",
-                  },
-                },
-              ],
-              as: "Usser",
-            },
-          },
-          { $sort: { 'Usser.name': 1 } },
+          { $match: { $expr: { $and: [{ $eq: ["$user", "$$usser"] }, { $eq: ["$theme", "$$www"] }] } } },
         ],
-        as: "integgers",
-      },
+        as: "tassks"
+      }
     },
     {
       $lookup: {
-
-        from: "tasks",
-        let: { w_1: "$_id", w_2: "$user" },
+        from: "tasks", let: { www: "$_id" },
         pipeline: [
-          { $match: { $expr: { $and: [{ $eq: ["$user", "$$w_2"] }, { $eq: ["$theme", '$$w_1'] },] } } },
+          { $match: { $expr: { $and: [{ $eq: ["$user", usser] }, { $eq: ["$theme", "$$www"] }] } } },
         ],
-        as: "tassks",
-
-      },
-    },
+        as: "tasskstd"
+      }
+    }
   ]);
-  //console.log(Curses)
-  //const Curses = await Curse.find();
+  // console.log(Curses)
+  // //const Curses = await Curse.find();
   return res.json(Curses);
 };
 notesww.getSS = async (req, res) => {
@@ -143,22 +112,31 @@ notesww.getSS = async (req, res) => {
   });
   res.json(note);
 };
+
 notesww.deleteS = async (req, res) => {
+  const { ObjectId } = require("mongodb");
+  // const theme = ObjectId(req.params.id);
+  console.log(req.params.id)
   await Note.findByIdAndDelete(req.params.id);
+  await TasK.deleteMany({ theme: ObjectId(req.params.id) });
   res.json("Note Deleted");
 };
 
 notesww.updateS = async (req, res) => {
-  //  const { title, content, duration, date, author } = req.body;
-  const { title, description, dateb, datee } = req.body;
-  await Note.findByIdAndUpdate(req.params.id, { title, description, dateb, datee });
-  res.json("Note Updated");
+  const { ObjectId } = require("mongodb");
+  const theme = ObjectId(req.params.id);
+  // console.log(req.body)
+  // const { title, content, duration, date, author } = req.body;
+  // const { title, description, dateb, datee } = req.body;
+  await TasK.updateMany({ theme: theme }, { $set: { dateb: req.body.dateb, datee: req.body.datee } });
+  await Note.findByIdAndUpdate(req.params.id, req.body);
+  res.json("Nota actualizado");
 };
 
 notesww.updateSfromStudent = async (req, res) => {
   //  const { title, content, duration, date, author } = req.body;
   const { contenido } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   await Note.findByIdAndUpdate(req.params.id, {
     contenido,
   });

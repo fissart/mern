@@ -1,90 +1,39 @@
 import React, { Component } from "react";
-//import authSvg from "../assests/update.svg";
-
 import Navigation from "../screens/Navigation.jsx";
-import DatePicker from "react-datepicker";
+// import DatePicker from "react-datepicker";
+// import { CKEditor } from '@ckeditor/ckeditor5-react';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import "react-datepicker/dist/react-datepicker.css";
-import { Link } from "react-router-dom";
+import Headroom from "react-headroom";
 import { ToastContainer, toast } from "react-toastify";
-import { IconButton } from "@material-ui/core";
-import { MdEdit, MdDelete, MdOpenInNew, MdComment } from "react-icons/md";
 import io from "socket.io-client";
-import { IoMdCreate, IoMdTrash } from "react-icons/io";
-import { MdAddCircle, MdWork, MdBook, } from "react-icons/md";
-import KatexMarkdown from "./Markdown"
 import axios from "axios"
 import { Modal, Row } from "react-bootstrap";
-import { Input } from "@material-ui/core";
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import TimeAgo from 'timeago-react'; // var TimeAgo = require('timeago-react');
+import Markdownkatexnew from "./Markdown.js";
+import { IoMdCreate, IoIosAlert, IoMdAlert, IoIosAddCircleOutline, IoIosAirplane, IoIosCreate } from "react-icons/io";
 import '@ckeditor/ckeditor5-build-classic/build/translations/es';
-
-
-import {  //  removeCookie,
-  //  removeLocalStorage,
-  isAsignature, setCookie, getCookie, setLocalStorage, isAuth,
-} from "../helpers/auth";
-const { format, register } = require('timeago.js') //Puede utilizar `import` para Javascript code.
-
-register('es_ES', (number, index, total_sec) => [
-  ['justo ahora', 'ahora mismo'],
-  ['hace %s segundos', 'en %s segundos'],
-  ['hace 1 minuto', 'en 1 minuto'],
-  ['hace %s minutos', 'en %s minutos'],
-  ['hace 1 hora', 'en 1 hora'],
-  ['hace %s horas', 'in %s horas'],
-  ['hace 1 dia', 'en 1 dia'],
-  ['hace %s dias', 'en %s dias'],
-  ['hace 1 semana', 'en 1 semana'],
-  ['hace %s semanas', 'en %s semanas'],
-  ['1 mes', 'en 1 mes'],
-  ['hace %s meses', 'en %s meses'],
-  ['hace 1 año', 'en 1 año'],
-  ['hace %s años', 'en %s años']
-][index]);
-
-const timeago = timestamp => format(timestamp, 'es_ES');
-
-
+import { setLocalStorage, isAuth, } from "../helpers/auth.js";
+import { FaArrowDown } from "react-icons/fa";
+import { FaArrowUp } from "react-icons/fa";
+import { MdCreate, MdEdit, MdRemove } from "react-icons/md";
 
 
 export default class CreateNote extends Component {
   state = {
-    showModal: false,
-    title: "",
-    theme: "",
-    comment: "",
-    calification: "",
-    curse: this.props.match.params.idcurse,
-    likes: "",
-    fecha: new Date(),
-    zz: [],
-    _id: "",
-    files: "",
-    submit: "",
-    editing: false,
-    option: false,
+    showModal: false, title: "", detail: "", option: '', calification: "", curse: this.props.match.params.idcurse, likes: "", i: '', j: '', k: '', zz: [], id: "", files: "", submit: "Crear", editing: false
   };
 
   open = () => this.setState({ showModal: true });
   close = () => this.setState({ showModal: false });
 
   getNotes = async () => {
-    this.socket.emit('forocurse', this.props.match.params.idcurse)
-    this.socket.emit("notes", this.props.match.params.idcurse)
-    this.socket.on("forum", (ww) => {
+    this.socket.emit('foroesfa', this.props.match.params.idcurse)
+    this.socket.emit("temas", this.props.match.params.idcurse)
+    this.socket.on("foro", (ww) => {
       console.log(ww, "new")
       this.setState({ zz: ww });
     })
-    //const res = await axios.get(`${process.env.REACT_APP_API_URL}/comments/comment/curse/` + this.props.match.params.idcurse)
-    //.then(()=>{toast.dark("Tema creado correctamente")}).catch((error) => { console.log("ERROR", error.response) });
-    // toast.dark("Procesado correctamente")
-    // await this.socket.emit('forocurse', this.props.match.params.idcurse);
-    // await this.socket.emit("notes", this.props.match.params.idcurse)
-    // await this.socket.on("forum", (ww) => {
-    //   console.log(ww, "new")
-    //   this.setState({ zz: ww });
-    // })
   };
 
   componentWillUnmount() {
@@ -92,125 +41,181 @@ export default class CreateNote extends Component {
   }
 
   async componentDidMount() {
-    document.title = `FORO ${isAsignature().title}`
-    // this.getNotes()
+    this.getCurses()
+    document.title = `FORO ${process.env.REACT_APP_pagetitle}`
     this.socket = io(`${process.env.REACT_APP_URL}`)
-    this.socket.emit('forocurse', this.props.match.params.idcurse)
-    this.socket.emit("notes", this.props.match.params.idcurse)
-    this.socket.on("forum", (ww) => {
-      console.log(ww, "newww")
+    this.socket.emit('foroesfa', this.props.match.params.idcurse)
+    this.socket.emit("temas", this.props.match.params.idcurse)
+    this.socket.on("foro", (ww) => {
       this.setState({ zz: ww });
+      console.log(ww, "new")
     })
-
   }
 
+  getCurses = async () => {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/curses/cursosculqui/${JSON.parse(localStorage.getItem("user"))._id}/true`);
+    console.log(res.data[0], "w wwwwww")
+    this.setState({
+      cursesteacher: res.data[0].curses,
+      report: res.data[0].cursesstd ? res.data[0].cursesstd : [],
+    });
+  };
+  CreateCurses = async () => {
+    const res = await axios.put(`${process.env.REACT_APP_API_URL}/curses/CreateCurses`, {
+      detail: "this.state.detail", title: "this.state.title"
+    });
+    this.setState({
+      cursesteacher: res.data[0].curses,
+      report: res.data[0].cursesstd ? res.data[0].cursesstd : [],
+    });
+  };
 
-
-
-
-  // onSubmitheme = async (e) => {
-  //   e.preventDefault()
-  //   if (this.state.editing) {
-  //     await axios.put(`${process.env.REACT_APP_API_URL}/comments/theme/` + this.state._id, {
-  //       theme: this.state.comment, title: this.state.title
-  //     }).then(() => { this.close() })
-  //     toast.dark("Tema actualizado correctamente")
-  //   } else {
-  //     await axios.post(`${process.env.REACT_APP_API_URL}/comments/theme`, { theme: this.state.comment, title: this.state.title, curse: this.state.curse, user: isAuth()._id }).then((res) => {
-  //       this.getNotes(); this.close(); toast.dark("Tema creado correctamente")
-  //     })
-  //       .catch((error) => { console.log("ERROR", error.response) })
-  //   }
-  //   this.getNotes();
-  //   //    this.setState({ theme: "", comment: "", calification: "", likes: "" });
-  // };
-  cretetheme = async (curseId) => {
-    this.setState({ submit: "Crear tema", option: true, });
-  }
-  updatetheme = async (id, theme, title) => {
-    console.log(id, theme, title);
-    this.setState({ editing: true, option: true, submit: "Actualizar tema", _id: id, theme, title });
-  }
-
+  ///////////////////////////////////////////////////////////////////////////////////////////////
   CreateTheme = async () => {
-    await axios.post(`${process.env.REACT_APP_API_URL}/comments/theme`, { theme: "Editar tema", title: "Titulo del tema", curse: this.state.curse, user: isAuth()._id }).then((res) => {
-      this.getNotes()
-      //; this.close(); toast.dark("Tema creado correctamente")
-    }).catch((error) => { console.log("ERROR", error.response) })
+    console.log(this.state.title, this.state.detail, isAuth()._id)
+    await axios.post(`${process.env.REACT_APP_API_URL}/foros/theme`, {
+      detail: this.state.detail,
+      title: this.state.title,
+      type: 'foroesfa',
+      curse: this.props.match.params.idcurse,
+      user: isAuth()._id
+    })
+      .then((res) => {
+        this.getNotes()
+        this.close()
+      }).catch((error) => { console.log("ERROR", error.response) })
   };
 
   UpdateTheme = async () => {
-    console.log("Update")
-    await axios.put(`${process.env.REACT_APP_API_URL}/comments/theme/` + this.state._id, {
-      theme: this.state.theme, title: this.state.title
-    }).then(() => { this.getNotes() })
-    toast.dark("Tema actualizado correctamente")
-
+    console.log(this.state.detail, this.state.title)
+    await axios.put(`${process.env.REACT_APP_API_URL}/foros/theme/` + this.state.id, {
+      detail: this.state.detail, title: this.state.title
+    }).then(() => {
+      this.getNotes()
+      this.close()
+      toast.dark("Tema actualizado correctamente")
+    }).catch((error) => { console.log("ERROR", error.response) })
   };
 
+  RemoveTheme = async (id) => {
+    const response = window.confirm('Deseas eliminar este item?');
+    if (response) {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/foros/theme/` + id);
+      this.getNotes();
+      toast.dark('Removido correctamente');
+    }
+  };
+  ///////////////////////////////////////////////////////////////////////////////////////////////
 
+  Likes = async (i, id) => {
+    var data = this.state.zz ? this.state.zz : []
+    console.log(data)
+    if (data[i].likes === undefined || data[i].likes === null) { data[i].likes = [] }
+    const hasLike = data[i].likes.some(usser => usser.user === 'fismart@w');
+    if (hasLike) { } else {
+      data[i].likes.unshift({ "user": isAuth().email, "likes": "w1", "unlikes": "w2", "createdAt": new Date(), "updatedAt": new Date(), })
+      this.setState({ zz: data, });
+      this.Save(data, id, i)
+    }
+  }
 
-
+  UnLikes = async (i, id) => {
+    var data = this.state.zz ? this.state.zz : []
+    console.log(data)
+    if (data[i].unlikes === undefined || data[i].unlikes === null) { data[i].unlikes = [] }
+    const hasLike = data[i].likes.some(usser => usser.user === 'fismart@w');
+    if (hasLike) { } else {
+      data[i].unlikes.unshift({ "user": isAuth().email, "likes": "w1", "unlikes": "w2", "createdAt": new Date(), "updatedAt": new Date(), })
+      this.setState({ zz: data, });
+      this.Save(data, id, i)
+    }
+  }
 
 
   onInputChange = (e) => {
-    //console.log(e.target.name, e.target.value);
+    console.log(e.target.name, e.target.value);
     this.setState({ [e.target.name]: e.target.value })
   };
 
+  Save = async (data, id, i) => {
+    await axios.put(`${process.env.REACT_APP_API_URL}/foros/theme/` + id, data[i]).then(() => {
+      // this.getNotes()
+      this.close()
+      toast.dark("Tema actualizado correctamente")
+    }).catch((error) => { console.log("ERROR", error.response) })
 
+  }
 
-
-
-
-
-  creteComment = async (idtheme) => {
-    this.setState({ option: false, submit: "Comentar", themeid: idtheme, });
-  };
-  updateComment = async (idcoment, comment, calification) => {
-    //console.log(idcoment, title, comment, calification)
-    this.setState({ editing: true, option: false, submit: "Actualizar comentario", _id: idcoment, comment: comment, calification });
-  };
-  onSubmiComment = async (e) => {
-    e.preventDefault()
-    if (this.state.editing) {
-      await axios.put(`${process.env.REACT_APP_API_URL}/comments/comment/` + this.state._id, {
-        comment: this.state.comment, calification: this.state.calification, likes: this.state.likes
-      }).then((res) => { this.close() })
-      toast.info("Actualizado correctamente");
-    } else {
-      await axios.post(`${process.env.REACT_APP_API_URL}/comments/comment`, {
-        curse: this.state.curse, user: isAuth()._id, theme: this.state.themeid,
-        comment: this.state.comment, calification: "", likes: this.state.likes
-      }).then((res) => { this.close() })
-      toast.info("Creado correctamente");
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  CreateSubTheme = async () => {
+    var data = this.state.zz ? this.state.zz : []
+    console.log(data)
+    if (data[this.state.i].units === undefined || data[this.state.i].units === null) {
+      data[this.state.i].units = []
     }
-
-    this.getNotes();
-    this.setState({ calification: "", theme: "", likes: "", comment: "", foreign: "", editing: false, _id: "", index: "", files: "", submit: "", task: false, calification: "", });
-  };
-
-
-  UpDateCommentt = async () => {
-    await axios.put(`${process.env.REACT_APP_API_URL}/comments/comment/` + this.state._id, {
-      comment: this.state.comment, calification: this.state.calification, likes: this.state.likes
-    }).then((res) => {
-      //this.close()
-      toast.info("Actualizado correctamente");
-    })
-    this.getNotes();
-
-    this.setState({ calification: "", theme: "", likes: "", comment: "", foreign: "", editing: false, _id: "", index: "", files: "", submit: "", task: false, calification: "", });
+    data[this.state.i].units.unshift({ "user": isAuth().email, "title": this.state.title, "detail": this.state.detail, "themes": [], "createdAt": new Date(), "updatedAt": new Date(), })
+    this.setState({ zz: data, });
+    this.Save(data)
   }
 
-  onChangeDate = (fecha) => { this.setState({ fecha }) }
-
-  deleteComment = async (id) => { const response = window.confirm("Deseas eliminar este comentario?"); if (response) { await axios.delete(`${process.env.REACT_APP_API_URL}/comments/` + id).then(console.log(response)); this.getNotes() } };
-  deleteTheme = async (idtheme, length) => { const response = window.confirm("Deseas eliminar este tema, también ellimará todos los comentarios?"); if (response) { await axios.delete(`${process.env.REACT_APP_API_URL}/comments/theme/` + idtheme); this.getNotes() } }
-
-  CleanFields = async (noteId) => {
-    this.setState({ nombre: "", chapter: "", contenido: "", tarea: "", files: "", calification: "", timexa: "", option: "", task: true, _id: "", fechaexa: "", })
+  updateSubTheme = async () => {
+    var data = this.state.zz ? this.state.zz : []
+    data[this.state.i].units[this.state.j].title = this.state.title
+    data[this.state.i].units[this.state.j].detail = this.state.detail
+    data[this.state.i].units[this.state.j].updatedAt = new Date()
+    this.setState({ zz: data, });
+    this.Save(data)
   }
+
+
+  removeSubTheme = async (i, j) => {
+    const response = window.confirm("Deseas eliminar este item?");
+    if (response) {
+      var data = this.state.zz ? this.state.zz : []
+      data[i].units.splice(j, 1);
+      console.log(data[i], "www")
+      this.setState({ zz: data })
+      this.Save(data)
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  CreateSubSubTheme = async () => {
+    var data = this.state.zz ? this.state.zz : []
+    console.log(data)
+    data[this.state.i].units[this.state.i].themes.unshift({ "user": isAuth().email, "title": this.state.title, "detail": this.state.detail, "themes": [], "createdAt": new Date(), "updatedAt": new Date(), })
+    this.setState({ zz: data, });
+    this.Save(data)
+  }
+
+  updateSubSubTheme = async () => {
+    var data = this.state.zz ? this.state.zz : []
+    data[this.state.i].units[this.state.j].themes[this.state.k].title = this.state.title
+    data[this.state.i].units[this.state.j].themes[this.state.k].detail = this.state.detail
+    data[this.state.i].units[this.state.j].themes[this.state.k].updatedAt = new Date()
+    this.setState({ zz: data, });
+    this.Save(data)
+  }
+
+
+  removeSubSubTheme = async (i, j, k) => {
+    const response = window.confirm("Deseas eliminar este item?");
+    if (response) {
+      var data = this.state.zz ? this.state.zz : []
+      data[i].units[j].themes.splice(k, 1);
+      console.log(data[i], "www")
+      this.setState({ zz: data })
+      this.Save(data)
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
   render() {
     return (
@@ -219,222 +224,150 @@ export default class CreateNote extends Component {
 
 
         <Modal show={this.state.showModal} onHide={() => { this.close(); }} animation={false}>
-          <form onSubmit={this.state.option ? this.onSubmitheme : this.onSubmiComment} >
-            <div className="modal-header font-weight-bold"> {this.state.submit} </div>
-            <div className="modal-body p-2">
-              <input type="text" className="form-control mt-1" placeholder="Título" onChange={this.onInputChange} name="title" value={this.state.title} />
-              <CKEditor editor={ClassicEditor} config={{
-                language: 'es',
-                toolbar: ["math", "|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList", "numberedList", "|", "indent", "outdent", "|", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "heading"]
-              }} data={this.state.comment} onChange={(event, editor) => {
-                //wwWw(editor.getData())
-                //timeNow()
-              }} onReady={editor => {
-                console.log('Editor is ready to use!', editor)
-                //wwWw(editor.getData())
-              }}
-              />
-              <textarea type="text" className="form-control" placeholder="Texto" name="comment" onChange={this.onInputChange} value={this.state.comment} required autoFocus>
-              </textarea>
-              {this.state.option ?
-                <DatePicker className="form-control mt-1 d-none" selected={this.state.fecha} onChange={this.onChangeDate} showTimeSelect dateFormat="MMMM d, yyyy h:mm aa" />
-                : null}
-              {isAuth().rol == "2" && this.state.editing ? (
-                <input type="text" className="form-control mt-1" placeholder="Calificación" onChange={this.onInputChange} name="calification" value={this.state.calification} />) : null}
+          <div className="modal-header font-weight-bold h5"> {this.state.submit} </div>
+          <div className="modal-body">
+            <div class="mb-3">
+              <label for="www" class="form-label">Título</label>
+              <input type="text" id="www" className="form-control my-1" placeholder="Título" onChange={this.onInputChange} name="title" value={this.state.title} />
             </div>
-            <div className="modal-footer d-flex right-content-center">
-              <button className="btn btn-info"> {this.state.submit}</button>
-              <button type="button" className="btn btn-info" data-dismiss="modal" aria-label="Close" onClick={this.CleanFields} > close </button>
-            </div>
-          </form>
-        </Modal>
 
-        <Navigation />
+            <div class="mb-3">
+              <label for="wwwww" class="form-label">Detalle (Escriba texto en formato Markdown [<a href="https://www.markdownguide.org/basic-syntax/" target="_blank">Tutorial!</a>])</label>
+              <textarea type="text" id="wwwww" className="form-control scroll" placeholder="Contenido" rows="9" name="detail" onChange={this.onInputChange} value={this.state.detail} required ></textarea>
+              <Markdownkatexnew>
+                {this.state.detail}
+              </Markdownkatexnew>
+            </div>
+
+          </div>
+          <div className="modal-footer d-flex right-content-center">
+            {/* <button className="btn btn-info"> {this.state.submit}</button> */}
+            {this.state.option === '3w' ? <button type="button" className="btn btn-info" data-dismiss="modal" aria-label="Close" onClick={() => { this.updateSubSubTheme() }}> updateSubSubTheme </button> : ""}
+            {this.state.option === '3' ? <button type="button" className="btn btn-info" data-dismiss="modal" aria-label="Close" onClick={() => { this.CreateSubSubTheme() }}> CreateSubSubTheme </button> : ""}
+            {this.state.option === '2w' ? <button type="button" className="btn btn-info" data-dismiss="modal" aria-label="Close" onClick={() => { this.updateSubTheme() }}> updateSubTheme </button> : ""}
+            {this.state.option === '2' ? <button type="button" className="btn btn-info" data-dismiss="modal" aria-label="Close" onClick={() => { this.CreateSubTheme() }}> CreateSubTheme </button> : ""}
+            {this.state.option === '1w' ? <button type="button" className="btn btn-info" data-dismiss="modal" aria-label="Close" onClick={() => { this.UpdateTheme() }}> UpdateTheme </button> : ""}
+            {this.state.option === '1' ? <button type="button" className="btn btn-info" data-dismiss="modal" aria-label="Close" onClick={() => { this.CreateTheme() }}> CrearTheme </button> : ""}
+            <button type="button" className="btn btn-info" data-dismiss="modal" aria-label="Close" onClick={() => { this.close() }}> Close </button>
+          </div>
+          {/* </form> */}
+        </Modal >
+
+        <Headroom>
+          <Navigation />
+        </Headroom>
 
         <div className="container p-1 my-3">
 
-          {isAuth().rol === "2" && this.state.zz.length >= 0 ? (
-            <button className="btn btn-ligth text-uppercase w-100" onClick={() => { this.CreateTheme() }} >
-              Createtheme de {isAsignature().title} [{isAsignature().mencion}]
+          {isAuth().rol === '2' || isAuth().rol === '1' ?
+            <button className="btn btn-info text-uppercase" onClick={() => { this.open(); this.setState({ option: "1", title: '', detail: '' }) }} >
+              Crear tema
             </button>
-          ) : null}
-          {this.state.zz.length > 1 ?
-            <div className="container bg-info p-1 text-uppercase text-center bg-light border rounded">
-              {this.state.zz.length} Temas forum de {isAsignature().title}
-            </div>
-            : null}
-          {this.state.zz.map((note, index) => (
-            <div className="container my-5 border bg-light rounded-lg p-1" key={index} >
-              <div className="bg-warning p-1 rounded-top">
+            : ''}
+
+          {this.state.zz.map((note, i) => (
+            <div className="container my-5 border border-warning rounded-lg p-1" key={i} >
+              <div className="p-1 rounded-top">
                 <div className="">
-                  <div className="text-center pt-1 text-light text-uppercase" style={{ 'fontWeight': "800" }}>
-                    TEMA: {index + 1}. <span className="">{note.title}</span>
+                  <div className="pt-1" style={{ 'fontWeight': "100" }}>
+                    <h1 className="">{note.title}</h1>
                   </div>
-                  {note.theme}
-                  {/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: "" }} data={note.theme} /> */}
+                  <div className="text-secondary text-right border-bottom" style={{ fontSize: 12 }}>
+                    {note.usser[0].email}	Creado <TimeAgo datetime={note.createdAt} locale='es_ES' />. Actualizado <TimeAgo datetime={note.updatedAt} locale='es_ES' />
+                  </div>
+                  <Markdownkatexnew>
+                    {note.detail}
+                  </Markdownkatexnew>
                 </div>
-                <div className="text-center pb-1">
+                {isAuth() ? <>
                   <div className="btn-group">
-                    <button className="btn btn-outline-light" onClick={() => { this.open(); this.creteComment(note._id, note._id, "1") }} >
-                      <MdComment />
+                    <button className="btn text-center btn-info" onClick={() => { this.open(); this.setState({ option: "2", title: '', detail: '', i: i, id: note._id }) }} >
+                      <IoIosCreate style={{ color: '#ffffffff', fontSize: '24px' }} />
                     </button>
-                    {isAuth().rol == 2 ?
-                      <>
-                        <button className="btn btn-outline-light" onClick={() => this.deleteTheme(note._id, note.comments.length)} >
-                          <MdDelete />
-                        </button>
-                        <button className="btn btn-outline-light" type="button" data-toggle="collapse" data-target={"#collapseOne" + note._id} aria-expanded="false" onClick={() => { this.updatetheme(note._id, note.theme, note.title) }}>
-                          <MdEdit />
-                        </button>
-                      </> : null}
+                    <button className="btn text-center btn-light" onClick={() => { this.Likes(i, note._id) }} >
+                      <FaArrowUp style={{ color: '#49c8e7ff', fontSize: '24px' }} /> {note.likes ? note.likes.length : ''}
+                    </button>
+                    <button className="btn text-center btn-warning" onClick={() => { this.UnLikes(i, note._id) }} >
+                      <FaArrowDown style={{ color: '#36719cff', fontSize: '24px' }} /> {note.unlikes ? note.unlikes.length : ''}
+                    </button>
                   </div>
 
-                  <div className="collapse" id={"collapseOne" + note._id}>
-                    {/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: ["math", "|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList", "numberedList", "|", "indent", "outdent", "|", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "heading"] }} data={note.theme} onChange={(event, editor) => { this.setState({ theme: editor.getData() }) }} /> */}
-                    <button className="btn btn-info" type="button" data-toggle="collapse" data-target={"#collapseOne" + note._id} aria-expanded="false" onClick={() => { this.UpdateTheme() }}>
-                      Actualizar
+                  <button className="btn btn-warning w-100" style={{ height: '11px', padding: '.1px' }} type="button" data-toggle="collapse" data-target={"#collapseOne" + note._id} aria-expanded="false">
+                  </button>
+                  <div className="input-group collapse" id={"collapseOne" + note._id}>
+                    <button className="btn text-center" onClick={() => { this.open(); this.setState({ option: "1w", title: note.title, detail: note.detail, i: i, id: note._id }) }} >
+                      <MdEdit style={{ color: '#062033ff', fontSize: '34px' }} />
+                    </button>
+                    <button className="btn text-center" onClick={() => { this.RemoveTheme(note._id) }}>
+                      <MdRemove style={{ color: '#bd3d79ff', fontSize: '34px' }} />
                     </button>
                   </div>
-                </div>
+                </> : ''}
               </div>
-
-              <div>
-                <div className="line pl-1">
-                  {note.comments.map((coment, index) => (
-                    <div key={index}>
-                      <div className="text-info">{coment.usser[0].email} </div>
-                      {coment.comment}{/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: "" }} data={coment.comment} /> */}
-                      <div className="text-secondary text-right border-bottom" style={{ fontSize: 12 }}>{timeago(coment.createdAt)}</div>
-                      <div className="pb-1">
-                        {isAuth()._id == coment.user || isAuth().rol == 2 ? <div className="btn-group">
-                          <button className="btn btn-outline-warning" data-toggle="modal" data-target=".bd-example-modal-lg" onClick={() => { this.open(); this.creteComment(coment._id, coment._id, "1") }}>
-                            <MdComment />
-                          </button>
-                          <button className="btn btn-outline-warning" onClick={() => this.deleteComment(coment._id)} >
-                            <MdDelete />
-                          </button>
-                          <button className="btn btn-outline-warning" type="button" data-toggle="collapse" data-target={"#collapseOne" + coment._id} aria-expanded="false" onClick={() => { this.updateComment(coment._id, coment.comment, coment.calification) }}>
-                            <MdEdit />
-                          </button>
-                        </div> : null}
-                        <div className="collapse" id={"collapseOne" + coment._id}>
-                          {/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: ["math", "|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList", "numberedList", "|", "indent", "outdent", "|", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "heading"] }} data={coment.comment} onChange={(event, editor) => { this.setState({ comment: editor.getData() }) }} /> */}
-                          <button className="btn btn-warning" type="button" data-toggle="collapse" data-target={"#collapseOne" + coment._id} aria-expanded="false" onClick={() => { this.UpDateCommentt() }}>
-                            Actualizar
-                          </button>
-                        </div>
-                      </div>
-                      <div className="line pl-1">
-                        {coment.comments.map((comentt, index) => (
-                          <div key={index}>
-                            <span className="text-info">{comentt.usser[0].email} </span>
-                            {comentt.comment}{/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: "" }} data={comentt.comment} /> */}
-                            <div className="text-secondary text-right border-bottom" style={{ fontSize: 12 }}>{timeago(coment.createdAt)}</div>
-                            <div className="pb-1">
-                              {isAuth()._id == coment.user || isAuth().rol == 2 ? <div className="btn-group">
-                                <button className="btn btn-outline-warning" data-toggle="modal" data-target=".bd-example-modal-lg" onClick={() => { this.open(); this.creteComment(comentt._id, comentt._id, "1") }}>
-                                  <MdComment />
-                                </button>
-                                <button className="btn btn-outline-warning" onClick={() => this.deleteComment(comentt._id)} >
-                                  <MdDelete />
-                                </button>
-                                <button className="btn btn-outline-warning" type="button" data-toggle="collapse" data-target={"#collapseOne" + comentt._id} aria-expanded="false" onClick={() => { this.updateComment(comentt._id, comentt.comment, comentt.calification) }}>
-                                  <MdEdit />
-                                </button>
-                              </div> : null}
-                              <div className="collapse" id={"collapseOne" + comentt._id}>
-                                {/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: ["math", "|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList", "numberedList", "|", "indent", "outdent", "|", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "heading"] }} data={comentt.comment} onChange={(event, editor) => { this.setState({ comment: editor.getData() }) }} /> */}
-                                <button className="btn btn-warning" type="button" data-toggle="collapse" data-target={"#collapseOne" + comentt._id} aria-expanded="false" onClick={() => { this.UpdateTheme() }}>
-                                  Actualizar
-                                </button>
-                              </div>
-                            </div>
-
-                            <div className="line pl-1">
-                              {comentt.comments.map((comenttt, index) => (
-                                <div key={index}>
-                                  <span className="text-info">{comenttt.usser[0].email} </span>
-                                  {comenttt.comment}{/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: "" }} data={comenttt.comment} /> */}
-                                  <div className="text-secondary text-right border-bottom" style={{ fontSize: 12 }}>{timeago(coment.createdAt)}</div>
-                                  <div className="pb-1">
-                                    {isAuth()._id == coment.user || isAuth().rol == 2 ? <div className="btn-group">
-                                      <button className="btn btn-outline-warning" data-toggle="modal" data-target=".bd-example-modal-lg" onClick={() => { this.open(); this.creteComment(comenttt._id, comenttt._id, "1") }}>
-                                        <MdComment />
-                                      </button>
-                                      <button className="btn btn-outline-warning" onClick={() => this.deleteComment(comenttt._id)} >
-                                        <MdDelete />
-                                      </button>
-                                      <button className="btn btn-outline-warning" type="button" data-toggle="collapse" data-target={"#collapseOne" + comenttt._id} aria-expanded="false" onClick={() => { this.updateComment(comenttt._id, comenttt.comment, comenttt.calification) }}>
-                                        <MdEdit />
-                                      </button>
-                                    </div> : null}
-                                    <div className="collapse" id={"collapseOne" + comenttt._id}>
-                                      {/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: ["math", "|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList", "numberedList", "|", "indent", "outdent", "|", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "heading"] }} data={comenttt.comment} onChange={(event, editor) => { this.setState({ comment: editor.getData() }) }} /> */}
-                                      <button className="btn btn-warning" size="small" onClick={() => { this.UpdateTheme() }}>
-                                        Actualizar
-                                      </button>
-                                    </div>
-                                  </div>
-                                  <div className="line pl-1">
-                                    {comenttt.comments.map((comentttt, index) => (
-                                      <div key={index}>
-                                        <span className="text-info">{comentttt.usser[0].email} </span>
-                                        {comentttt.comment}{/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: "" }} data={comentttt.comment} /> */}
-                                        <div className="pb-1">
-                                          <div className="btn-group">
-                                            <button className="btn btn-outline-warning" data-toggle="modal" data-target=".bd-example-modal-lg" onClick={() => { this.open(); this.creteComment(comentttt._id, comentttt._id, "1") }}>
-                                              <MdComment />
-                                            </button>
-                                            <button className="btn btn-outline-warning" onClick={() => this.deleteComment(comentttt._id)} >
-                                              <MdDelete />
-                                            </button>
-                                            <button className="btn btn-outline-warning" type="button" data-toggle="collapse" data-target={"#collapseOne" + comentttt._id} aria-expanded="false" onClick={() => { this.updateComment(comentttt._id, comentttt.comment, comentttt.calification) }}>
-                                              <MdEdit />
-                                            </button>
-                                          </div>
-                                          <div className="collapse" id={"collapseOne" + comentttt._id}>
-                                            {/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: ["math", "|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList", "numberedList", "|", "indent", "outdent", "|", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "heading"] }} data={comentttt.comment} onChange={(event, editor) => { this.setState({ comment: editor.getData() }) }} /> */}
-                                            <button className="btn btn-warning" size="small" onClick={() => { this.UpdateTheme() }}>
-                                              Actualizar
-                                            </button>
-                                          </div>
-                                        </div>
-                                        <div className="line pl-1">
-                                          {comentttt.comments.map((comenttttt, index) => (
-                                            <div key={index}>
-                                              <span className="text-info">{comenttttt.usser[0].email} </span>
-                                              {comenttttt.comment}{/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: "" }} data={comenttttt.comment} /> */}
-                                              <div className="pb-1">
-                                                <div className="btn-group">
-                                                  <button className="btn btn-outline-warning" onClick={() => this.deleteComment(comenttttt._id)} >
-                                                    <MdDelete />
-                                                  </button>
-                                                  <button className="btn btn-outline-warning" type="button" data-toggle="collapse" data-target={"#collapseOne" + comenttttt._id} aria-expanded="false" onClick={() => { this.updateComment(comenttttt._id, comenttttt.comment, comenttttt.calification) }}>
-                                                    <MdEdit />
-                                                  </button>
-                                                </div>
-                                                <div className="collapse" id={"collapseOne" + comenttttt._id}>
-                                                  {/* <CKEditor editor={ClassicEditor} config={{ language: 'es', toolbar: ["math", "|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList", "numberedList", "|", "indent", "outdent", "|", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "heading"] }} data={commentt.comment} onChange={(event, editor) => { this.setState({ comment: editor.getData() }) }} /> */}
-                                                  <button className="btn btn-warning" size="small" onClick={() => { this.UpdateTheme() }}>
-                                                    Actualizar
-                                                  </button>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+              <div className="line pl-1">
+                {note.units ? note.units.map((notte, j) => (
+                  <div className="p-1" key={j} >
+                    <div className="p-1 rounded-top">{notte.title}
                     </div>
-                  ))}
-                </div>
+                    <div className="text-secondary text-right border-bottom" style={{ fontSize: 12 }}>
+                      {notte.user} Creado <TimeAgo datetime={notte.createdAt} locale='es_ES' /> Actualizado <TimeAgo datetime={notte.createdAt} locale='es_ES' />
+                    </div>
+                    <Markdownkatexnew>
+                      {notte.detail}
+                    </Markdownkatexnew>
+                    {isAuth() ? <>
+                      <div className="btn-group">
+                        <button className="btn text-center btn-info" onClick={() => { this.open(); this.setState({ option: "3", title: '', detail: '', i: i, j: j, id: note._id }) }} >
+                          <IoIosCreate style={{ color: '#ffffffff', fontSize: '24px' }} />
+                        </button>
+                        <button className="btn text-center btn-light" onClick={() => { this.Likes(i) }} >
+                          <FaArrowUp style={{ color: '#49c8e7ff', fontSize: '24px' }} /> 2
+                        </button>
+                        <button className="btn text-center btn-warning" onClick={() => { this.UnLikes(i) }} >
+                          <FaArrowDown style={{ color: '#36719cff', fontSize: '24px' }} /> 3
+                        </button>
+                      </div>
+
+                      <button className="btn btn-info w-100" style={{ height: '11px', padding: '.1px' }} type="button" data-toggle="collapse" data-target={"#collapseOne" + i + j} aria-expanded="false">
+                      </button>
+                      <div className="input-group collapse" id={"collapseOne" + i + j}>
+                        <button className="btn text-center" onClick={() => { this.open(); this.setState({ option: "2w", title: notte.title, detail: notte.detail, i: i, j: j, id: note._id }) }} >
+                          <MdEdit style={{ color: '#657f91ff', fontSize: '34px' }} />
+                        </button>
+                        <button className="btn text-center" onClick={() => { this.removeSubTheme(i, j); this.setState({ id: note._id }) }}>
+                          <MdRemove style={{ color: '#d67ba5ff', fontSize: '34px' }} />
+                        </button>
+                      </div></> : ''}
+                    <div className="line pl-1">
+                      {notte.themes ? notte.themes.map((nottte, k) => (
+                        <div className="p-1" key={k} >
+                          <div className="p-1 rounded-top">{nottte.title}
+                          </div>
+                          <div className="text-secondary text-right border-bottom" style={{ fontSize: 12 }}>
+                            {nottte.user} <TimeAgo datetime={nottte.createdAt} locale='es_ES' /> <TimeAgo datetime={nottte.createdAt} locale='es_ES' />
+                          </div>
+                          <Markdownkatexnew>
+                            {nottte.detail}
+                          </Markdownkatexnew>
+                          <button className="btn btn-info w-100" style={{ height: '11px', padding: '.1px' }} type="button" data-toggle="collapse" data-target={"#collapseOne" + i + j + k} aria-expanded="false">
+                          </button>
+                          <div className="input-group collapse" id={"collapseOne" + i + j + k}>
+                            {/* <button className="btn text-center" onClick={() => { this.open(); this.setState({ option: "5", title: '', detail: '', i: i, id: note._id }) }} >
+                              <IoMdAlert style={{ color: '#d7d098ff', fontSize: '34px' }} />
+                            </button> */}
+                            {isAuth() ? <>
+                              <button className="btn text-center" onClick={() => { this.open(); this.setState({ option: "3w", title: nottte.title, detail: nottte.detail, i: i, j: j, k: k, id: note._id }) }} >
+                                <MdEdit style={{ color: '#d7d098ff', fontSize: '34px' }} />
+                              </button>
+                              <button className="btn text-center" onClick={() => { this.removeSubTheme(i, j, k); this.setState({ id: note._id }) }}>
+                                <MdRemove style={{ color: '#d7d098ff', fontSize: '34px' }} />
+                              </button></> : ''}
+                          </div>
+                        </div>
+                      )) : ''}
+                    </div>
+                  </div>
+                )) : ''}
               </div>
             </div>
           ))}

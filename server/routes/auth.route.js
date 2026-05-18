@@ -21,20 +21,22 @@ const {
 } = require("../helpers/valid")
 
 router.post("/www", neww);
-router.post("/register", registerController);
+// router.post("/register", registerController);
 router.get("/login/:email/:password", signinController);
 router.post("/activation", activationController);
 //router.post("/www", neww);
-//router.post("/register", validSign, registerController);
+router.post("/register", validSign, registerController);
 //router.post("/login", validLogin, signinController);
-//router.post("/activation", activationController);
+router.post("/activation", activationController);
 
 router.put(
   "/forgotpassword",
-  forgotPasswordValidator,
-  neww
+  // forgotPasswordValidator,
+  forgotPasswordController
 );
-router.put("/resetpassword", resetPasswordValidator, resetPasswordController);
+router.put("/resetpassword", 
+  resetPasswordValidator, 
+  resetPasswordController);
 // Google and Facebook Login
 router.post("/googlelogin", googleController);
 router.post("/facebooklogin", facebookController);

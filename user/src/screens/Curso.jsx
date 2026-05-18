@@ -5,7 +5,7 @@ import Editor from 'draft-js-plugins-editor'
 import createMathjaxPlugin from 'draft-js-mathjax-plugin'
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
-const mathjaxPlugin = createMathjaxPlugin(/* optional configuration object */)
+// const mathjaxPlugin = createMa  thjaxPlugin(/* optional configuration object */)
 const plugins = [
   mathjaxPlugin,
 ]

@@ -1,3 +1,114 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~swiper/swiper.min.css';
+@import '~swiper/components/pagination/pagination.min.css';
+@import '~swiper/components/scrollbar/scrollbar.min.css';
+/* @import '~swiper/components/autoplay/autoplay.min.css'; */
+@import '~swiper/components/effect-coverflow/effect-coverflow.min.css';
+@import '~swiper/components/effect-flip/effect-flip.min.css';
+@import '~swiper/components/effect-fade/effect-fade.min.css';
+@import '~swiper/components/effect-cube/effect-cube.min.css';
+
+
+@font-face {
+  font-family: 'Zapfino';
+  font-style: italic;
+  font-weight: bold;
+  src: local('Zapfino'), url('Zapfino.woff') format('woff');
+}
+
+body {
+  /* background-color: whitesmoke; */
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: inherit !important;
+}
+
+.name {
+  background-color: rgb(163, 224, 245);
+  /* border: .1em solid rgb(21, 4, 20); */
+  border-radius: 50%;
+  font-size: 3.2em;
+  /* font-family: 'Zapfino', cursive; */
+  /* font-family: century-gothic, sans-serif; */
+  font-family: 'Orbitron';
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white
+}
+
+
+
+.ffont {
+  font-family: 'Orbitron', sans-serif;
+  /* text-shadow: 4px 4px 4px #aaa; */
+  /* font-size: 36px; */
+}
+
+.contenedor {
+  position: relative;
+  /* Acts as the reference point for absolute children */
+  padding: 1cm;
+  width: 100%;
+}
+
+.image {
+  width: 100%;
+  /* display: block; */
+  /* margin: .2cm; */
+  /* overflow: hidden; */
+  border-radius: .1em;
+  /* position: relative; */
+  object-fit: cover;
+  /* background-color: rgba(255, 255, 255, 0.7); */
+  /* border: .15em solid rgb(255, 244, 254); */
+
+}
+
+.overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Centers text perfectly */
+  /* color: white; */
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 95%;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+/* .swiper-slide {
+  display: flex;
+  align-items: center;      
+  justify-content: center;  
+  height: 100%;              
+} */
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  /* background-color: #333;
+  color: white; */
+  text-align: center;
+  padding: 10px;
+}
+
+@media screen and (min-width: 900px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+.swiper-wrapper {
+  align-items: center;
+  text-align: left;
+
+}
+
 .navbar-light .navbar-nav .nav-link {
   color: rgba(63, 258, 258, 1);
 }
@@ -102,15 +213,15 @@ blockquote {
   padding-right: 0 !important;
 }
 
-/* .modal-dialog {
+.modal-dialog {
   max-width: 70%;
-} */
+}
 
-/* @media screen and (max-width: 575px) {
+@media screen and (max-width: 575px) {
   .modal-dialog {
     max-width: 95%;
   }
-} */
+}
 
 .modal-backdrop.in {
   opacity: 0.5;
@@ -276,8 +387,8 @@ blockquote {
 }
 
 .wrapperestperfil {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   /* overflow: hidden; */
   border-radius: 50%;
   position: relative;
@@ -376,8 +487,18 @@ blockquote {
 }
 
 iframe {
-  border: none;
+  border: 1px solid rgb(77, 82, 229);
+  /* display: block;
+  justify-content: center;
+  align-items: center;
+  margin: auto; */
+  /* text-align: center; */
 }
+
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
 
 .time {
   font-size: 20px;
@@ -419,6 +540,8 @@ h4,
 h5,
 h6 {
   margin: 8px 0;
+  /* font-family: 'Hurricane', cursive; */
+  /* font-family: 'Zapfino', sans-serif; */
 }
 
 p {
@@ -722,14 +845,47 @@ td {
 }
 
 tr:nth-child(even) {
-  background-color: rgba(250, 235, 235, 0.7)
+  /* background-color: rgba(250, 235, 235, 0.7) */
 }
 
 tr:nth-child(odd) {
   color: black;
-  background-color: rgba(144, 186, 189, 0.7)
+  background-color: rgba(217, 232, 234, 0.7)
 }
 
 th {
   color: inherit;
+}
+
+
+/* quiz */
+
+button {
+  border: 1px solid black;
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* .btn-group,
+.fullpage-center {
+  display: flex;
+} */
+
+/* .fullpage-center {
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+} */
+
+.answers {
+  text-align: left;
+  margin-bottom: 1rem;
+  line-height: 2rem;
+}
+
+.btn-group>button:last-of-type {
+  margin-left: 0.5rem;
 }

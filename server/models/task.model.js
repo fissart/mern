@@ -14,9 +14,11 @@ const userSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
     },
+    codetheme: { type: String },
     file: { type: String },
     solution: { type: String },
     task: { type: String },
+    items: { type: [] },
     dateb: { type: String },
     datee: { type: String },
     note: { type: String },

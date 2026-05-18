@@ -38,8 +38,9 @@ import {
 
 export default class CreateNote extends Component {
 	state = {
-		category: this.props.match.params.categ,
-		curse: this.props.match.params.id,
+		mencion: this.props.match.params.mencion,
+		ciclo: this.props.match.params.ciclo,
+		year: this.props.match.params.year,
 		chapter: '',
 		section: '',
 		nombre: '',
@@ -74,19 +75,14 @@ export default class CreateNote extends Component {
 
 	getNotes = async () => {
 		const res = await axios.get(
-			`${process.env.REACT_APP_API_URL}/chapters/www/` + isAuth()._id + `/` + this.props.match.params.id
+			`${process.env.REACT_APP_API_URL}/users/stdaverages/` + this.props.match.params.mencion + `/` + this.props.match.params.ciclo + `/` + this.props.match.params.year
 		);
-		//    console.log(res.data[0].nombre);
+		   console.log(res);
 		this.setState({
-			zz: res.data[0].capitulos,
-			ccss: res.data[0].testschp,
-			testrespchp: res.data[0].testrespschp,
-			tasksendl: res.data[0].tasksend,
-			tasksend: res.data[0].tasksend[0],
-			ccs: res.data[0],
+			zz: res,
 		});
 		setLocalStorage('namecurse', this.state.ccs.nombre);
-		setCokie('namecurse', this.state.ccs.nombre);
+		// setCokie('namecurse', this.state.ccs.nombre);
 		//    console.log(new Date(this.state.ccs.fechaexamen).toString());
 		//    console.log(this.state.zz);
 	};
@@ -310,7 +306,7 @@ export default class CreateNote extends Component {
 
 	fileSelectHandler = files => {
 		// console.log(files);
-		var array = [ 'application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/PNG' ];
+		var array = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/PNG'];
 		// console.log(array.includes(files[0].type));
 		if (files) {
 			if (files[0].size < 1048576 && array.includes(files[0].type)) {
@@ -345,7 +341,7 @@ export default class CreateNote extends Component {
 		data.append('curse', getCokie('idc'));
 		data.append('user', isAuth()._id);
 		// console.log(data);
-		
+
 		if (!this.state.editing) {
 			axios
 				.post(`${process.env.REACT_APP_API_URL}/tasks/`, data, {})
@@ -556,11 +552,11 @@ export default class CreateNote extends Component {
 						{this.state.option === 'sec'
 							? null
 							: <div className="card form-group">
-									<div className="componentWrappertext text-uppercase">
-										Tiempo de examen
-									</div>
-									<Input onChange={this.onInputChange} name="timexa" value={this.state.timexa} required />
-								</div>}
+								<div className="componentWrappertext text-uppercase">
+									Tiempo de examen
+								</div>
+								<Input onChange={this.onInputChange} name="timexa" value={this.state.timexa} required />
+							</div>}
 					</Modal.Body>
 					<Modal.Footer>
 						<Button
@@ -597,25 +593,25 @@ export default class CreateNote extends Component {
 							<div className="modal-body p-1 text-info">
 								{this.state.task && this.state.file != ''
 									? <div className="text-center">
-											<img
-												src={`${process.env.REACT_APP_URL}/tasks/` + this.state.file}
-												className="img-fluid m-auto my-1"
-												alt="www"
-												onError={e => {
-													e.target.src = authSvg; //replacement image imported above
-													e.target.style = 'padding: 3px; margin: 1px;'; // inline styles in html format
-												}}
-											/>
-											<div>
-												<a
-													className="btn btn-light mt-1 btn-sm small"
-													target="_blank"
-													href={`${process.env.REACT_APP_URL}/tasks/${this.state.file}`}
-												>
-													Descargar {this.state.file}
-												</a>
-											</div>
+										<img
+											src={`${process.env.REACT_APP_URL}/tasks/` + this.state.file}
+											className="img-fluid m-auto my-1"
+											alt="www"
+											onError={e => {
+												e.target.src = authSvg; //replacement image imported above
+												e.target.style = 'padding: 3px; margin: 1px;'; // inline styles in html format
+											}}
+										/>
+										<div>
+											<a
+												className="btn btn-light mt-1 btn-sm small"
+												target="_blank"
+												href={`${process.env.REACT_APP_URL}/tasks/${this.state.file}`}
+											>
+												Descargar {this.state.file}
+											</a>
 										</div>
+									</div>
 									: null}
 								<div className="card mt-2 p-2 sky">
 									<div className="componentWrappertext  sky2   text-uppercase text-center">
@@ -626,11 +622,11 @@ export default class CreateNote extends Component {
 								</div>
 								{!this.state.task
 									? <div className="card mt-3 p-2 sky">
-											<div className="componentWrappertext  sky2  text-uppercase text-center">
-												Tarea de la sección
-											</div>
-											<KatexMarkdown>{this.state.tarea}</KatexMarkdown>
+										<div className="componentWrappertext  sky2  text-uppercase text-center">
+											Tarea de la sección
 										</div>
+										<KatexMarkdown>{this.state.tarea}</KatexMarkdown>
+									</div>
 									: null}
 							</div>
 							<div className="modal-footer p-1">
@@ -714,24 +710,24 @@ export default class CreateNote extends Component {
 
 				{isAuth().role === 'admin'
 					? <div
-							style={{
-								position: 'fixed',
-								bottom: 0 + 'em',
-								left: 0,
-								zIndex: 1050,
+						style={{
+							position: 'fixed',
+							bottom: 0 + 'em',
+							left: 0,
+							zIndex: 1050,
+						}}
+					>
+						<button
+							className="btn btn-info"
+							style={{ color: '#000' }}
+							onClick={() => {
+								this.createcurso();
+								//this.openChat();
 							}}
 						>
-							<button
-								className="btn btn-info"
-								style={{ color: '#000' }}
-								onClick={() => {
-									this.createcurso();
-									//this.openChat();
-								}}
-							>
-								New Cpt
-							</button>
-						</div>
+							New Cpt
+						</button>
+					</div>
 					: null}
 
 				{/* ////////////////////////////////////////////////////////////// Test */}
@@ -806,54 +802,54 @@ export default class CreateNote extends Component {
 
 								{isAuth().role === 'admin'
 									? <div className="container text-center">
-											<div className="btn-group">
-												<button
-													className="btn btn-success"
-													onClick={() => {
-														this.upDate(note._id);
-														this.openChat();
-													}}
-												>
-													Edit chapter
-												</button>
-												<button
-													onClick={() => {
-														this.CreateSeccion(note._id);
-														//this.openChat();
-													}}
-													className="btn btn-light"
-												>
-													New theme
-												</button>
+										<div className="btn-group">
+											<button
+												className="btn btn-success"
+												onClick={() => {
+													this.upDate(note._id);
+													this.openChat();
+												}}
+											>
+												Edit chapter
+											</button>
+											<button
+												onClick={() => {
+													this.CreateSeccion(note._id);
+													//this.openChat();
+												}}
+												className="btn btn-light"
+											>
+												New theme
+											</button>
 
-												<button onClick={() => this.deleteNote(note._id)} className="btn btn-warning">
-													Delete chapter
-												</button>
-											</div>
+											<button onClick={() => this.deleteNote(note._id)} className="btn btn-warning">
+												Delete chapter
+											</button>
 										</div>
+									</div>
 									: null}
 								<div className="text-white">
 									{Date.parse(new Date(note.fechaexa)) / 1000 < Date.parse(new Date()) / 1000 &&
 										Date.parse(new Date()) / 1000 < Date.parse(new Date(note.fechaexa)) / 1000 + note.timexa * 3600
 										? <Link to={'/test/' + note._id + '/' + (index + 1)} className="text-white">
-												<div className="text-center p-1">
-													Exam. ahora.{' '}
-													{new Date(note.fechaexa).toLocaleString().substring(0, 21)}
-													{'. '}
-													{note.timexa} H
-												</div>
-											</Link>
+											<div className="text-center p-1">
+												Exam. ahora.{' '}
+												{new Date(note.fechaexa).toLocaleString().substring(0, 21)}
+												{'. '}
+												{note.timexa} H
+											</div>
+										</Link>
 										: Date.parse(new Date(note.fechaexa)) / 1000 + note.timexa * 3600 < Date.parse(new Date()) / 1000
-												? <div className="text-center p-1">
-														Exam. cap. fue{' '}
-														{new Date(note.fechaexa).toLocaleString().substring(0, 21)}{' '}
-														{note.timexa}
-													</div>
-												: <div className="text-center p-1">
-														Exam. cap. es{' '}
-														{new Date(note.fechaexa).toLocaleString().substring(0, 21)}{' '}
-														{note.timexa} horas
-													</div>}
+											? <div className="text-center p-1">
+												Exam. cap. fue{' '}
+												{new Date(note.fechaexa).toLocaleString().substring(0, 21)}{' '}
+												{note.timexa}
+											</div>
+											: <div className="text-center p-1">
+												Exam. cap. es{' '}
+												{new Date(note.fechaexa).toLocaleString().substring(0, 21)}{' '}
+												{note.timexa} horas
+											</div>}
 								</div>
 
 								<div className="row d-flex justify-content-center align-items-center p-0 m-0">
@@ -875,95 +871,95 @@ export default class CreateNote extends Component {
 														</button>
 														{wwwww.tasks.length === 0
 															? <div>
-																	{Date.parse(new Date(wwwww.fechaexa)) / 1000 > Date.parse(new Date()) / 1000
-																		? <div>
-																				<button
-																					onClick={() => {
-																						this.fileSelectHandlerww(wwwww._id, note._id);
-																						this.openTask();
-																					}}
-																					className="btn btn-light"
-																				>
-																					Entregar tarea
-																				</button>
-																				<div className="blue1 p-1 text-light">
-																					Hasta{' '}
-																					{new Date(wwwww.fechaexa).toLocaleString().substring(0, 21)}
-																				</div>
-																			</div>
-																		: <div className="blue1 p-1  text-light">
-																				Culminó{' '}
-																				{new Date(wwwww.fechaexa).toLocaleString().substring(0, 21)}
-																			</div>}
-																</div>
+																{Date.parse(new Date(wwwww.fechaexa)) / 1000 > Date.parse(new Date()) / 1000
+																	? <div>
+																		<button
+																			onClick={() => {
+																				this.fileSelectHandlerww(wwwww._id, note._id);
+																				this.openTask();
+																			}}
+																			className="btn btn-light"
+																		>
+																			Entregar tarea
+																		</button>
+																		<div className="blue1 p-1 text-light">
+																			Hasta{' '}
+																			{new Date(wwwww.fechaexa).toLocaleString().substring(0, 21)}
+																		</div>
+																	</div>
+																	: <div className="blue1 p-1  text-light">
+																		Culminó{' '}
+																		{new Date(wwwww.fechaexa).toLocaleString().substring(0, 21)}
+																	</div>}
+															</div>
 															: null}
 														{isAuth().role === 'admin'
 															? <div className="btn-group">
-																	{' '}
-																	<button
-																		data-toggle="modal"
-																		data-target=".bd-example-modal-lg"
-																		onClick={() => {
-																			this.upDateS(wwwww._id);
-																			this.openChat();
-																		}}
-																		className="btn btn-light"
-																	>
-																		Edit theme
-																	</button>
-																	<button onClick={() => this.deleteSs(wwwww._id)} className="btn btn-success">
-																		Delete theme
-																	</button>
-																</div>
+																{' '}
+																<button
+																	data-toggle="modal"
+																	data-target=".bd-example-modal-lg"
+																	onClick={() => {
+																		this.upDateS(wwwww._id);
+																		this.openChat();
+																	}}
+																	className="btn btn-light"
+																>
+																	Edit theme
+																</button>
+																<button onClick={() => this.deleteSs(wwwww._id)} className="btn btn-success">
+																	Delete theme
+																</button>
+															</div>
 															: null}
 														<div>
 															{wwwww.tasks.map(ww => (
 																<div>
 																	{0 === 0
 																		? <div key={ww._id} className="text-uppercase">
-																				<div className="text-uppercase">
-																					Tarea entregada{' '}
-																					{Date.parse(new Date(wwwww.fechaexa)) / 1000 > Date.parse(new Date()) / 1000
-																						? 'editar hasta'
-																						: 'Culminó'}
-																					{' '}
-																					{new Date(wwwww.fechaexa).toLocaleString().substring(0, 21)}
-																				</div>
-																				<button
-																					className="btn btn-light"
-																					data-toggle="modal"
-																					data-target=".bd-example"
-																					onClick={() => this.getTask(ww.file, ww.content)}
-																				>
-																					Show task
-																				</button>
+																			<div className="text-uppercase">
+																				Tarea entregada{' '}
 																				{Date.parse(new Date(wwwww.fechaexa)) / 1000 > Date.parse(new Date()) / 1000
-																					? <div className="btn-group">
-																							<button
-																								data-toggle="modal"
-																								data-target="#modalLoginFormWW"
-																								onClick={() => {
-																									this.upDateTasks(ww._id);
-																									this.openTask();
-																								}}
-																								className="btn btn-info"
-																								style={{ color: 'sky' }}
-																							>
-																								Edit task
-																							</button>
-																							<button
-																								onClick={() => this.deleteTask(ww._id)}
-																								className="btn btn-light"
-																								style={{ color: 'sky' }}
-																							>
-																								Delete task
-																							</button>
-																						</div>
-																					: null}
+																					? 'editar hasta'
+																					: 'Culminó'}
+																				{' '}
+																				{new Date(wwwww.fechaexa).toLocaleString().substring(0, 21)}
 																			</div>
+																			<button
+																				className="btn btn-light"
+																				data-toggle="modal"
+																				data-target=".bd-example"
+																				onClick={() => this.getTask(ww.file, ww.content)}
+																			>
+																				Show task
+																			</button>
+																			{Date.parse(new Date(wwwww.fechaexa)) / 1000 > Date.parse(new Date()) / 1000
+																				? <div className="btn-group">
+																					<button
+																						data-toggle="modal"
+																						data-target="#modalLoginFormWW"
+																						onClick={() => {
+																							this.upDateTasks(ww._id);
+																							this.openTask();
+																						}}
+																						className="btn btn-info"
+																						style={{ color: 'sky' }}
+																					>
+																						Edit task
+																					</button>
+																					<button
+																						onClick={() => this.deleteTask(ww._id)}
+																						className="btn btn-light"
+																						style={{ color: 'sky' }}
+																					>
+																						Delete task
+																					</button>
+																				</div>
+																				: null}
+																		</div>
 																		: <div className="bg-danger">
-																				Tarea entregada {ww.fechatarea}
-																			</div>}
+																			Tarea entregada {ww.fechatarea}
+																		</div>}
 																</div>
 															))}
 														</div>
@@ -981,28 +977,28 @@ export default class CreateNote extends Component {
 					<div className="container text-uppercase text-white">
 						{Date.parse(new Date(this.state.ccs.fechaexamen)) / 1000 < Date.parse(new Date()) / 1000 &&
 							Date.parse(new Date()) / 1000 <
-								Date.parse(new Date(this.state.ccs.fechaexamen)) / 1000 + this.state.ccs.timexa * 3600
+							Date.parse(new Date(this.state.ccs.fechaexamen)) / 1000 + this.state.ccs.timexa * 3600
 							? <Link to={'/test/' + this.props.match.params.id + '/' + 'curse'} className="text-white">
-									<div className="container bg-warning text-center p-1">
-										Ex. final ahora.{' '}
-										{new Date(this.state.ccs.fechaexamen).toLocaleString().substring(0, 24)}
-										{'. '}
-										{this.state.ccs.timexa} H
-									</div>
-								</Link>
+								<div className="container bg-warning text-center p-1">
+									Ex. final ahora.{' '}
+									{new Date(this.state.ccs.fechaexamen).toLocaleString().substring(0, 24)}
+									{'. '}
+									{this.state.ccs.timexa} H
+								</div>
+							</Link>
 							: Date.parse(new Date(this.state.ccs.fechaexamen)) / 1000 + this.state.ccs.timexa * 3600 <
-									Date.parse(new Date()) / 1000
-									? <div className=" container text-light text-center p-1">
-											Ex. final fue{' '}
-											{new Date(this.state.ccs.fechaexamen).toLocaleString().substring(0, 24)}{' '}
-											con duración de {this.state.ccs.timexa} horas.{' '}
-											{this.state.testrespchp.length}
-										</div>
-									: <div className=" container text-light text-center p-1">
-											Ex. final es{' '}
-											{new Date(this.state.ccs.fechaexamen).toLocaleString().substring(0, 24)}{' '}
-											con duración de {this.state.ccs.timexa} horas
-										</div>}
+								Date.parse(new Date()) / 1000
+								? <div className=" container text-light text-center p-1">
+									Ex. final fue{' '}
+									{new Date(this.state.ccs.fechaexamen).toLocaleString().substring(0, 24)}{' '}
+									con duración de {this.state.ccs.timexa} horas.{' '}
+									{this.state.testrespchp.length}
+								</div>
+								: <div className=" container text-light text-center p-1">
+									Ex. final es{' '}
+									{new Date(this.state.ccs.fechaexamen).toLocaleString().substring(0, 24)}{' '}
+									con duración de {this.state.ccs.timexa} horas
+								</div>}
 					</div>
 
 					<div className="border text-uppercase text-light">
@@ -1024,17 +1020,17 @@ export default class CreateNote extends Component {
 							<div>
 								{this.state.tasksendl.length === 0
 									? <div className="">
-											<button
-												style={{ color: 'sky' }}
-												onClick={() => {
-													this.fileSelectHandlerww(this.state.ccs._id, this.state.ccs._id);
-													this.openTask();
-												}}
-												className="btn btn-light"
-											>
-												Show taskChp
-											</button>
-										</div>
+										<button
+											style={{ color: 'sky' }}
+											onClick={() => {
+												this.fileSelectHandlerww(this.state.ccs._id, this.state.ccs._id);
+												this.openTask();
+											}}
+											className="btn btn-light"
+										>
+											Show taskChp
+										</button>
+									</div>
 									: null}
 
 								<button
@@ -1047,23 +1043,23 @@ export default class CreateNote extends Component {
 								</button>
 								{Date.parse(new Date(this.state.ccs.fechatarea)) / 1000 > Date.parse(new Date()) / 1000
 									? <div>
-											<button
-												onClick={() => {
-													this.upDateTasks(this.state.tasksend._id);
-													this.openTask();
-												}}
-												className="btn btn-light"
-											>
-												Edit
-											</button>
-											<button
-												onClick={() => this.deleteTask(this.state.tasksend._id)}
-												style={{ color: 'sky' }}
-												className="btn btn-info"
-											>
-												Trash
-											</button>
-										</div>
+										<button
+											onClick={() => {
+												this.upDateTasks(this.state.tasksend._id);
+												this.openTask();
+											}}
+											className="btn btn-light"
+										>
+											Edit
+										</button>
+										<button
+											onClick={() => this.deleteTask(this.state.tasksend._id)}
+											style={{ color: 'sky' }}
+											className="btn btn-info"
+										>
+											Trash
+										</button>
+									</div>
 									: null}
 							</div>
 						</div>

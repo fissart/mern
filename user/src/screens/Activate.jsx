@@ -7,7 +7,7 @@ import { isAuth } from '../helpers/auth';
 import { Redirect } from 'react-router-dom';
 
 const Activate = ({ match }) => {
-	const [ formData, setFormData ] = useState({
+	const [formData, setFormData] = useState({
 		name: '',
 		token: '',
 		show: true,
@@ -23,7 +23,7 @@ const Activate = ({ match }) => {
 			console.log(token, name);
 			// eslint-disable-next-line
 		},
-		[ match.params ]
+		[match.params]
 	);
 
 	const { name, token } = formData;
@@ -31,21 +31,7 @@ const Activate = ({ match }) => {
 	const handleSubmit = e => {
 		e.preventDefault();
 
-		axios
-			.post(`${process.env.REACT_APP_API_URL}/activation`, {
-				token,
-			})
-			.then(res => {
-				setFormData({
-					...formData,
-					show: false,
-				});
-
-				toast.success(res.data.message);
-			})
-			.catch(err => {
-				toast.error(err.response.data.errors);
-			});
+		axios.post(`${process.env.REACT_APP_API_URL}/activation`, { token, }).then(res => { setFormData({ ...formData, show: false, }); toast.success(res.data.message); }).catch(err => { toast.error(err.response.data.errors); });
 	};
 
 	return (

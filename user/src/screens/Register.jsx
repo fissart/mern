@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { isAuth } from "../helpers/auth";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import Navigation from "../screens/Navigation";
 
-const Register = ({history}) => {
+const Register = ({ history }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,32 +26,32 @@ const Register = ({history}) => {
       if (password1 === password2) {
         setFormData({ ...formData, textChange: "Espere..." });
         axios
-          .post(`${process.env.REACT_APP_API_URL}/register`, {
+          .post(`${process.env.REACT_APP_API_URL}/auth/register`, {
             name,
             email,
             password: password1,
           })
           .then((res) => {
-            setFormData({
-              ...formData,
-              name: "",
-              email: "",
-              password1: "",
-              password2: "",
-              textChange: "Ok",
-            });
+            // setFormData({
+            //   ...formData,
+            //   name: "",
+            //   email: "",
+            //   password1: "",
+            //   password2: "",
+            //   textChange: "Ok",
+            // });
             history.push("/login");
             toast.success(res.data.message);
           })
           .catch((err) => {
-            setFormData({
-              ...formData,
-              name: "",
-              email: "",
-              password1: "",
-              password2: "",
-              textChange: "Registrarse",
-            });
+            // setFormData({
+            //   ...formData,
+            //   name: "",
+            //   email: "",
+            //   password1: "",
+            //   password2: "",
+            //   textChange: "Registrarse",
+            // });
             console.log(err.response);
             toast.error(err.response.data.errors);
           });
@@ -64,14 +64,14 @@ const Register = ({history}) => {
   };
 
   return (
-    <div className="container">
-    <Navigation/>
-      <div className="row">
-        <div className="container p-3 col-md-6 text-light">
+    <div className="">
+      <Navigation />
+      <div className="justify-content-center align-items-center" style={{ height: "71.9vh", display: 'flex' }}>
+        <div className="container col-lg-5 p-2 text-center rounded-left">
           {isAuth() ? <Redirect to="/" /> : null}
-          <ToastContainer />
+          <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} newestOnTop={false} closeOnClick={true} rtl={false} pauseOnFocusLoss={false} draggable pauseOnHover={false} closeButton={false} />
 
-          <h5 className="text-center text-white">Regístrese en Fisart</h5>
+          <h5 className="text-center ffont">Regístrese en {process.env.REACT_APP_page}</h5>
 
           <form onSubmit={handleSubmit}>
             <input
@@ -103,21 +103,21 @@ const Register = ({history}) => {
               value={password2}
             />
             <div className="text-center">
-              <button type="submit" className="btn btn-light">
+              <button type="submit" className="btn btn-info w-100">
                 {textChange}
               </button>
               {/* <div className="my-12 mt-5 text-center text-white">
                 <h7>Inicie sesion con email o registros sociales</h7>
               </div> */}
-              <div className="text-center">
+              {/* <div className="text-center">
                 <Link to="/login" className="btn btn-success text-light mt-1">
                   Si esta registrado iniciar sesion
                 </Link>
-              </div>
+              </div> */}
             </div>
           </form>
         </div>
-  {/*      <div className="container col-md-8 rounded-right bg-info p-5">
+        {/*      <div className="container col-md-8 rounded-right bg-info p-5">
           <img className="img-fluid" src={authSvg} alt="img" />
         </div>
 */}      </div>

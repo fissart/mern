@@ -1,5 +1,23 @@
-https://commons.wikimedia.org/wiki/File:AirborneExercise2017_16.jpg
-https://www.radios-argentinas.org/us/frisky-radio
+https://chromewebstore.google.com/detail/block-imagevideo/njclihbmkjiklhnhpmajjjkahhnbnpca
+hhttps://chromewebstore.google.com/detail/blur-the-image-and-video/aikjogmpaoaookmacnkbenekcnkjlkmi
+https://chromewebstore.google.com/detail/emoji-blocker/eimknojlmcfpmofldcdiaddfimjchmcj
+https://chromewebstore.google.com/detail/adblock-for-youtube/cmedhionkhpnakcndndgjdbohmhepckk
+
+ng build --configuration production
+
+ "window.menuBarVisibility": "compact"
+ "window.titleBarStyle": "native"
+  
+
+login hashed password mongo react server github
+https://github.com/sidharthhhh/password-guard
+https://github.com/soham0005/SecureVault/blob/master/server/models/schema.js
+https://github.com/thamerh/System-Authentification-ReactNative-nodeJs-Express-Mongodb/blob/main/Back-End/models/user.js
+https://github.com/culqi/culqi-reactjs-demo-jsv4?tab=readme-ov-file
+
+
+ 966878340ricardo@gmail.comqwerty123456
+ https://www.radios-argentinas.org/us/frisky-radio
 You can hide all images in Firefox by typing 
 about:config
 
@@ -154,14 +172,39 @@ pass:	esfapa.edu.pe22
 User: bellasartes@esfapa.edu.pe
 Pass: @2Sl00sJ
 pass root: 
-ssh root@169.197.183.189
-trvIDrLHK3Hp
-gDKEd5FFa63EUce
-T)o2*bghLg!m
+ssh root@169.197.183.78
 
+VPS Panel - https://cloud.interlayer.net:4083/
+Username: ayacucho.bellasartes@gmail.com
+Password: 9yKOfX!5
+
+Certificate is saved at: /etc/letsencrypt/live/www.esfapa.edu.pe/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/www.esfapa.edu.pe/privkey.pem
+
+
+VPS Details:
+Username: root
+Password: 
+9yKOfX!5
+SSH: Default Port
+chrmA%AridNM
+gDKEd5FFa63EUce
+
+
+https://portal.datapacket.net/clientarea.php?action=emails
 169.197.183.76
 --------------------------
-scp -r html root@169.197.183.189:/var/www
+scp -r new/angularcli15/!(assets) root@169.197.183.78:/var/www/html
+scp -r www/!(w2) root@169.197.183.78:/var/www
+scp root@169.197.183.189:/var/www/file.txt /local/directory
+
+#find some file en all subfolders
+find . -name inicio.js
+#remove all files with some words
+sudo rm -r *recup_dir*
+
+
+
 ext3grep /dev/sda3 --restore-all --after date -d '2024-23-01 00:00:00' '+%s' --before `date -d ‘2015-01-02 00:00:00’ ‘+%s’
 q1w2e3r4t5y6
 
@@ -210,6 +253,7 @@ sudo systemctl apache2 restart
 
 http://169.197.183.229/  
 MIIxwIG8KDxD
+
 
 
 

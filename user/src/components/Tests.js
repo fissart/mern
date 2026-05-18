@@ -1,17 +1,29 @@
+//import authSvg from '../assests/file.jpg';
+//import DatePicker from 'react-datepicker';
+//import { IconButton, Input, TextareaAutosize, ThemeProvider } from '@material-ui/core';
+//import { Modal, Row } from 'react-bootstrap';
+// import { Alpha, Www } from "../components/new"
 import React, { Component } from 'react';
 import Navigation from '../screens/Navigation.jsx';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ToastContainer, toast } from 'react-toastify'
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-//import authSvg from '../assests/file.jpg';
-//import DatePicker from 'react-datepicker';
 import { Link } from 'react-router-dom';
-//import { IconButton, Input, TextareaAutosize, ThemeProvider } from '@material-ui/core';
-//import { Modal, Row } from 'react-bootstrap';
 import axios from 'axios'
-import { Alpha, Www } from "../components/new"
+import WindowFocusHandler from "./isvisible.js";
+
+import TimeAgo from 'timeago-react';
+import * as timeago from 'timeago.js';
+import es from 'timeago.js/lib/lang/es';
+
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import '@ckeditor/ckeditor5-build-classic/build/translations/es';
+import { registerLocale } from "react-datepicker";
+import { parseISO } from "date-fns";
+import wes from 'date-fns/locale/es';
+registerLocale('es', wes);
+
+timeago.register('es', es);
 
 export default class Tests extends Component {
 
@@ -26,7 +38,10 @@ export default class Tests extends Component {
       timexa: "2",
       editing: false,
       integers: [],
+      items: [],
       theme: "",
+      dateb: new Date(),
+      datee: "",
       note: "",
       one: 3,
       noww: "",
@@ -40,16 +55,19 @@ export default class Tests extends Component {
     await axios.get(
       `${process.env.REACT_APP_API_URL}/tasks/${this.props.match.params.idtest}`
     ).then(res => {
-      console.log(res);
+      console.log(res.data, "www");
       if (res.data.length != 0) {
         this.setState({
-          theme: res.data[0],
-          solution: res.data[0].solution,
-          task: res.data[0].task == '' ? 'www' : res.data[0].task.replace(new RegExp('<script type="math/tex"></script>', 'g'), '').replace(new RegExp('<script type="math/tex; mode=display"></script>', 'g'), ''),
-          note: res.data[0].note,
+          dateb: parseISO(res.data.dateb),
+          datee: parseISO(res.data.datee),
+          theme: res.data,
+          items: res.data.items,
+          solution: res.data.solution,
+          task: res.data.task == '' ? 'www' : res.data.task.replace(new RegExp('<script type="math/tex"></script>', 'g'), '').replace(new RegExp('<script type="math/tex; mode=display"></script>', 'g'), ''),
+          note: res.data.note,
         });
       } else {
-        history.push("/categorias");
+        // history.push("/categorias");
       }
     });
   }
@@ -67,26 +85,27 @@ export default class Tests extends Component {
   }
 
   submitTest = async () => {
-    //console.log(this.state.solution, this.state.note);
+    console.log(this.state.items, this.state.note);
     const Data = {
       task: this.state.task,
       solution: this.state.solution,
+      items: JSON.parse(this.state.items),
       note: this.state.note
     };
     await axios.put(`${process.env.REACT_APP_API_URL}/tasks/${this.props.match.params.idtest}`, Data).then(res => {
-      //console.log(res)
+      console.log(res)
       toast.dark('Actualizado correctamente')
     });
   };
 
-  // async componentDidMount() {
-  //  //await this.getNotes()
-  //  await this.timeNow()
-  //   console.log(this.props.match.params.id)
-  //   if (this.props.match.params.id) {
-  //   } else {
-  //   }
-  // }
+  async componentDidMount() {
+    await this.getNotes()
+    // await this.timeNow()
+    // console.log(this.props.match.params.id)
+    // if (this.props.match.params.id) {
+    // } else {
+    // }
+  }
 
   timeNow() {
     var str = new Date()
@@ -97,7 +116,7 @@ export default class Tests extends Component {
     let mnt = str.getMinutes()
     let scn = str.getSeconds()
     let format1 = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}T${hour < 10 ? '0' + hour : hour}:${mnt < 10 ? '0' + mnt : mnt}`
-    this.state.noww = format1
+    this.state.noww = str//format1
     //console.log(format1)
   }
 
@@ -119,24 +138,21 @@ export default class Tests extends Component {
   render() {
     return (
       <div className='container'>
-        <ToastContainer
-          position="bottom-right"
-          autoClose={2000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
+        <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} newestOnTop={false} closeOnClick={true} rtl={false} pauseOnFocusLoss={false} draggable pauseOnHover={false} closeButton={false} />
         <Navigation />
-        <Www name="www" />
+        <WindowFocusHandler />
+
+        {/* <Www name="www" /> */}
         {/* <span>{this.state.solution.length}</span> */}
-        {this.state.theme.dateb < this.state.noww && this.state.noww < this.state.theme.datee ? <div className="bg-light w-100 p-1 my-5 text-center">Desde {this.state.theme.dateb.replace(/T/, "--")} hasta {this.state.theme.datee.replace(/T/, "--")}</div> : <div className="bg-warning w-100 p-1 my-5 text-center">Culminó el tiempo establecido el {this.state.theme.datee}</div>}
-        <CKEditor
+        {this.state.dateb < this.state.noww && this.state.noww < this.state.datee ?
+          <div className="bg-warning w-100 p-1 my-5 text-center">Inició <TimeAgo datetime={this.state.theme.dateb} locale='es' />. Termina <TimeAgo datetime={this.state.theme.datee} locale='es' /></div>
+          :
+          <div className="bg-secondary w-100 p-1 my-5 text-center">Culminó el tiempo establecido hace <TimeAgo datetime={this.state.theme.datee} locale='es' />
+          </div>
+        }
+        {/* <CKEditor
           editor={ClassicEditor}
-          config={{ 
+          config={{
             language: 'es',
             //toolbar: ["math", "|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList", "numberedList", "|", "indent", "outdent", "|", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "heading"]
           }}
@@ -147,7 +163,7 @@ export default class Tests extends Component {
               task: editor.getData()
             });
             this.timeNow()
-            if (this.state.theme.dateb < this.state.noww && this.state.noww < this.state.theme.datee) {
+            if (this.state.dateb < this.state.noww && this.state.noww < this.state.datee) {
               //this.submitTest
               //console.log("www")
             } else {
@@ -168,8 +184,8 @@ export default class Tests extends Component {
         //console.log('Focus.', editor)
         //this.submitTest()
         //}}
-        />
-        {this.state.solution.length != 1 && JSON.parse(localStorage.getItem("user")).rol == '2' ?
+        /> */}
+        {/* {this.state.solution.length != 1 && JSON.parse(localStorage.getItem("user")).rol == '1' ?
           <div className="mt-5">
             <CKEditor
               className="bordr border-info"
@@ -201,9 +217,16 @@ export default class Tests extends Component {
             </button>
           </div>
           : null
-        }
-        {JSON.parse(localStorage.getItem("user")).rol == '2' ?
+        } */}
+        {JSON.parse(localStorage.getItem("user")).rol == '1' ?
           <>
+            <textarea className="form-control" value={JSON.stringify(this.state.items, null, 5)} rows={19} onChange={(event) => {
+              this.setState({
+                items: event.target.value
+              })
+            }}
+              required="required"></textarea>
+
             <input defaultValue={this.state.solution} onChange={(event) => {
               this.setState({
                 solution: event.target.value
@@ -218,7 +241,7 @@ export default class Tests extends Component {
             }} className="form-control mt-3" /> : null}
           </>
           : null}
-        {this.state.theme.dateb < this.state.noww && this.state.noww < this.state.theme.datee || JSON.parse(localStorage.getItem("user")).rol == '2' ?
+        {this.state.dateb < this.state.noww && this.state.noww < this.state.datee || JSON.parse(localStorage.getItem("user")).rol == '1' ?
           <button className="btn btn-info w-100 my-5" onClick={this.submitTest}>
             Actualizar
           </button> :

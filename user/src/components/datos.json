@@ -1,0 +1,29 @@
+{
+  "response_code": 0,
+  "results": [
+    {
+      "category": "Entertainment: Video Games",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What&#039;s the best selling video game to date?",
+      "correct_answer": "Tetris",
+      "incorrect_answers": ["Wii Sports", "Minecraft", "Super Mario Bros"]
+    },
+    {
+      "category": "Entertainment: Video Games",
+      "type": "boolean",
+      "difficulty": "easy",
+      "question": "The main character in the &quot;Half-Life&quot; franchise is named Morgan Freeman.",
+      "correct_answer": "False",
+      "incorrect_answers": ["True"]
+    },
+    {
+      "category": "Entertainment: Video Games",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What engine did the original &quot;Half-Life&quot; run on?",
+      "correct_answer": "GoldSrc",
+      "incorrect_answers": ["Source", "Quake", "Unreal"]
+    }
+  ]
+}

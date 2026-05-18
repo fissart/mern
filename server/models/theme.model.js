@@ -8,7 +8,12 @@ const userSchema = new Schema(
     curse: {
       type: Schema.Types.ObjectId,
     },
+    units: { type: [] },
+    unlikes: { type: [] },
+    likes: { type: [] },
+    type: { type: String },
     title: { type: String },
+    detail: { type: String },
     theme: { type: String },
     fechaforum: Date,
   },
@@ -17,4 +22,4 @@ const userSchema = new Schema(
   }
 );
 
-module.exports = model("Ttheme", userSchema);
+module.exports = model("Foro", userSchema);

@@ -3,49 +3,38 @@ import io from "socket.io-client";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import authSvgwww from "../assests/foto.png";
-import { isAuth, getCokie } from "../helpers/auth";
+import { signout, isAuth, getCokie } from "../helpers/auth";
 import axios from "axios";
-//import addNotification from "react-push-notification";
-// import { MeetingItem, SideBar, Navbar, MeetingList, Input, MessageBox, MeetingMessage, MessageList, ChatList, Button, Popup, ChatItem, } from "react-chat-elements";
-import { ChatList } from "react-chat-elements";
-import "react-chat-elements/dist/main.css";
+// import "react-chat-elements/dist/main.css";
+// import { ChatList } from 'react-chat-elements'
 //var beep = require("beepbeep");
 //import Notifier from "react-desktop-notification"
 // import authSvg from "../assests/1295198.svg";
-import foto from "../assests/foto.png";
+// import foto from "../assests/foto.png";
+// import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-// import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload';
+// import { Bold, Code, Italic, Strikethrough, Subscript, Superscript, Underline } from '@ckeditor/ckeditor5-build-classic';
+import TimeAgo from 'timeago-react'; // var TimeAgo = require('timeago-react');
+// import { PiVideoConference } from "react-icons/pi"
 import '@ckeditor/ckeditor5-build-classic/build/translations/es';
-import renderMathInElement from 'katex/dist/contrib/auto-render';
+// import renderMathInElement from 'katex/dist/contrib/auto-render';
 import Markdownkatexnew from "../components/Markdown";
-import { BlockMath, InlineMath } from "react-katex";
-const { format, register } = require('timeago.js') //Puede utilizar `import` para Javascript code.
+import * as timeago from 'timeago.js';
 
-register('es_ES', (number, index, total_sec) => [
-  ['justo ahora', 'ahora mismo'],
-  ['hace %s segundos', 'en %s segundos'],
-  ['hace 1 minuto', 'en 1 minuto'],
-  ['hace %s minutos', 'en %s minutos'],
-  ['hace 1 hora', 'en 1 hora'],
-  ['hace %s horas', 'in %s horas'],
-  ['hace 1 dia', 'en 1 dia'],
-  ['hace %s dias', 'en %s dias'],
-  ['hace 1 semana', 'en 1 semana'],
-  ['hace %s semanas', 'en %s semanas'],
-  ['1 mes', 'en 1 mes'],
-  ['hace %s meses', 'en %s meses'],
-  ['hace 1 año', 'en 1 año'],
-  ['hace %s años', 'en %s años']
-][index]);
+// import it first.
+import es from 'timeago.js/lib/lang/es';
 
-const timeago = timestamp => format(timestamp, 'es_ES');
+// register it.
+timeago.register('es', es);
 
 
 export default class Admin extends Component {
   state = {
     userr: [],
   };
+
+  // nodes = document.querySelectorAll('.timeago');
 
   constructor() {
     super();
@@ -59,29 +48,27 @@ export default class Admin extends Component {
     };
   }
 
-
+  // componentDidUpdate() {
+  //   render(nodes, 'zh_CN');
+  // }
   componentWillUnmount() {
     this.socket.disconnect();
   }
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////
   componentDidMount() {
-    console.log(isAuth(), "wwwww123")
-    if (this.ref.current) {
-      console.log("wwwork")
-      renderMathInElement(this.ref.current, {
-        delimiters: [
-          { left: '$$', right: '$$', display: true },
-          { left: '\\[', right: '\\]', display: true },
-          { left: '$', right: '$', display: false },
-          { left: '\\(', right: '\\)', display: false },
-        ],
-      });
-    }
-    // renderMathInElement(this.ref.current);
-    this.getUser();
-    if (!("Notification" in window)) { alert("This browser does not support desktop notification"); } else { Notification.requestPermission(); }
 
     this.socket = io(`${process.env.REACT_APP_URL}`);
+    if (isAuth()) {
+      // console.log("new")
+      this.getUser();
+    } else {
+      const www = { user: 'res.data._id', email: 'res.data.email', name: 'www', id: 'res.data._id', foto: 'res.data.foto', ref: window.location.href };
+      this.socket.emit("usssers", www)
+
+    }
+    if (!("Notification" in window)) { alert("This browser does not support desktop notification"); } else { Notification.requestPermission(); }
+
 
     this.socket.on("mesages", (ww) => {
       //console.log(ww, "www");
@@ -94,18 +81,14 @@ export default class Admin extends Component {
       //beep([1000, 500, 2000]);
     })
 
-    this.socket.on("users", (ww) => {
+    this.socket.on("usersss", (ww) => {
       console.log(ww, "ww")
       this.setState({
         users: []
       })
 
       for (let i = 0; i < ww.length; i++) {
-        //console.log(ww[i])
-        // const www = {
-        //   user: ww[i],
-        //   i: i,
-        // };
+        console.log(ww[i])
         this.setState({
           users: [ww[i], ...this.state.users],
         })
@@ -124,22 +107,24 @@ export default class Admin extends Component {
       }
       console.log(this.state.messages);
     });
+
   }
+  ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const user = `${this.state.userr._id}`
-    const name = `${this.state.userr.name}`
-    const email = `${this.state.userr.email}`
-    const mensaje = e.target.value;
-    //console.log(e.target.value)
-    if (e.keyCode === 13 && mensaje) {
-      this.socket.emit("mesagess", { mensaje, user, name, email });
-      e.target.value = "";
-    }
-  };
+  // handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const user = `${this.state.userr._id}`
+  //   const name = `${this.state.userr.name}`
+  //   const email = `${this.state.userr.email}`
+  //   const mensaje = e.target.value;
+  //   //console.log(e.target.value)
+  //   if (e.keyCode === 13 && mensaje) {
+  //     this.socket.emit("mesagess", { mensaje, user, name, email });
+  //     e.target.value = "";
+  //   }
+  // };
 
   sendMessage = () => {
     //e.preventDefault();
@@ -165,8 +150,8 @@ export default class Admin extends Component {
 
   getUser = async () => {
     const token = getCokie("token");
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/user/${isAuth()._id}`,
+    await axios.get(
+      `${process.env.REACT_APP_API_URL}/users/user/${isAuth()._id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -174,12 +159,26 @@ export default class Admin extends Component {
           Accept: `application/json`,
         },
       }
-    );
-    this.setState({
-      userr: res.data,
+    ).then((res) => {
+      this.setState({
+        userr: res.data,
+      })
+      // console.log(token, "wwWWW")
+      // console.log(res.data, "wwWWW")
+      const www = { user: res.data._id, email: res.data.email, name: res.data.name.replace(/[^\x00-\x7F]/g, '&#209'), id: res.data._id, foto: res.data.foto, ref: window.location.href };
+      this.socket.emit("usssers", www)
     })
-    const www = { user: res.data._id, email: res.data.email, name: res.data.name.replace(/[^\x00-\x7F]/g, '&#209'), id: res.data._id, foto: res.data.foto };
-    await this.socket.emit("usssers", www)
+      .catch((err) => {
+        // toast.error(`Error To Your Information ${err.response.statusText}`);
+        if (err.response.status === 401) {
+          signout(() => {
+            window.location.href = "/login";
+          });
+        }
+      });
+    // this.setState({
+    //   userr: res.data,
+    // })
   }
 
 
@@ -192,34 +191,18 @@ export default class Admin extends Component {
 
 
   render() {
-    const messagges = this.state.messages.map((message, index) => {
+    const messagges = this.state.messages.map((message, i) => {
       return (
-        <div key={index} className={`my-2 bg-light p-1 ${isAuth().email === message.email ? 'border-right border-warning' : 'border-left border-primary'}`} style={isAuth().email === message.email ? { fontSize: 14, float: "right", clear: "right" } : { fontSize: 14, float: "left", clear: "left" }}>
+        <div key={i} className={`my-2 bg-light p-1 ${isAuth().email === message.email ? 'border-right border-warning' : 'border-left border-primary'}`} style={isAuth().email === message.email ? { fontSize: 14, float: "right", clear: "right" } : { fontSize: 14, float: "left", clear: "left" }}>
           <div className={`text-left ${isAuth().email === message.email ? 'text-info' : 'text-primary'}`} style={{ fontSize: 14 }}>
             {message.name + '-' + message.email}
           </div>
-
           <Markdownkatexnew>
-            {message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<oembed url="https:\/\/www.youtube.com\/watch\?v=)(.*?)(".*?oembed>|&.*?oembed>)/g, ` <iframe width='100%' height='350' src="https://www.youtube.com/embed/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$").replace(/(<p>)/g, "").replace(/(<\/p>)/g, "").replace(/(<h2>)/g, "").replace(/(<\/h2>)/g, "").replace(/(<li>)/g, "\n 1. ").replace(/(<\/li>)/g, "").replace(/(<ol>)/g, "").replace(/(<\/ol>)/g, "").replace(/(<blockquote>)/g, "\n > ").replace(/(<\/blockquote>)/g, "\n\n ")}
+            {message.mensaje}
           </Markdownkatexnew>
-          {/* {message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n\n$$$$\n$2\n$$$$\n\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$").replace(/(<p>)/g, "").replace(/(<\/p>)/g, "")} */}
-          {/* <Markdownkatexnew>
-          {"$\\epsilon$ entonces \n$$\n\\epsilon\n$$\n <iframe width='100%' height='350' src='https://www.dailymotion.com/embed/video/x8uv6iq'></iframe>"}
-          </Markdownkatexnew> */}
-          {/* {message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, " $$$2$$ ").replace(/(<p>)/g, "").replace(/(<\/p>)/g, "")} */}
-          {/* <div dangerouslySetInnerHTML={{ __html: `$\\int_0^\\infty x^2dx$
-          $$$$\n\\int_0^\\infty x^2dx\n$$$$
-          <iframe width='100%' height='350' src='https://www.dailymotion.com/embed/video/x8uv6iq'></iframe>` }} /> */}
-
-          {/* <div dangerouslySetInnerHTML={{ __html: message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "\n$$$$\n$2\n$$$$\n").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "$$$2$$") }} /> */}
-
-          {/* ..................................................{message.mensaje.replace(/(<oembed url="https:\/\/www.dailymotion.com\/video\/)(.*?)(".*?oembed>)/g, `<iframe width='100%' height='350' src="https://www.dailymotion.com/embed/video/$2"></iframe>`).replace(/(<script type="math\/tex; mode=display">)(.*?)(<\/script>)/g, "<InlineMath>$2</InlineMath>").replace(/(<script type="math\/tex">)(.*?)(<\/script>)/g, "<InlineMath>$2</InlineMath>")}
-        */}
           <div className="text-secondary text-right" style={{ fontSize: 12 }}>
-            {timeago(message.create)}
+            <TimeAgo datetime={message.create} locale='es_ES' />
           </div>
-
-
 
           {/* <MessageList
             className="message-list"
@@ -239,10 +222,10 @@ export default class Admin extends Component {
       );
     });
 
-    const usser = this.state.users.map((user, i) => {
+    const usser = this.state.users.map((user, j) => {
       return (
-        <div key={i} className="border border-info p-1">
-          <img className="wrapperestchat p-0"
+        <div key={j} className="border bg-light p-1 pb-0 rounded" style={{ marginBottom: ".2em" }}>
+          <img className="wrapperestchat p-0" alt="www"
             src={
               `${process.env.REACT_APP_URL}/profile/` + user.foto
             }
@@ -251,46 +234,56 @@ export default class Admin extends Component {
             }}
           />
           <div className="text-secondary text-right" style={{ fontSize: 12 }}>
-            {user.email} {user.name}
+            {user.email} {isAuth().rol == '1' ? user.ip.substring(7) : ""}
           </div>
           <div className="text-secondary text-right" style={{ fontSize: 12 }}>
-            {timeago(new Date())}
+            {isAuth().rol == '1' ? user.ref : ""}
+          </div>
+          <div className="timeago text-secondary text-right" style={{ fontSize: 12 }}>
+            <TimeAgo datetime={user.time} locale='es_ES' />
             {/* <ChatList
-            className="chat-list"
-            dataSource={[
-              {
-                avatar: user.foto!=undefined ? `${process.env.REACT_APP_URL}/profile/` + user.foto : foto,
-                alt: "Reactjs",
-                title: user.email,
-                subtitle: user.name,
-                date: new Date(),
-                // unread: this.state.messages.length,
-              },
-            ]}
-          /> */}
+                className="chat-list"
+                dataSource={[
+                  {
+                    avatar: 'https://avatars.githubusercontent.com/u/80540635?v=4',
+                    alt: "Reactjs",
+                    title: user.email,
+                    subtitle: user.name,
+                    date: new Date(),
+                    unread: 2,
+                  },
+                ]}
+              /> */}
           </div>
         </div>
       );
     });
 
     return (
-      <div className="container border">
-        <div className="row">
-          <div className="col-md-4 rounded-left p-2"> {usser} </div>
-          <div className="col-md-8 rounded-right p-2">
-            {/* <textarea value={this.state.mensaje} ></textarea> */}
-            <CKEditor
-              editor={ClassicEditor}
-              config={{ language: 'es', }}
-              data={this.state.mensaje}
-              onChange={(event, editor) => { this.setState({ mensaje: editor.getData() }) }}
-              onReady={editor => { console.log('Editor is ready to use!', editor) }}
-            />
-            <div className="w-100"> <button className="btn btn-info w-100 rounded-0" onClick={this.sendMessage} > Enviar </button> </div>
-            {messagges}
-          </div>
-        </div>
-      </div>
+      <>
+        {
+          isAuth().rol === '1' || window.location.href === `http://localhost:3000/tramites` ?
+            // isAuth().rol === '1' || window.location.href === `${process.env.REACT_APP_pro}/tramites` ?
+            <div className="container border my-3 rounded">
+              <div className="row">
+                <div className="col-md-4 rounded-left p-2"> {usser} </div>
+                <div className="col-md-8 rounded-right p-2">
+                  {/* <textarea value={this.state.mensaje} ></textarea> */}
+                  <CKEditor className="rounded"
+                    editor={ClassicEditor}
+                    config={{ language: 'es', toolbar: ["heading", "|", "bold", "italic", "link", "bulletedList", "numberedList", "|", "indent", "outdent", "|", "blockQuote", "insertTable", "|", "undo", "redo"], placeholder: 'Descripción', isReadOnly: 'true' }}
+                    data={this.state.mensaje}
+                    onChange={(event, editor) => { this.setState({ mensaje: editor.getData() }) }}
+                    onReady={editor => { console.log('Editor is ready to use!', editor) }}
+                  />
+                  <div className="w-100"> <button className="btn btn-info w-100 rounded-0" onClick={this.sendMessage} > Enviar </button> </div>
+                  {messagges}
+                </div>
+              </div>
+            </div>
+            : ""
+        }
+      </>
     );
   }
 }

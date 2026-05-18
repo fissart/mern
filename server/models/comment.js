@@ -2,6 +2,9 @@ const { Schema, model, ObjectId } = require("mongoose");
 
 const userSchema = new Schema(
   {
+    title: { type: String },
+    theme: { type: String },
+    type: { type: String },
     curse: {
       type: Schema.Types.ObjectId,
     },

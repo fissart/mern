@@ -17,20 +17,21 @@ const {
   // getU,
   // getUu,
   // deleteU,
-} = require("../controllers/comment.controller");
+} = require("../controllers/foro.controller");
 
-router.route("/comment/curse/:curse").get(getTheme);
-router.route("/comment/count/:idtheme/:user").get(getComment_User_Idtheme);
-router.route("/themes/:idtheme/:user").get(getComments);
+// router.route("/comment/curse/:curse").get(getTheme);
+// router.route("/comment/count/:idtheme/:user").get(getComment_User_Idtheme);
+// router.route("/themes/:idtheme/:user").get(getComments);
 
 router.route("/theme").post(createTheme);
+router.route("/theme/:id").put(updateTheme);
 router.route("/comment").post(createComment);
-router.route("/c2").post(createComment2);
+// router.route("/c2").post(createComment2);
 
 
-router.route("/theme/:idtheme").get(updateThemeget).put(updateTheme).delete(deleteTheme);
+// router.route("/theme/:idtheme").get(updateThemeget).put(updateTheme).delete(deleteTheme);
 
-router.route("/:idcoment").delete(deleteComment);
-router.route("/comment/:id").get(updateCommentget).put(updateComment);
+router.route("/theme/:id").delete(deleteTheme);
+// router.route("/comment/:id").get(updateCommentget).put(updateComment);
 
 module.exports = router;
